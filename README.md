@@ -19,6 +19,18 @@ El `--format 'text'` hace que no imprima la interfaz interactiva, sino que devue
 
 Para crowdfunding nos sirve variar también el maxValue y el balanceContract, (maxValue: 100, balanceContract: 0)
 
+### Flags de echidna
+```
+Usage: echidna [--version] FILES [--contract CONTRACT] [--config CONFIG] 
+               [--format FORMAT] [--corpus-dir PATH] [--test-mode ARG] 
+               [--all-contracts] [--test-limit INTEGER] [--shrink-limit INTEGER]
+               [--seq-len INTEGER] [--contract-addr ADDRESS] 
+               [--deployer ADDRESS] [--sender ADDRESS] [--seed SEED] 
+               [--crytic-args ARGS] [--solc-args ARGS]
+```
+Notar que no están maxValue ni balanceContract. En vez de agregarlos en el comando directamente podemos crear una configFile con python.
+
+
 Los resultados tienen dos tipos, dependiendo si el test falló o pasó:
 
 - Si el test pasa 

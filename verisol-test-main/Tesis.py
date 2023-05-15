@@ -316,6 +316,8 @@ def validCombinations(arg, tool="verisol"):
     if (tool == 'echidna'):
         toolComm = f"echidna {fileNameTemp} --contract {contractName} --test-mode assertion" # "--config {configFile}"
         print("Tool command: " + toolComm)
+        echidna_module.create_echidna_command()
+
         # acá habría que agregar una lógica que hardcodee los parámetros del constructor a la tempFile que se creó
         # y también quitar que owner y balance sean parámetros, sobre todo balance.
         # (owner=payable(msg.sender), max_block = 2, goal=50, block_number=0), en ese orden
