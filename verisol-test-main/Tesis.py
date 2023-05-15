@@ -86,7 +86,7 @@ def getToolCommand(includeNumber, toolCommand, combinations, txBound):
     for indexCombination, combi in enumerate(combinations):
         if combi != includeNumber: 
             command += "/ignoreMethod:vc"+ combi +"@" + contractName + " "
-    print(command)
+    #print(command)
     return command
 
 def get_extra_condition_output(condition):
@@ -233,8 +233,8 @@ def try_preconditions(tool, tempFunctionNames, final_directory, statesTemp, prec
 def try_transaction(tool, tempFunctionNames, final_directory, statesTemp, states, arg):
     global txBound 
     for functionName in tempFunctionNames:
-        if time == False:
-            print(functionName + "---" + str(arg))
+        #if time == False:
+        #    print(functionName + "---" + str(arg))
         indexPreconditionRequire, indexPreconditionAssert, indexFunction = get_params_from_function_name(functionName)
         if try_command(tool, functionName, tempFunctionNames, final_directory, txBound):
             add_node_to_graph(indexPreconditionRequire, indexPreconditionAssert, indexFunction, statesTemp, states)
@@ -254,8 +254,8 @@ def try_command(tool, temp_function_name, tempFunctionNames, final_directory, tx
     command = getToolCommand(temp_function_name, tool, tempFunctionNames, txBound)
     # print(command)
     result = subprocess.run([command, ""], shell = True, cwd=final_directory, stdout=subprocess.PIPE)
-    if verbose:
-        print(result.stdout.decode('utf-8'))
+    #if verbose:
+    #    print(result.stdout.decode('utf-8'))
     return tool_output in str(result.stdout.decode('utf-8'))
 
 def get_temp_function_name(indexPrecondtion, indexAssert, indexFunction):
@@ -288,8 +288,9 @@ def reduceCombinations(arg):
     if not verbose:
         delete_directory(final_directory)
 
-def validCombinations(arg):
+def validCombinations(arg, tool="verisol"):
     global preconditionsThreads, statesThreads, extraConditionsThreads, extraConditions, preconditions, states, contractName, fileName, dot
+    print(preconditionsThreads)
     preconditionsTemp = preconditionsThreads[arg]
     statesTemp = statesThreads[arg]
     extraConditionsTemp = extraConditionsThreads[arg]
@@ -297,8 +298,13 @@ def validCombinations(arg):
     fileNameTemp = create_file(arg, final_directory)
     body, fuctionCombinations = get_valid_transitions_output(preconditionsTemp, preconditions, extraConditionsTemp, extraConditions, functions, statesTemp)
     write_file(fileNameTemp, body)
-    tool = "Verisol " + fileNameTemp + " " + contractName
-    try_transaction(tool, fuctionCombinations, final_directory, statesTemp, states, arg)
+    if (tool == 'echidna'):
+        toolComm = f"echidna {fileNameTemp} --contract {contractName} --test-mode assertion" # "--config {configFile}"
+        print("Tool command: " + toolComm)
+        return
+    else:
+        toolComm = "Verisol " + fileNameTemp + " " + contractName
+    try_transaction(toolComm, fuctionCombinations, final_directory, statesTemp, states, arg)
     if not verbose:
         delete_directory(final_directory)
 
@@ -339,6 +345,16 @@ def main():
 
     count = len(functions)
     funcionesNumeros = list(range(1, count + 1))
+
+    if (echidna == True):
+        preconditions = statePreconditionsModeState
+        states = statesModeState
+        extraConditions = statesExtraConditions
+        preconditionsThreads = preconditions
+        statesThreads = states
+        extraConditionsThreads = extraConditions
+        validCombinations(0, "echidna")
+        return
 
     threadCount = 10
     threads = []
@@ -439,35 +455,56 @@ def main():
     tempFileName = configFile.replace('Config','')
     dot.render("graph/" + tempFileName + "_" + str(mode))
 
+
+def run_echidna():
+    preconditionsThreads = preconditions
+    print("Running echidna...")
+    validCombinations(0, "echidna")
+    # crear el nuevo contrato, que puede ser de la misma manera que validCombinations()
+    # ver si crear lo de validInit()
+    # correr echidna
+
+
 states = []
 preconditions = []
 tool_output = "Found a counterexample"
 
-sys.path.append("/Users/etorres/Proyectos/verisol-test/Configs")
+# Cambiar este path según dónde se ejecute
+sys.path.append("/Users/iangrinspan/Documents/1C2023/Beca/verisol-test-main/Configs")
 
 if __name__ == "__main__":
     global mode, config, verbose, time
     epaMode = False
     statesMode = False
+    echidna = False
     configFile = sys.argv[1]
+    print(f"Config file: {configFile}")
+    print(f"Flag: {sys.argv[2]}")
     verbose = False
     time = False
-    if len(sys.argv) > 2 and sys.argv[2] == "-v":
-        verbose = True
-    if len(sys.argv) > 2 and sys.argv[2] == "-t":
-        time = True
-    if len(sys.argv) > 3 and sys.argv[3] == "-e":
-        epaMode = True
-    if len(sys.argv) > 3 and sys.argv[3] == "-s":
-        statesMode = True
-    if len(sys.argv) > 3 and sys.argv[3] == "-a":
-        statesMode = True
-        epaMode = True
+    if (len(sys.argv) > 2) and sys.argv[2] == "-echidna":
+        echidna = True 
+        mode = Mode.states
+        config = __import__(configFile, level=0)
+        main()
+
+    else:
+        if len(sys.argv) > 2 and sys.argv[2] == "-v":
+            verbose = True
+        if len(sys.argv) > 2 and sys.argv[2] == "-t":
+            time = True
+        if len(sys.argv) > 3 and sys.argv[3] == "-e":
+            epaMode = True
+        if len(sys.argv) > 3 and sys.argv[3] == "-s":
+            statesMode = True
+        if len(sys.argv) > 3 and sys.argv[3] == "-a":
+            statesMode = True
+            epaMode = True
     
     if epaMode:
         mode = Mode.epa
         print(configFile)
-        config = __import__(configFile)
+        config = __import__(configFile, level=0)
         main()
 
     if statesMode:
