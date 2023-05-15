@@ -9,6 +9,10 @@ from time import sleep
 from enum import Enum
 import sys
 
+sys.path.append('../')
+
+import echidna_module
+
 def getCombinations(funcionesNumeros):
     global statePreconditions
     truePreconditions = []
@@ -81,12 +85,15 @@ def functionOutput(number):
 
 def getToolCommand(includeNumber, toolCommand, combinations, txBound):
     global contractName
-    command = toolCommand + " " 
-    command = command + "/txBound:" + str(txBound) + " "
-    for indexCombination, combi in enumerate(combinations):
-        if combi != includeNumber: 
-            command += "/ignoreMethod:vc"+ combi +"@" + contractName + " "
-    #print(command)
+    if toolCommand[0] == 'e':
+        command = toolCommand
+    else:
+        command = toolCommand + " " 
+        command = command + "/txBound:" + str(txBound) + " "
+        for indexCombination, combi in enumerate(combinations):
+            if combi != includeNumber: 
+                command += "/ignoreMethod:vc"+ combi +"@" + contractName + " "
+        #print(command)
     return command
 
 def get_extra_condition_output(condition):
@@ -159,14 +166,18 @@ def create_file(index, final_directory):
     return fileNameTemp
 
 def write_file(fileNameTemp, body):
+    new_body = echidna_module.clean_true_requires(body)
     inputfile = open(fileNameTemp, 'r').readlines()
     write_file = open(fileNameTemp,'w')
     fuctionCombinations = []
     for line in inputfile:
         write_file.write(line)
         if 'contract ' + contractName in line:
-                write_file.write(body)
+                write_file.write(new_body)
     write_file.close()
+
+
+
 
 def get_valid_preconditions_output(preconditions, extraConditions):
     temp_output = ""
@@ -188,6 +199,7 @@ def get_valid_transitions_output(preconditionsThread, preconditions, extraCondit
             for indexFunction, function in enumerate(functions):
                 extraConditionPre = extraConditionsTemp[indexPreconditionRequire]
                 extraConditionPost = extraConditions[indexPreconditionAssert]
+                print(f"-------- {statesThread[indexPreconditionRequire]} --------")
                 if (indexFunction + 1) in statesThread[indexPreconditionRequire] and mode == Mode.epa:
                     functionName = get_temp_function_name(indexPreconditionRequire, indexPreconditionAssert, indexFunction)
                     tempFunctionNames.append(functionName)
@@ -251,6 +263,7 @@ def try_init(tool, tempFunctionNames, final_directory, states):
 
 def try_command(tool, temp_function_name, tempFunctionNames, final_directory, txBound):
     global tool_output, verbose
+    print("Llegué hasta acá. Hay que cambiar getToolCommand")
     command = getToolCommand(temp_function_name, tool, tempFunctionNames, txBound)
     # print(command)
     result = subprocess.run([command, ""], shell = True, cwd=final_directory, stdout=subprocess.PIPE)
@@ -290,17 +303,23 @@ def reduceCombinations(arg):
 
 def validCombinations(arg, tool="verisol"):
     global preconditionsThreads, statesThreads, extraConditionsThreads, extraConditions, preconditions, states, contractName, fileName, dot
-    print(preconditionsThreads)
-    preconditionsTemp = preconditionsThreads[arg]
-    statesTemp = statesThreads[arg]
-    extraConditionsTemp = extraConditionsThreads[arg]
+    #print(preconditionsThreads)
+    preconditionsTemp = preconditionsThreads
+    statesTemp = statesThreads
+    extraConditionsTemp = extraConditionsThreads
     final_directory = create_directory(arg)
     fileNameTemp = create_file(arg, final_directory)
+    # print(statesTemp)
     body, fuctionCombinations = get_valid_transitions_output(preconditionsTemp, preconditions, extraConditionsTemp, extraConditions, functions, statesTemp)
     write_file(fileNameTemp, body)
+    print("-----------LLEGAMOS HASTA ACÁ, SE CREÓ UN ARCHIVO TEMPORAL CON LAS COMBINACIONES----------")
     if (tool == 'echidna'):
         toolComm = f"echidna {fileNameTemp} --contract {contractName} --test-mode assertion" # "--config {configFile}"
         print("Tool command: " + toolComm)
+        # acá habría que agregar una lógica que hardcodee los parámetros del constructor a la tempFile que se creó
+        # y también quitar que owner y balance sean parámetros, sobre todo balance.
+        # (owner=payable(msg.sender), max_block = 2, goal=50, block_number=0), en ese orden
+        echidna_module.hardcode_constructor_parameters(fileNameTemp, 2, 50, 0) 
         return
     else:
         toolComm = "Verisol " + fileNameTemp + " " + contractName
@@ -349,7 +368,7 @@ def main():
     if (echidna == True):
         preconditions = statePreconditionsModeState
         states = statesModeState
-        extraConditions = statesExtraConditions
+        extraConditions = ["true" for i in range(len(states))]
         preconditionsThreads = preconditions
         statesThreads = states
         extraConditionsThreads = extraConditions

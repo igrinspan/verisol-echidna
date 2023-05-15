@@ -1,5 +1,11 @@
 # verisol-echidna
 
+### Para correr el script de python (desde verisol-test-main)
+```
+    python3 tesis.py CrowdfundingTimeBalanceConfig  -echidna
+```
+
+
 Debemos cambiar el path.
 
 #### Comando de echidna para correr un contrato y que devuelva directamente por consola
@@ -10,6 +16,9 @@ Podemos ignorar la config file y directamente poner los valores de cada configur
 ```
 
 El `--format 'text'` hace que no imprima la interfaz interactiva, sino que devuelve los resultados directamente por consola.
+
+Para crowdfunding nos sirve variar también el maxValue y el balanceContract, (maxValue: 100, balanceContract: 0)
+
 Los resultados tienen dos tipos, dependiendo si el test falló o pasó:
 
 - Si el test pasa 
@@ -24,3 +33,13 @@ Call sequence:
   state2_to_state3_push(0)
   state2_to_state2_pop()
   ```
+
+
+### Hasta ahora
+
+- Agregué un -echidna que nos manda a main con echidna == True.
+- En el main cargamos todo.
+- Ignoramos todo lo de los threads (antes de que se haga eso, llamamos validCombinations(0, "echidna"))
+- A validCombinations le agregué el segundo parámetro (por default dejo verisol), para ver qué tool tiene que ejecutar.
+- En validComb metí un if que diferencia como se arma el toolCommand, y con eso llamamos a try_transaction.
+- En try_transaction no agregué nada, directamente se llama a try_command
