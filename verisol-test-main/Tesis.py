@@ -8,9 +8,8 @@ from threading import Thread
 from time import sleep
 from enum import Enum
 import sys
-
 sys.path.append('../')
-
+from file_manager import create_directory, delete_directory, create_file, write_file
 import echidna_module
 
 def getCombinations(funcionesNumeros):
@@ -85,15 +84,11 @@ def functionOutput(number):
 
 def getToolCommand(includeNumber, toolCommand, combinations, txBound):
     global contractName
-    if toolCommand[0] == 'e':
-        command = toolCommand
-    else:
-        command = toolCommand + " " 
-        command = command + "/txBound:" + str(txBound) + " "
-        for indexCombination, combi in enumerate(combinations):
-            if combi != includeNumber: 
-                command += "/ignoreMethod:vc"+ combi +"@" + contractName + " "
-        #print(command)
+    command = toolCommand + " " 
+    command = command + "/txBound:" + str(txBound) + " "
+    for indexCombination, combi in enumerate(combinations):
+        if combi != includeNumber: 
+            command += "/ignoreMethod:vc"+ combi +"@" + contractName + " "
     return command
 
 def get_extra_condition_output(condition):
@@ -145,40 +140,6 @@ def print_output(indexPreconditionRequire, indexFunction, indexPreconditionAsser
     if time == False:
         print(output)
 
-def create_directory(index):
-    current_directory = os.getcwd()
-    final_directory = os.path.join(current_directory, r'output'+str(index))
-    if not os.path.exists(final_directory):
-        os.makedirs(final_directory)
-    return final_directory
-
-def delete_directory(final_directory):
-    shutil.rmtree(final_directory)
-
-def create_file(index, final_directory):
-    global contractName, fileName
-    fileNameTemp = "OutputTemp"+str(index)+".sol"
-    fileNameTemp = final_directory +"/"+ fileNameTemp
-    tool = "Verisol " + fileNameTemp + " " + contractName
-    if os.path.isfile(fileNameTemp):
-        os.remove(fileNameTemp)
-    shutil.copyfile(fileName, fileNameTemp)
-    return fileNameTemp
-
-def write_file(fileNameTemp, body):
-    new_body = echidna_module.clean_true_requires(body)
-    inputfile = open(fileNameTemp, 'r').readlines()
-    write_file = open(fileNameTemp,'w')
-    fuctionCombinations = []
-    for line in inputfile:
-        write_file.write(line)
-        if 'contract ' + contractName in line:
-                write_file.write(new_body)
-    write_file.close()
-
-
-
-
 def get_valid_preconditions_output(preconditions, extraConditions):
     temp_output = ""
     tempFunctionNames = []
@@ -199,7 +160,6 @@ def get_valid_transitions_output(preconditionsThread, preconditions, extraCondit
             for indexFunction, function in enumerate(functions):
                 extraConditionPre = extraConditionsTemp[indexPreconditionRequire]
                 extraConditionPost = extraConditions[indexPreconditionAssert]
-                print(f"-------- {statesThread[indexPreconditionRequire]} --------")
                 if (indexFunction + 1) in statesThread[indexPreconditionRequire] and mode == Mode.epa:
                     functionName = get_temp_function_name(indexPreconditionRequire, indexPreconditionAssert, indexFunction)
                     tempFunctionNames.append(functionName)
@@ -245,8 +205,8 @@ def try_preconditions(tool, tempFunctionNames, final_directory, statesTemp, prec
 def try_transaction(tool, tempFunctionNames, final_directory, statesTemp, states, arg):
     global txBound 
     for functionName in tempFunctionNames:
-        #if time == False:
-        #    print(functionName + "---" + str(arg))
+        if time == False:
+            print(functionName + "---" + str(arg))
         indexPreconditionRequire, indexPreconditionAssert, indexFunction = get_params_from_function_name(functionName)
         if try_command(tool, functionName, tempFunctionNames, final_directory, txBound):
             add_node_to_graph(indexPreconditionRequire, indexPreconditionAssert, indexFunction, statesTemp, states)
@@ -263,7 +223,6 @@ def try_init(tool, tempFunctionNames, final_directory, states):
 
 def try_command(tool, temp_function_name, tempFunctionNames, final_directory, txBound):
     global tool_output, verbose
-    print("Llegué hasta acá. Hay que cambiar getToolCommand")
     command = getToolCommand(temp_function_name, tool, tempFunctionNames, txBound)
     # print(command)
     result = subprocess.run([command, ""], shell = True, cwd=final_directory, stdout=subprocess.PIPE)
@@ -290,9 +249,9 @@ def reduceCombinations(arg):
     statesTemp = statesThreads[arg]
     extraConditionsTemp = extraConditionsThreads[arg]
     final_directory = create_directory(arg)
-    fileNameTemp = create_file(arg, final_directory)
+    fileNameTemp = create_file(arg, final_directory, fileName, contractName)
     body,fuctionCombinations = get_valid_preconditions_output(preconditionsTemp, extraConditionsTemp)
-    write_file(fileNameTemp, body)
+    write_file(fileNameTemp, body, contractName)
     tool = "Verisol " + fileNameTemp + " " + contractName
     preconditionsTemp2, statesTemp2, extraConditionsTemp2 = try_preconditions(tool, fuctionCombinations, final_directory, statesTemp, preconditionsTemp, extraConditionsTemp , arg)
     preconditionsThreads[arg] = preconditionsTemp2
@@ -303,25 +262,25 @@ def reduceCombinations(arg):
 
 def validCombinations(arg, tool="verisol"):
     global preconditionsThreads, statesThreads, extraConditionsThreads, extraConditions, preconditions, states, contractName, fileName, dot
-    #print(preconditionsThreads)
     preconditionsTemp = preconditionsThreads
     statesTemp = statesThreads
     extraConditionsTemp = extraConditionsThreads
     final_directory = create_directory(arg)
-    fileNameTemp = create_file(arg, final_directory)
-    # print(statesTemp)
-    body, fuctionCombinations = get_valid_transitions_output(preconditionsTemp, preconditions, extraConditionsTemp, extraConditions, functions, statesTemp)
-    write_file(fileNameTemp, body)
-    print("-----------LLEGAMOS HASTA ACÁ, SE CREÓ UN ARCHIVO TEMPORAL CON LAS COMBINACIONES----------")
-    if (tool == 'echidna'):
-        toolComm = f"echidna {fileNameTemp} --contract {contractName} --test-mode assertion" # "--config {configFile}"
-        print("Tool command: " + toolComm)
-        echidna_module.create_echidna_command()
+    fileNameTemp = create_file(arg, final_directory, fileName, contractName)
 
-        # acá habría que agregar una lógica que hardcodee los parámetros del constructor a la tempFile que se creó
-        # y también quitar que owner y balance sean parámetros, sobre todo balance.
-        # (owner=payable(msg.sender), max_block = 2, goal=50, block_number=0), en ese orden
-        echidna_module.hardcode_constructor_parameters(fileNameTemp, 2, 50, 0) 
+    body, fuctionCombinations = get_valid_transitions_output(preconditionsTemp, preconditions, extraConditionsTemp, extraConditions, functions, statesTemp)
+    write_file(fileNameTemp, body, contractName)
+    print("----------- Se creó un archivo temporal con todos los tests ----------")
+    if (tool == 'echidna'):
+        toolComm = echidna_module.create_echidna_command(fileNameTemp, contractName, final_directory)
+        echidna_module.hardcode_constructor_parameters(fileNameTemp, 2, 50, 0)
+        print(f"El comando a correr es {toolComm} en el directorio {final_directory}") 
+        # Acá tengo 2 opciones: correr el comando directamente para todos los tests y después procesar el resultado, 
+        # o aprovechar try_transaction y try_command, que corren un test a la vez.
+        # Si hago lo segundo, tengo que modificar el config file para que haga blacklists de los tests que no quiero correr.
+        echidna_module.run_echidna_command(toolComm, final_directory)   
+        # si quiero hacer lo primero, en functionCombinations tengo todos los nombres de las funciones de test
+        # de ahí, puedo usar get_params_from_function_name y print_output para obtener el estado inicial, la transición y el estado final.
         return
     else:
         toolComm = "Verisol " + fileNameTemp + " " + contractName
@@ -332,10 +291,10 @@ def validCombinations(arg, tool="verisol"):
 def validInit(arg):
     global preconditionsThreads, extraConditions, preconditions, states, contractName, fileName, dot
     final_directory = create_directory(arg)
-    fileNameTemp = create_file(arg, final_directory)
+    fileNameTemp = create_file(arg, final_directory, fileName, contractName)
 
     body, fuctionCombinations = get_init_output(preconditions, extraConditions)
-    write_file(fileNameTemp, body)
+    write_file(fileNameTemp, body, contractName)
     
     tool = "Verisol " + fileNameTemp + " " + contractName
     try_init(tool, fuctionCombinations, final_directory, states)
@@ -477,18 +436,10 @@ def main():
     dot.render("graph/" + tempFileName + "_" + str(mode))
 
 
-def run_echidna():
-    preconditionsThreads = preconditions
-    print("Running echidna...")
-    validCombinations(0, "echidna")
-    # crear el nuevo contrato, que puede ser de la misma manera que validCombinations()
-    # ver si crear lo de validInit()
-    # correr echidna
-
-
 states = []
 preconditions = []
 tool_output = "Found a counterexample"
+echidna_output = "failed!"
 
 # Cambiar este path según dónde se ejecute
 sys.path.append("/Users/iangrinspan/Documents/1C2023/Beca/verisol-test-main/Configs")
