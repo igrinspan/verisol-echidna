@@ -1,5 +1,6 @@
 import itertools
 import subprocess
+import inspect
 import os
 import shutil
 import numpy  as np
@@ -10,8 +11,125 @@ from enum import Enum
 import sys
 sys.path.append('../')
 from file_manager import create_directory, delete_directory, create_file, write_file
-from string_op import get_params_from_function_name, print_output
-from echidna_module import set_up_and_run
+
+class EchidnaRunner:
+
+    def __init__(self, preconditions, states, extraConditions):
+        self.preconditions = preconditions
+        self.states = states
+        self.extraConditions = extraConditions
+        self.preconditionsThreads = preconditions
+        self.statesThreads = states
+        self.extraConditionsThreads = extraConditions
+
+    def set_up_and_run(self, fileNameTemp, contractName, final_directory, init=False):
+        toolComm = self.create_echidna_command(fileNameTemp, contractName, final_directory)
+        # acá deberíamos 1: generalizarla para cualquier contrato, 2: hacer que se puedan ingresar distintos parámetros al constructor.
+        # si estamos en init, hacer esto? cómo hacer para que echidna haga el assert justo después del constructor???
+        self.hardcode_constructor_parameters(fileNameTemp, 2, 50, 0)
+        # los asserts ya están negados
+        print(f"El comando a correr es {toolComm} en el directorio {final_directory}") 
+        result = self.run_echidna_command(toolComm, final_directory)
+        print(result)
+        tests_that_failed = self.process_output(result)
+        self.print_failed_tests(tests_that_failed, init)
+
+    def process_output(self, tool_result):
+        tests_that_failed = []
+        # 1. Recorrer todas las líneas del resultado.
+        for line in tool_result.splitlines():
+        # 2. Si nos encontramos con una línea "  vc3x1x2(): failed!💥"
+            if "failed!" in line:
+        # 3. Obtener el NOMBRE de la función de test que falló: vcIxJxK(): -> IxJxK.
+                failed_test = line.split()[0][2:-3]
+        # 4. Appendeamos ese resultado a alguna estructura donde guardemos todo.
+        #  Luego podemos usar get_params y todo eso para hacer add_node_to_graph y print_output.
+                i, j, k = get_params_from_function_name(failed_test)
+                tests_that_failed.append((i, j, k))
+        return tests_that_failed
+
+    def print_failed_tests(self, tests_that_failed, init):
+        if init:
+            output = "Desde el constructor, se puede llegar a: "
+            for test in tests_that_failed:
+                print(f"{output}  {output_combination(test[0], states)}")
+        else:
+            for test in tests_that_failed:
+                print_output(test[0], test[2], test[1], states, states) #print_output recibe como segundo param la función y tercero el assert.
+                add_node_to_graph(test[0], test[1], test[2], states, states)
+
+    # Implementar.
+    def run_echidna_command(self, toolComm, final_directory):
+        result = subprocess.run([toolComm, ""], shell = True, cwd=final_directory, stdout=subprocess.PIPE)
+        return result.stdout.decode('utf-8')
+
+    # Esta función está implementada específicamente para crowdfunding, generalizarla
+    def hardcode_constructor_parameters(self, fileNameTemp, max_block, funding_goal, initial_block):
+        inputfile = open(fileNameTemp, 'r').readlines()
+        constructor_lines = self.get_constructor_from_file(inputfile).splitlines()
+        # hacer otra función que sea la que crea el constructor
+        # constructor_lines = build_new_constructor(constructor_lines, max_block, funding_goal, initial_block)
+        constructor_lines[0] = "constructor() public {"
+        constructor_lines[1] = "owner = msg.sender;" # depende la versión de solidity, podríamos necesitar agregar payable(msg.sender)
+        constructor_lines[2] = f"max_block = {max_block};"
+        constructor_lines[3] = f"goal = {funding_goal};"
+        constructor_lines[4] = "balance = 0;"
+        constructor_lines[5] = f"blockNumber = {initial_block};"
+
+        # Buscamos la línea en la que comienza el constructor y en la que termina, para actualizar ese rango.
+        constructor_start_line = next((index for index, line in enumerate(inputfile) if line.strip().startswith('constructor(')), None)
+        constructor_end_line = constructor_start_line + 6 # cambiar esto, está hardcodeado para crowdfunding
+        for i in range(constructor_start_line, constructor_end_line):
+            inputfile[i] = constructor_lines[i-constructor_start_line] + "\n"
+        write_file = open(fileNameTemp,'w')
+        for line in inputfile:
+            write_file.write(line)
+        write_file.close()
+        return 
+
+    def get_constructor_from_file(self, inputfile):
+        #input file es una lista de strings. tiene uno por cada línea del contrato.
+        res = ""
+        for i in range(len(inputfile)):
+            line = inputfile[i]
+            if ('constructor(' in line):
+                while True:
+                    res += line
+                    if ('}' in line): # Si tenemos un constructor que haga algo adentro con llaves {}, cambiar esto.
+                        return inspect.cleandoc(res).replace('  ', '')
+                    i += 1
+                    line = inputfile[i]
+        raise NameError('No se encontró el constructor del contrato.')
+
+    def create_echidna_command(self, fileNameTemp, contractName, directory):
+        config_file = self.create_config_file(directory, 50000, 100, 0) # parámetros de crowdfunding
+        commandResult =  f"echidna {fileNameTemp} --contract {contractName} --config {config_file}"
+        return commandResult
+
+    def create_config_file(self, directory, testLimit, maxValue, balanceContract, shrinkLimit=0):
+        testMode = "assertion"
+        format = "text"
+        new_file_name = f"{directory}/config.yaml"
+
+        newfile = open(new_file_name, "w")
+        newfile.write(f"testMode: \"{testMode}\"\n")
+        newfile.write(f"format: \"{format}\"\n")
+        newfile.write(f"shrinkLimit: {shrinkLimit}\n")
+        newfile.write(f"testLimit: {testLimit}\n")
+        newfile.write(f"maxValue: {maxValue}\n")
+        newfile.write(f"balanceContract: {balanceContract}\n")
+        newfile.close()
+        print("----------- Se creó una configFile para esos tests -------------------")
+        return new_file_name
+
+    def clean_true_requires(self, body):
+        new_body = ""
+        for line in body.splitlines():
+            if line != "require(true);":
+                new_body +=  line + "\n"
+        return new_body
+
+
 
 
 
@@ -138,7 +256,9 @@ def print_combination(indexCombination, tempCombinations):
     if time == False:
         print(output + "---------")
 
-
+def get_params_from_function_name(temp_function_name):
+    array = temp_function_name.split('x')
+    return int(array[0]), int(array[1]), int(array[2])
 
 def get_valid_preconditions_output(preconditions, extraConditions):
     temp_output = ""
@@ -233,7 +353,11 @@ def try_command(tool, temp_function_name, tempFunctionNames, final_directory, tx
 def get_temp_function_name(indexPrecondtion, indexAssert, indexFunction):
     return str(indexPrecondtion) + "x" + str(indexAssert) + "x" + str(indexFunction)
 
-
+def print_output(indexPreconditionRequire, indexFunction, indexPreconditionAssert, combinations, fullCombination):
+    print(indexFunction)
+    output ="Desde el estado: "+ output_combination(indexPreconditionRequire, combinations) + "\nHaciendo: " + functions[indexFunction] + "\nLlegas al estado: " + output_combination(indexPreconditionAssert, fullCombination) + "\n---------"
+    #if time == False:
+    print(output)
 
 def add_node_to_graph(indexPreconditionRequire, indexPreconditionAssert, indexFunction, statesTemp, states):
     global dot, functions
@@ -267,10 +391,10 @@ def validCombinations(arg, tool="verisol"):
     fileNameTemp = create_file(arg, final_directory, fileName, contractName)
 
     body, fuctionCombinations = get_valid_transitions_output(preconditionsTemp, preconditions, extraConditionsTemp, extraConditions, functions, statesTemp)
-    write_file(fileNameTemp, body, contractName)
+    write_file(fileNameTemp, body, contractName, echidna_runner)
     print("----------- Se creó un archivo temporal con todos los tests ----------")
     if (tool == 'echidna'):
-        result = set_up_and_run(fileNameTemp, contractName, final_directory)
+        result = echidna_runner.set_up_and_run(fileNameTemp, contractName, final_directory)
         return
     else:
         toolComm = "Verisol " + fileNameTemp + " " + contractName
@@ -278,16 +402,20 @@ def validCombinations(arg, tool="verisol"):
     if not verbose:
         delete_directory(final_directory)
 
-def validInit(arg):
+def validInit(arg, tool="verisol"):
     global preconditionsThreads, extraConditions, preconditions, states, contractName, fileName, dot
     final_directory = create_directory(arg)
     fileNameTemp = create_file(arg, final_directory, fileName, contractName)
 
     body, fuctionCombinations = get_init_output(preconditions, extraConditions)
-    write_file(fileNameTemp, body, contractName)
-    
-    tool = "Verisol " + fileNameTemp + " " + contractName
-    try_init(tool, fuctionCombinations, final_directory, states)
+    write_file(fileNameTemp, body, contractName, echidna_runner)
+    if (tool == 'echidna'):
+        print("Estoy en validInit() con echidna")
+        result = echidna_runner.set_up_and_run(fileNameTemp, contractName, final_directory, True)
+        return
+    else:
+        toolComm = "Verisol " + fileNameTemp + " " + contractName
+    try_init(toolComm, fuctionCombinations, final_directory, states)
     delete_directory(final_directory)
 
 class Mode(Enum):
@@ -310,7 +438,7 @@ def make_global_variables(config):
     statesModeState = config.statesModeState
 
 def main():
-    global config, dot, preconditionsThreads, statesThreads, states, preconditions, extraConditionsThreads, extraConditions
+    global config, dot, preconditionsThreads, statesThreads, states, preconditions, extraConditionsThreads, extraConditions, echidna_runner
     make_global_variables(config)
 
     count = len(functions)
@@ -323,7 +451,11 @@ def main():
         preconditionsThreads = preconditions
         statesThreads = states
         extraConditionsThreads = extraConditions
-        validCombinations(0, "echidna")
+        echidna_runner = EchidnaRunner(statePreconditionsModeState, statesModeState, extraConditions)
+        dot = graphviz.Digraph(comment='aperrr')
+        dot.render("graph/" + "aper_" + str(mode))
+        validCombinations(0, "echidna") 
+        #validInit(1, "echidna")
         return
 
     threadCount = 10
@@ -444,6 +576,7 @@ if __name__ == "__main__":
     print(f"Flag: {sys.argv[2]}")
     verbose = False
     time = False
+    
     if (len(sys.argv) > 2) and sys.argv[2] == "-echidna":
         echidna = True 
         mode = Mode.states

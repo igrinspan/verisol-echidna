@@ -1,6 +1,5 @@
 import os
 import shutil
-import echidna_module
 
 def create_directory(index):
     current_directory = os.getcwd()
@@ -21,8 +20,8 @@ def create_file(index, final_directory, fileName, contractName):
     shutil.copyfile(fileName, fileNameTemp)
     return fileNameTemp
 
-def write_file(fileNameTemp, body, contractName):
-    new_body = echidna_module.clean_true_requires(body)
+def write_file(fileNameTemp, body, contractName, echidna_runner):
+    new_body = echidna_runner.clean_true_requires(body)
     inputfile = open(fileNameTemp, 'r').readlines()
     write_file = open(fileNameTemp,'w')
     fuctionCombinations = []
