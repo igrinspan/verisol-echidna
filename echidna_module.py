@@ -1,17 +1,49 @@
 import inspect
 import subprocess
+from string_op import get_params_from_function_name
+
+def set_up_and_run(fileNameTemp, contractName, final_directory):
+    toolComm = create_echidna_command(fileNameTemp, contractName, final_directory)
+    hardcode_constructor_parameters(fileNameTemp, 2, 50, 0)
+    # los asserts ya están negados, no?
+    print(f"El comando a correr es {toolComm} en el directorio {final_directory}") 
+    result = run_echidna_command(toolComm, final_directory)
+    print(result)
+    tests_that_failed = process_output(result)
+    # en tests_that_failed hay un arreglo del estilo ["1x2x3", "1x0x1", "3x1x0"...]
+
+
+    # Acá tengo 2 opciones: correr el comando directamente para todos los tests y después procesar el resultado, 
+    # o aprovechar try_transaction y try_command, que corren un test a la vez.
+    # Si hago lo segundo, tengo que modificar el config file para que haga blacklists de los tests que no quiero correr.
+    # si quiero hacer lo primero, en functionCombinations tengo todos los nombres de las funciones de test
+    # de ahí, puedo usar get_params_from_function_name y print_output para obtener el estado inicial, la transición y el estado final.
+
+def process_output(tool_result):
+    tests_that_failed = []
+    # 1. Recorrer todas las líneas del resultado.
+    for line in tool_result.splitlines():
+    # 2. Si nos encontramos con una línea "  vc3x1x2(): failed!💥"
+        if "failed!" in line:
+    # 3. Obtener el NOMBRE de la función de test que falló: vcIxJxK(): -> IxJxK.
+            failed_test = line.split()[0][2:-3]
+    # 4. Appendeamos ese resultado a alguna estructura donde guardemos todo.
+    #  Luego podemos usar get_params y todo eso para hacer add_node_to_graph y print_output.
+            tests_that_failed.append(failed_test)
+    return tests_that_failed
 
 
 # Implementar.
 def run_echidna_command(toolComm, final_directory):
     result = subprocess.run([toolComm, ""], shell = True, cwd=final_directory, stdout=subprocess.PIPE)
-    print(result.stdout.decode('utf-8'))
-    return
+    return result.stdout.decode('utf-8')
 
 # Esta función está implementada específicamente para crowdfunding, generalizarla
 def hardcode_constructor_parameters(fileNameTemp, max_block, funding_goal, initial_block):
     inputfile = open(fileNameTemp, 'r').readlines()
     constructor_lines = get_constructor_from_file(inputfile).splitlines()
+    # hacer otra función que sea la que crea el constructor
+    # constructor_lines = build_new_constructor(constructor_lines, max_block, funding_goal, initial_block)
     constructor_lines[0] = "constructor() public {"
     constructor_lines[1] = "owner = msg.sender;" # depende la versión de solidity, podríamos necesitar agregar payable(msg.sender)
     constructor_lines[2] = f"max_block = {max_block};"

@@ -10,7 +10,10 @@ from enum import Enum
 import sys
 sys.path.append('../')
 from file_manager import create_directory, delete_directory, create_file, write_file
-import echidna_module
+from string_op import get_params_from_function_name, print_output
+from echidna_module import set_up_and_run
+
+
 
 def getCombinations(funcionesNumeros):
     global statePreconditions
@@ -135,10 +138,7 @@ def print_combination(indexCombination, tempCombinations):
     if time == False:
         print(output + "---------")
 
-def print_output(indexPreconditionRequire, indexFunction, indexPreconditionAssert, combinations, fullCombination):
-    output ="Desde este estado:\n"+ output_combination(indexPreconditionRequire, combinations) + "\nHaciendo " + functions[indexFunction] + "\n\nLlegas al estado:\n" + output_combination(indexPreconditionAssert, fullCombination) + "\n---------"
-    if time == False:
-        print(output)
+
 
 def get_valid_preconditions_output(preconditions, extraConditions):
     temp_output = ""
@@ -233,9 +233,7 @@ def try_command(tool, temp_function_name, tempFunctionNames, final_directory, tx
 def get_temp_function_name(indexPrecondtion, indexAssert, indexFunction):
     return str(indexPrecondtion) + "x" + str(indexAssert) + "x" + str(indexFunction)
 
-def get_params_from_function_name(temp_function_name):
-    array = temp_function_name.split('x')
-    return int(array[0]), int(array[1]), int(array[2])
+
 
 def add_node_to_graph(indexPreconditionRequire, indexPreconditionAssert, indexFunction, statesTemp, states):
     global dot, functions
@@ -272,15 +270,7 @@ def validCombinations(arg, tool="verisol"):
     write_file(fileNameTemp, body, contractName)
     print("----------- Se creó un archivo temporal con todos los tests ----------")
     if (tool == 'echidna'):
-        toolComm = echidna_module.create_echidna_command(fileNameTemp, contractName, final_directory)
-        echidna_module.hardcode_constructor_parameters(fileNameTemp, 2, 50, 0)
-        print(f"El comando a correr es {toolComm} en el directorio {final_directory}") 
-        # Acá tengo 2 opciones: correr el comando directamente para todos los tests y después procesar el resultado, 
-        # o aprovechar try_transaction y try_command, que corren un test a la vez.
-        # Si hago lo segundo, tengo que modificar el config file para que haga blacklists de los tests que no quiero correr.
-        echidna_module.run_echidna_command(toolComm, final_directory)   
-        # si quiero hacer lo primero, en functionCombinations tengo todos los nombres de las funciones de test
-        # de ahí, puedo usar get_params_from_function_name y print_output para obtener el estado inicial, la transición y el estado final.
+        result = set_up_and_run(fileNameTemp, contractName, final_directory)
         return
     else:
         toolComm = "Verisol " + fileNameTemp + " " + contractName
