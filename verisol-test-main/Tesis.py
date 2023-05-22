@@ -10,10 +10,9 @@ from time import sleep
 from enum import Enum
 import sys
 sys.path.append('../')
-from file_manager import create_directory, delete_directory, create_file, write_file
+from file_manager import create_directory, delete_directory, create_file, write_file, write_file_from_string
 
 class EchidnaRunner:
-
     def __init__(self, preconditions, states, extraConditions):
         self.preconditions = preconditions
         self.states = states
@@ -25,9 +24,9 @@ class EchidnaRunner:
     def set_up_and_run(self, fileNameTemp, contractName, final_directory, init=False):
         toolComm = self.create_echidna_command(fileNameTemp, contractName, final_directory)
         # acá deberíamos 1: generalizarla para cualquier contrato, 2: hacer que se puedan ingresar distintos parámetros al constructor.
-        # si estamos en init, hacer esto? cómo hacer para que echidna haga el assert justo después del constructor???
-        self.hardcode_constructor_parameters(fileNameTemp, 2, 50, 0)
-        # los asserts ya están negados
+        self.hardcode_constructor_parameters(fileNameTemp, 2, 55, 0)
+        if init:
+            self.transform_contract_for_init(fileNameTemp)
         print(f"El comando a correr es {toolComm} en el directorio {final_directory}") 
         result = self.run_echidna_command(toolComm, final_directory)
         print(result)
@@ -36,16 +35,11 @@ class EchidnaRunner:
 
     def process_output(self, tool_result):
         tests_that_failed = []
-        # 1. Recorrer todas las líneas del resultado.
         for line in tool_result.splitlines():
-        # 2. Si nos encontramos con una línea "  vc3x1x2(): failed!💥"
             if "failed!" in line:
-        # 3. Obtener el NOMBRE de la función de test que falló: vcIxJxK(): -> IxJxK.
-                failed_test = line.split()[0][2:-3]
-        # 4. Appendeamos ese resultado a alguna estructura donde guardemos todo.
-        #  Luego podemos usar get_params y todo eso para hacer add_node_to_graph y print_output.
+                failed_test = line.split()[0][2:-3] # vcIxJxK(): -> IxJxK.
                 i, j, k = get_params_from_function_name(failed_test)
-                tests_that_failed.append((i, j, k))
+                tests_that_failed.append([i, j, k])
         return tests_that_failed
 
     def print_failed_tests(self, tests_that_failed, init):
@@ -53,42 +47,37 @@ class EchidnaRunner:
             output = "Desde el constructor, se puede llegar a: "
             for test in tests_that_failed:
                 print(f"{output}  {output_combination(test[0], states)}")
+                add_init_node_to_graph(test)
         else:
             for test in tests_that_failed:
                 print_output(test[0], test[2], test[1], states, states) #print_output recibe como segundo param la función y tercero el assert.
                 add_node_to_graph(test[0], test[1], test[2], states, states)
 
-    # Implementar.
     def run_echidna_command(self, toolComm, final_directory):
         result = subprocess.run([toolComm, ""], shell = True, cwd=final_directory, stdout=subprocess.PIPE)
         return result.stdout.decode('utf-8')
 
-    # Esta función está implementada específicamente para crowdfunding, generalizarla
+    # Esta función está implementada específicamente para crowdfunding, generalizarla. 
+    # Y que se puedan iniciar los constructores con diferentes valores.
     def hardcode_constructor_parameters(self, fileNameTemp, max_block, funding_goal, initial_block):
         inputfile = open(fileNameTemp, 'r').readlines()
         constructor_lines = self.get_constructor_from_file(inputfile).splitlines()
-        # hacer otra función que sea la que crea el constructor
-        # constructor_lines = build_new_constructor(constructor_lines, max_block, funding_goal, initial_block)
-        constructor_lines[0] = "constructor() public {"
-        constructor_lines[1] = "owner = msg.sender;" # depende la versión de solidity, podríamos necesitar agregar payable(msg.sender)
-        constructor_lines[2] = f"max_block = {max_block};"
-        constructor_lines[3] = f"goal = {funding_goal};"
-        constructor_lines[4] = "balance = 0;"
-        constructor_lines[5] = f"blockNumber = {initial_block};"
+
+        # new_constructor_lines = build_new_constructor(constructor_lines, max_block, funding_goal, initial_block)
+        new_constructor_lines = ["constructor() public {", "owner = msg.sender;", f"max_block = {max_block};", f"goal = {funding_goal};", "balance = 0;", f"blockNumber = {initial_block};"]
+        constructor_lines = new_constructor_lines
 
         # Buscamos la línea en la que comienza el constructor y en la que termina, para actualizar ese rango.
         constructor_start_line = next((index for index, line in enumerate(inputfile) if line.strip().startswith('constructor(')), None)
-        constructor_end_line = constructor_start_line + 6 # cambiar esto, está hardcodeado para crowdfunding
-        for i in range(constructor_start_line, constructor_end_line):
-            inputfile[i] = constructor_lines[i-constructor_start_line] + "\n"
-        write_file = open(fileNameTemp,'w')
-        for line in inputfile:
-            write_file.write(line)
-        write_file.close()
+        constructor_end_line = next((index for index, line in enumerate(inputfile[constructor_start_line:]) if line.strip() == '}'), None) + constructor_start_line
+
+        inputfile[constructor_start_line:constructor_end_line] = list(map(lambda x: x + "\n", constructor_lines))
+
+        write_file_from_string(fileNameTemp, inputfile)
         return 
 
     def get_constructor_from_file(self, inputfile):
-        #input file es una lista de strings. tiene uno por cada línea del contrato.
+        #inputfile es una lista de strings. tiene uno por cada línea del contrato.
         res = ""
         for i in range(len(inputfile)):
             line = inputfile[i]
@@ -100,6 +89,18 @@ class EchidnaRunner:
                     i += 1
                     line = inputfile[i]
         raise NameError('No se encontró el constructor del contrato.')
+
+    def transform_contract_for_init(self, fileNameTemp):
+        new_contract_body = self.remove_everything_after_constructor(fileNameTemp)   
+        write_file_from_string(fileNameTemp, new_contract_body)
+    
+    def remove_everything_after_constructor(self, fileNameTemp):
+        lines = open(fileNameTemp, 'r').readlines()
+        constructor_line = next((index for index, line in enumerate(lines) if line.strip().startswith('constructor(')), None)
+        end_line = next((index for index, line in enumerate(lines[constructor_line:]) if line.strip() == '}'), None)
+        lines = lines[:constructor_line + end_line + 1]
+        lines.append("}")
+        return lines
 
     def create_echidna_command(self, fileNameTemp, contractName, directory):
         config_file = self.create_config_file(directory, 50000, 100, 0) # parámetros de crowdfunding
@@ -128,9 +129,6 @@ class EchidnaRunner:
             if line != "require(true);":
                 new_body +=  line + "\n"
         return new_body
-
-
-
 
 
 def getCombinations(funcionesNumeros):
@@ -364,6 +362,15 @@ def add_node_to_graph(indexPreconditionRequire, indexPreconditionAssert, indexFu
     dot.node(combinationToString(statesTemp[indexPreconditionRequire]), output_combination(indexPreconditionRequire, statesTemp))
     dot.node(combinationToString(states[indexPreconditionAssert]), output_combination(indexPreconditionAssert, states))
     dot.edge(combinationToString(statesTemp[indexPreconditionRequire]),combinationToString(states[indexPreconditionAssert]) , label=functions[indexFunction])
+    print("Se agregó algo al grafo")
+
+def add_init_node_to_graph(init_test): # ian
+    global states
+    print(f"El test a agregar al grafo de init es: {init_test}")
+    indexPreconditionAssert = init_test[0]
+    dot.node("init", "init")
+    dot.node(combinationToString(states[indexPreconditionAssert]), output_combination(indexPreconditionAssert, states))
+    dot.edge("init",combinationToString(states[indexPreconditionAssert]) , "constructor")
 
 def reduceCombinations(arg):
     global fileName, preconditionsThreads, statesThreads, extraConditionsThreads, contractName
@@ -452,10 +459,10 @@ def main():
         statesThreads = states
         extraConditionsThreads = extraConditions
         echidna_runner = EchidnaRunner(statePreconditionsModeState, statesModeState, extraConditions)
-        dot = graphviz.Digraph(comment='aperrr')
-        dot.render("graph/" + "aper_" + str(mode))
+        dot = graphviz.Digraph(comment='prueba-echidna-crowdfunding')
         validCombinations(0, "echidna") 
-        #validInit(1, "echidna")
+        validInit(1, "echidna")
+        dot.render("graph/" + "0_echidna_" + str(mode))
         return
 
     threadCount = 10

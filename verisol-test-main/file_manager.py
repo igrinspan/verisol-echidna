@@ -30,3 +30,9 @@ def write_file(fileNameTemp, body, contractName, echidna_runner):
         if 'contract ' + contractName in line:
                 write_file.write(new_body)
     write_file.close()
+
+def write_file_from_string(fileNameTemp, array_of_strings):
+    write_file = open(fileNameTemp,'w')
+    for line in array_of_strings:
+        write_file.write(line)
+    write_file.close()
