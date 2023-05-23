@@ -2,7 +2,7 @@
 
 ### Para correr el script de python (desde verisol-test-main)
 ```
-    python3 tesis.py CrowdfundingTimeBalanceConfig  -echidna
+    python3 Tesis.py CrowdfundingTimeBalanceConfig  -echidna
 ```
 
 
