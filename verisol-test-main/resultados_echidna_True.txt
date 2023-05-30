@@ -1,27 +1,29 @@
-[2023-05-30 10:37:28.40] Compiling /Users/iangrinspan/Documents/1C2023/Beca/verisol-echidna/verisol-test-main/output_echidna/OutputTemp_init.sol... Done! (0.980689s)
+[2023-05-30 12:27:47.06] Compiling /Users/iangrinspan/Documents/1C2023/Beca/verisol-echidna/verisol-test-main/output_echidna/OutputTemp_init.sol... Done! (0.7868s)
 Analyzing contract: /Users/iangrinspan/Documents/1C2023/Beca/verisol-echidna/verisol-test-main/output_echidna/OutputTemp_init.sol:Crowdfunding
-[2023-05-30 10:37:29.39] Running slither on /Users/iangrinspan/Documents/1C2023/Beca/verisol-echidna/verisol-test-main/output_echidna/OutputTemp_init.sol... Done! (1.9893s)
-[2023-05-30 10:37:34.42] [status] tests: 1/6, values: [], fuzzing: 8302/50000, cov: 311, corpus: 1
-[2023-05-30 10:37:37.46] [status] tests: 1/6, values: [], fuzzing: 16465/50000, cov: 311, corpus: 1
-[2023-05-30 10:37:40.48] [status] tests: 1/6, values: [], fuzzing: 25096/50000, cov: 311, corpus: 1
-[2023-05-30 10:37:43.49] [status] tests: 1/6, values: [], fuzzing: 35263/50000, cov: 311, corpus: 1
-[2023-05-30 10:37:46.49] [status] tests: 1/6, values: [], fuzzing: 47179/50000, cov: 311, corpus: 1
-vc0x0x0():  passed! 🎉
+[2023-05-30 12:27:47.86] Running slither on /Users/iangrinspan/Documents/1C2023/Beca/verisol-echidna/verisol-test-main/output_echidna/OutputTemp_init.sol... Done! (1.732981s)
+[2023-05-30 12:27:52.60] [status] tests: 1/6, values: [], fuzzing: 7392/100000, cov: 429, corpus: 1
+[2023-05-30 12:27:55.62] [status] tests: 1/6, values: [], fuzzing: 15096/100000, cov: 429, corpus: 1
+[2023-05-30 12:27:58.62] [status] tests: 1/6, values: [], fuzzing: 22691/100000, cov: 429, corpus: 1
+[2023-05-30 12:28:01.65] [status] tests: 1/6, values: [], fuzzing: 30354/100000, cov: 429, corpus: 1
+[2023-05-30 12:28:04.65] [status] tests: 1/6, values: [], fuzzing: 37970/100000, cov: 429, corpus: 1
+[2023-05-30 12:28:07.67] [status] tests: 1/6, values: [], fuzzing: 45535/100000, cov: 429, corpus: 1
+[2023-05-30 12:28:10.67] [status] tests: 1/6, values: [], fuzzing: 53076/100000, cov: 429, corpus: 1
+[2023-05-30 12:28:13.71] [status] tests: 1/6, values: [], fuzzing: 60734/100000, cov: 429, corpus: 1
+[2023-05-30 12:28:16.72] [status] tests: 1/6, values: [], fuzzing: 68266/100000, cov: 429, corpus: 1
+[2023-05-30 12:28:19.73] [status] tests: 1/6, values: [], fuzzing: 77609/100000, cov: 429, corpus: 1
+[2023-05-30 12:28:22.74] [status] tests: 1/6, values: [], fuzzing: 86876/100000, cov: 429, corpus: 1
+[2023-05-30 12:28:25.75] [status] tests: 1/6, values: [], fuzzing: 98630/100000, cov: 429, corpus: 1
+vc0x0x0(): failed!💥  
+  Call sequence:
+    vc0x0x0() Value: 0x1 Time delay: 482712 seconds Block delay: 1
+
+
 vc4x0x0():  passed! 🎉
 vc1x0x0():  passed! 🎉
 vc2x0x0():  passed! 🎉
-vc3x0x0(): failed!💥  
-  Call sequence:
-    vc4x0x0() from: 0x0000000000000000000000000000000000010000 Value: 0x33 Time delay: 238653 seconds Block delay: 24272
-    vc1x0x0() from: 0x0000000000000000000000000000000000020000 Value: 0x45 Time delay: 566039 seconds Block delay: 22699
-    vc4x0x0() from: 0x0000000000000000000000000000000000010000 Time delay: 512439 seconds Block delay: 60267
-    vc4x0x0() from: 0x0000000000000000000000000000000000020000 Value: 0x5
-    vc2x0x0() from: 0x0000000000000000000000000000000000010000 Value: 0x45 Time delay: 344203 seconds Block delay: 54809
-    vc3x0x0() from: 0x0000000000000000000000000000000000020000 Value: 0x32 Time delay: 322373 seconds Block delay: 15005
-
-
+vc3x0x0():  passed! 🎉
 AssertionFailed(..):  passed! 🎉
-Unique instructions: 311
+Unique instructions: 429
 Unique codehashes: 1
 Corpus size: 1
-Seed: 8342204597051706562
+Seed: 4865067252474205456

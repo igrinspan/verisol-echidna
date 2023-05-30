@@ -10,6 +10,7 @@ import time
 from time import sleep
 from enum import Enum
 import sys
+from dataclasses import dataclass, fields, asdict
 
 sys.path.append('../')
 from file_manager import create_directory, delete_directory, create_file, write_file, write_file_from_string, \
@@ -140,26 +141,17 @@ class EchidnaRunner:
         lines.append("}")
         return lines
 
-    # Tiene cosas hardcodeadas para crowdfunding.
     def create_echidna_command(self, fileNameTemp, contractName, directory):
-        config_file = self.create_config_file(directory, 50000, 100, 0)  # parámetros de crowdfunding
+        config_file = self.create_config_file(directory, ConfigFileData())  # acá habría que pasarle parámetros.
         commandResult = f"echidna {fileNameTemp} --contract {contractName} --config {config_file}"
         return commandResult
 
-    def create_config_file(self, directory, testLimit, maxValue, balanceContract, shrinkLimit=0):
-        testMode = "assertion"
-        format = "text"
+    def create_config_file(self, directory, config_file_data):
         new_file_name = f"{directory}/config.yaml"
-
         newfile = open(new_file_name, "w")
-        newfile.write(f"testMode: \"{testMode}\"\n")
-        newfile.write(f"format: \"{format}\"\n")
-        newfile.write(f"shrinkLimit: {shrinkLimit}\n")
-        newfile.write(f"testLimit: {testLimit}\n")
-        newfile.write(f"maxValue: {maxValue}\n")
-        newfile.write(f"balanceContract: {balanceContract}\n")
+        for key, value in asdict(config_file_data).items():
+            newfile.write(f"{key}: {value} \n")
         newfile.close()
-        print("----------- Se creó una configFile para esos tests -------------------")
         return new_file_name
 
     def process_output(self, tool_result):
@@ -194,6 +186,16 @@ class ContractCreator:
         return fileNameTemp
 
 
+@dataclass
+class ConfigFileData: # Tiene cosas hardcodeadas para crowdfunding
+    maxValue: int = 7
+    testLimit: int = 100000
+    shrinkLimit: int = 0
+    balanceContract: int = 0
+    testMode: str = 'assertion'
+    format: str = 'text'
+
+
 class Printer:
     def print_results(self, transition_tests_that_failed, init_tests_that_failed):
         self.print_failed_tests(transition_tests_that_failed)
@@ -220,7 +222,7 @@ class GraphManager:
     def build_graph(self, transition_tests_that_failed, init_tests_that_failed):
         self.add_failed_tests_init(init_tests_that_failed)
         self.add_failed_tests_transition(transition_tests_that_failed)
-        self.graph.render("graph/" + self.nombre)
+        self.graph.render("output_echidna/graph/" + self.nombre)
 
     def add_failed_tests_init(self, tests_that_failed):
         output = "Desde el constructor, se puede llegar a: "

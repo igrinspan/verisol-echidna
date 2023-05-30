@@ -36,7 +36,7 @@ statePreconditionsModeState = [
 # Que empiece terminado y sin balance.
 # Que empiece terminado y con balance superior a goal (se puede hacer getFunds).
 constructors =  [
-    ["owner = msg.sender;", f"max_block = 4;", f"goal = 5;", "balance = 0;", f"blockNumber = 2;"],
+    ["owner = msg.sender;", f"max_block = 4;", f"goal = 9;", "balance = 0;", f"blockNumber = 0;"],
     ["owner = msg.sender;", f"max_block = 2;", f"goal = 5;", "balance = 4;", f"blockNumber = 3;"],
     ["owner = msg.sender;", f"max_block = 2;", f"goal = 5;", "balance = 0;", f"blockNumber = 3;"],
     ["owner = msg.sender;", f"max_block = 2;", f"goal = 5;", "balance = 10;", f"blockNumber = 3;"]
