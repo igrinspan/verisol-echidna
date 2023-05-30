@@ -6,6 +6,7 @@ import shutil
 import numpy as np
 import graphviz
 from threading import Thread
+import time
 from time import sleep
 from enum import Enum
 import sys
@@ -15,84 +16,104 @@ from file_manager import create_directory, delete_directory, create_file, write_
     read_from_file
 
 
+class ThreadsEchidna:
+    def __init__(self, dir):
+        self.threads = None
+        self.dir = dir
+        self.thread_count = len(preconditions)
+
+    def create_and_run_transitions_threads(self):
+        preconditions_require = np.array_split(preconditions, self.thread_count)
+        results = [None] * self.thread_count
+        self.threads = [Thread(target=self.run_transitions,
+                          args=(preconditions_require[i], states, preconditions, extraConditions, i, results))
+                            for i in range(self.thread_count)]
+        self.start_and_join_all_threads()
+        return self.join_transitions_results(results)
+
+    def create_and_run_init_threads(self):
+        self.thread_count = len(config.constructors)
+        results = [None] * self.thread_count
+        self.threads = [Thread(target=self.run_inits, args=(i, results)) for i in range(self.thread_count)]
+        self.start_and_join_all_threads()
+        return self.join_transitions_results(results)
+
+    def run_transitions(self, preconditions_require, states, preconditions, extraConditions, thread_id, results):
+        tr_contract = ContractCreator(self.dir).create_transitions_contract(preconditions_require, states, preconditions, extraConditions, thread_id)
+        tr_failed = EchidnaRunner(self.dir).run_contract(tr_contract)
+        results[thread_id] = tr_failed
+
+    def run_inits(self, thread_id, results):
+        init_contract = ContractCreator(self.dir).create_init_contract()
+        init_failed = EchidnaRunner(self.dir).run_init_contract(init_contract, thread_id)
+        results[thread_id] = init_failed
+
+    def join_transitions_results(self, results):
+        tr_failed = [elem for result in results for elem in result]
+        # init_failed = [elem for result in results for elem in result[1]]
+        return tr_failed  #, init_failed
+
+    def start_and_join_all_threads(self):
+        self.start_all_threads()
+        self.join_all_threads()
+
+    def start_all_threads(self):
+        for thread in self.threads:
+            thread.start()
+            sleep(2)
+
+    def join_all_threads(self):
+        for thread in self.threads:
+            thread.join()
+
+
 class EchidnaRunner:
     def __init__(self, directory):
         self.directory = directory
 
-    def run_all_contracts(self, transitions_contract, init_contract=None):
-        result = self.set_up_and_run(0, transitions_contract, contractName)
-        # result = read_from_file("resultados_echidna_False.txt")
-        transition_tests_that_failed = self.process_output(result)
-        init_tests_that_failed = []  # después borrar y sacar el if
-        if init_contract:
-            result_init = ""
-            for i in range(len(config.constructors)):
-                unres = self.set_up_and_run(i, init_contract, contractName, True)
-                result_init += unres
-            # result_init = read_from_file("resultados_echidna_True.txt")
-            init_tests_that_failed = self.process_output(result_init)
-        return transition_tests_that_failed, init_tests_that_failed
+    def run_init_contract(self, contract, constructor_index):
+        result = self.set_up_and_run(contract, contractName, True, constructor_index)
+        return self.process_output(result)
 
-    def set_up_and_run(self, index, fileNameTemp, contractName, init=False):
-        toolComm = self.create_echidna_command(fileNameTemp, contractName, self.directory)
-        # acá deberíamos 1: generalizarla para cualquier contrato, 2: hacer que se puedan ingresar distintos parámetros al constructor.
-        self.hardcode_constructor_parameters(fileNameTemp, index)
+    def run_contract(self, contract):
+        result = self.set_up_and_run(contract, contractName)
+        return self.process_output(result)
+
+    def set_up_and_run(self, filename_temp, contract_name, init=False, index=0):
+        tool_command = self.create_echidna_command(filename_temp, contract_name, self.directory)
+        self.hardcode_constructor_parameters(filename_temp, index)
         if init:
-            self.transform_contract_for_init(fileNameTemp)
-        print(f"El comando a correr es {toolComm} en el directorio {self.directory}")
-        result = self.run_echidna_command(toolComm)
+            self.transform_contract_for_init(filename_temp)
+        print(f"El comando a correr es {tool_command} en el directorio {self.directory}")
+        result = self.run_echidna_command(tool_command)
         write_file_from_string(f"resultados_echidna_{init}.txt", result)
         return result
 
-    def process_output(self, tool_result):
-        tests_that_failed = []
-        for line in tool_result.splitlines():
-            if "failed!" in line:
-                failed_test = line.split()[0][2:-3]  # vcIxJxK(): -> IxJxK.
-                i, j, k = get_params_from_function_name(failed_test)
-                tests_that_failed.append([i, j, k])
-        return tests_that_failed
-
-    def print_failed_tests(self, tests_that_failed, init):
-        if init:
-            output = "Desde el constructor, se puede llegar a: "
-            for test in tests_that_failed:
-                print(f"{output}  {output_combination(test[0], states)}")
-        else:
-            for test in tests_that_failed:
-                print_output(test[0], test[2], test[1], states,
-                             states)  # print_output recibe como segundo param la función y tercero el assert.
-
-    def run_echidna_command(self, toolComm):
-        result = subprocess.run([toolComm, ""], shell=True, cwd=self.directory, stdout=subprocess.PIPE)
+    def run_echidna_command(self, command_to_run):
+        result = subprocess.run([command_to_run, ""], shell=True, cwd=self.directory, stdout=subprocess.PIPE)
         return result.stdout.decode('utf-8')
 
-    # Esta función está implementada específicamente para crowdfunding, generalizarla. 
-    # Y que se puedan iniciar los constructores con diferentes valores.
-    def hardcode_constructor_parameters(self, fileNameTemp, constructor_i):
-        inputfile = open(fileNameTemp, 'r').readlines()
-        constructor_lines = self.get_constructor_from_file(inputfile).splitlines()
-
-        new_constructor_lines = self.build_constructor_from_config(constructor_i)
-        # new_constructor_lines = ["constructor() public {", "owner = msg.sender;", f"max_block = {max_block};", f"goal = {funding_goal};", "balance = 0;", f"blockNumber = {initial_block};"]
-        constructor_lines = new_constructor_lines
-
-        # Buscamos la línea en la que comienza el constructor y en la que termina, para actualizar ese rango.
-        constructor_start_line = next(
-            (index for index, line in enumerate(inputfile) if line.strip().startswith('constructor(')), None)
-        constructor_end_line = next(
-            (index for index, line in enumerate(inputfile[constructor_start_line:]) if line.strip() == '}'),
-            None) + constructor_start_line + 1
-
-        inputfile[constructor_start_line:constructor_end_line] = list(map(lambda x: x + "\n", constructor_lines))
-
-        write_file_from_string(fileNameTemp, inputfile)
+    # Puede que haya que generalizar esta función
+    def hardcode_constructor_parameters(self, fileNameTemp, constructor_index):
+        input_file = open(fileNameTemp, 'r').readlines()
+        new_constructor_lines = self.build_constructor_from_config(constructor_index)
+        constructor_start_line, constructor_end_line = self.get_constructor_start_and_end_lines(input_file)
+        input_file[constructor_start_line:constructor_end_line] = list(map(lambda x: x + "\n", new_constructor_lines))
+        write_file_from_string(fileNameTemp, input_file)
         return
 
     def build_constructor_from_config(self, index):
         return ["constructor() public {"] + config.constructors[index] + ["}"]
 
-    def get_constructor_from_file(self, inputfile):
+    def get_constructor_start_and_end_lines(self, input_file):
+        constructor_start_line = next(
+            (index for index, line in enumerate(input_file) if line.strip().startswith('constructor(')), None)
+        constructor_end_line = next(
+            (index for index, line in enumerate(input_file[constructor_start_line:]) if line.strip() == '}'),
+            None) + constructor_start_line + 1
+        return constructor_start_line, constructor_end_line
+
+    def get_constructor_from_file(self, inputfile): # No se usa.
         # inputfile es una lista de strings. tiene uno por cada línea del contrato.
         res = ""
         for i in range(len(inputfile)):
@@ -119,6 +140,7 @@ class EchidnaRunner:
         lines.append("}")
         return lines
 
+    # Tiene cosas hardcodeadas para crowdfunding.
     def create_echidna_command(self, fileNameTemp, contractName, directory):
         config_file = self.create_config_file(directory, 50000, 100, 0)  # parámetros de crowdfunding
         commandResult = f"echidna {fileNameTemp} --contract {contractName} --config {config_file}"
@@ -140,30 +162,33 @@ class EchidnaRunner:
         print("----------- Se creó una configFile para esos tests -------------------")
         return new_file_name
 
+    def process_output(self, tool_result):
+        tests_that_failed = []
+        for line in tool_result.splitlines():
+            if "failed!" in line:
+                failed_test = line.split()[0][2:-3]  # vcIxJxK(): -> IxJxK.
+                i, j, k = get_params_from_function_name(failed_test)
+                tests_that_failed.append([i, j, k])
+        return tests_that_failed
 
-class ContractProcessor:
-    def __init__(self, preconditions_require, states, preconditions, extraConditions, directory, thread_id):
-        self.preconditions_require = preconditions_require
-        self.preconditions = preconditions
-        self.states = states
-        self.extraConditions = extraConditions
+
+class ContractCreator:
+    def __init__(self, directory):
         self.directory = directory
-        self.thread_id = thread_id
 
-    def create_all_contracts(self):
+    def create_all_contracts(self): # no se usa
         return self.create_transitions_contract(), self.create_init_contract()
 
-    def create_transitions_contract(self):
-        fileNameTemp = create_file(f"_transitions_{self.thread_id}", self.directory, fileName, contractName)
-        body, fuctionCombinations = get_valid_transitions_output(self.preconditions_require, self.preconditions,
-                                                                 self.extraConditions, self.extraConditions, functions,
-                                                                 self.states)
+    def create_transitions_contract(self, preconditions_require, states, preconditions, extraConditions, thread_id):
+        fileNameTemp = create_file(f"_transitions_{thread_id}", self.directory, fileName, contractName)
+        body, fuctionCombinations = get_valid_transitions_output(preconditions_require, preconditions,
+                                                                 extraConditions, extraConditions, functions, states)
         print(f"functionCombinations: {fuctionCombinations}")
         write_file(fileNameTemp, body, contractName)
         return fileNameTemp
 
     def create_init_contract(self):
-        fileNameTemp = create_file(f"_init_{self.thread_id}", self.directory, fileName, contractName)
+        fileNameTemp = create_file("_init", self.directory, fileName, contractName)
         body, fuctionCombinations = get_init_output(preconditions, extraConditions)
         write_file(fileNameTemp, body, contractName)
         return fileNameTemp
@@ -173,6 +198,8 @@ class Printer:
     def print_results(self, transition_tests_that_failed, init_tests_that_failed):
         self.print_failed_tests(transition_tests_that_failed)
         self.print_failed_tests(init_tests_that_failed, True)
+        print(f"- Init states found: {init_tests_that_failed} (count: {len(init_tests_that_failed)}) \n "
+              f"- Transitions found: {transition_tests_that_failed} (count: {len(transition_tests_that_failed)})")
 
     def print_failed_tests(self, tests_that_failed, init=False):
         if init:
@@ -412,7 +439,7 @@ def try_preconditions(tool, tempFunctionNames, final_directory, statesTemp, prec
     extraConditionsTemp2 = []
 
     for functionName in tempFunctionNames:
-        if time == False:
+        if time_opt == False:
             print(functionName + "---" + str(arg))
         indexPreconditionRequire, _, _ = get_params_from_function_name(functionName)
         if try_command(tool, functionName, tempFunctionNames, final_directory, txBound):
@@ -426,7 +453,7 @@ def try_preconditions(tool, tempFunctionNames, final_directory, statesTemp, prec
 def try_transaction(tool, tempFunctionNames, final_directory, statesTemp, states, arg):
     global txBound
     for functionName in tempFunctionNames:
-        if time == False:
+        if time_opt == False:
             print(functionName + "---" + str(arg))
         indexPreconditionRequire, indexPreconditionAssert, indexFunction = get_params_from_function_name(functionName)
         if try_command(tool, functionName, tempFunctionNames, final_directory, txBound):
@@ -460,11 +487,9 @@ def get_temp_function_name(indexPrecondtion, indexAssert, indexFunction):
 
 
 def print_output(indexPreconditionRequire, indexFunction, indexPreconditionAssert, combinations, fullCombination):
-    print(indexFunction)
     output = "Desde el estado: " + output_combination(indexPreconditionRequire, combinations) + "\nHaciendo: " + \
              functions[indexFunction] + "\nLlegas al estado: " + output_combination(indexPreconditionAssert,
                                                                                     fullCombination) + "\n---------"
-    # if time == False:
     print(output)
 
 
@@ -568,18 +593,6 @@ def prepare_variables(mode, funcionesNumeros):  # ian
     extraConditionsThreads = extraConditions
 
 
-def each_thread_do(preconditions_require, states, preconditions, extraConditions, dir, thread_id, results):
-    tr_contract = ContractProcessor(preconditions_require, states, preconditions, extraConditions, dir, thread_id).create_transitions_contract()
-    tr_failed, init_failed = EchidnaRunner(dir).run_all_contracts(tr_contract)
-    results[thread_id] = (tr_failed, init_failed)
-
-
-def join_results(results):
-    tr_failed = [elem for result in results for elem in result[0]]
-    init_failed = [elem for result in results for elem in result[1]]
-    return tr_failed, init_failed
-
-
 
 def main():
     global config, dot, preconditionsThreads, statesThreads, states, preconditions, extraConditionsThreads, extraConditions
@@ -591,19 +604,14 @@ def main():
     prepare_variables(mode, funcionesNumeros)
 
     if (echidna):
+        start = time.time()
         dir = create_directory('_echidna')
-        preconditions_require = np.array_split(preconditions, len(preconditions))
-        results = [None] * len(preconditions_require)
-        threads = [Thread(target=each_thread_do, args=(preconditions_require[i], states, preconditions, extraConditions, dir, i, results)) for i in range(len(preconditions))]
-        for thread in threads:
-            thread.start()
-            sleep(2)
-        for thread in threads:
-            thread.join()
-        tr_failed, init_failed = join_results(results)
+        tr_failed = ThreadsEchidna(dir).create_and_run_transitions_threads()
+        init_failed = ThreadsEchidna(dir).create_and_run_init_threads()
         Printer().print_results(tr_failed, init_failed)
-        print(f"- Init states found: {init_failed} (count: {len(init_failed)}) \n - Transitions found: {tr_failed} (count: {len(tr_failed)})")
         GraphManager("echidna").build_graph(tr_failed, init_failed)
+        end = time.time()
+        print(f"El tiempo total transcurrido fue de: {round(end - start, 2)} segundos.")
         return
 
     threadCount = 10
@@ -690,6 +698,8 @@ def main():
     dot.render("graph/" + tempFileName + "_" + str(mode))
 
 
+
+
 states = []
 preconditions = []
 tool_output = "Found a counterexample"
@@ -699,7 +709,7 @@ echidna_output = "failed!"
 sys.path.append("/Users/iangrinspan/Documents/1C2023/Beca/verisol-echidna/verisol-test-main/Configs")
 
 if __name__ == "__main__":
-    global mode, config, verbose, time
+    global mode, config, verbose, time_opt
     epaMode = False
     statesMode = False
     echidna = False
@@ -707,7 +717,7 @@ if __name__ == "__main__":
     print(f"Config file: {configFile}")
     print(f"Flag: {sys.argv[2]}")
     verbose = False
-    time = False
+    time_opt = False
 
     if (len(sys.argv) > 2) and sys.argv[2] == "-echidna":
         echidna = True
@@ -719,7 +729,7 @@ if __name__ == "__main__":
         if len(sys.argv) > 2 and sys.argv[2] == "-v":
             verbose = True
         if len(sys.argv) > 2 and sys.argv[2] == "-t":
-            time = True
+            time_opt = True
         if len(sys.argv) > 3 and sys.argv[3] == "-e":
             epaMode = True
         if len(sys.argv) > 3 and sys.argv[3] == "-s":
