@@ -13,15 +13,18 @@ import sys
 from dataclasses import dataclass, fields, asdict
 
 sys.path.append('../')
-from file_manager import create_directory, delete_directory, create_file, write_file, write_file_from_string, \
-    read_from_file
+from file_manager import create_directory, delete_directory, create_file, write_file, write_file_from_string, read_from_file
 
+
+class Mode(Enum):
+    epa = "epa"
+    states = "states"
 
 class ThreadsEchidna:
-    def __init__(self, dir):
+    def __init__(self, dir, thread_count):
         self.threads = None
         self.dir = dir
-        self.thread_count = len(preconditions)
+        self.thread_count = thread_count
 
     def create_and_run_transitions_threads(self):
         preconditions_require = np.array_split(preconditions, self.thread_count)
@@ -33,7 +36,6 @@ class ThreadsEchidna:
         return self.join_transitions_results(results)
 
     def create_and_run_init_threads(self):
-        self.thread_count = len(config.constructors)
         results = [None] * self.thread_count
         self.threads = [Thread(target=self.run_inits, args=(i, results)) for i in range(self.thread_count)]
         self.start_and_join_all_threads()
@@ -334,8 +336,7 @@ def get_extra_condition_output(condition):
     return extraConditionOutput
 
 
-def output_transitions_function(preconditionRequire, function, preconditionAssert, functionIndex, extraConditionPre,
-                                extraConditionPost):
+def output_transitions_function(preconditionRequire, function, preconditionAssert, functionIndex, extraConditionPre, extraConditionPost):
     if mode == Mode.epa:
         precondictionFunction = functionPreconditions[functionIndex]
     else:
@@ -433,8 +434,7 @@ def get_init_output(preconditions, extraConditions):
     return temp_output, tempFunctionNames
 
 
-def try_preconditions(tool, tempFunctionNames, final_directory, statesTemp, preconditionsTemp, extraConditionsTemp,
-                      arg):
+def try_preconditions(tool, tempFunctionNames, final_directory, statesTemp, preconditionsTemp, extraConditionsTemp, arg):
     global txBound
     preconditionsTemp2 = []
     statesTemp2 = []
@@ -477,7 +477,6 @@ def try_init(tool, tempFunctionNames, final_directory, states):
 def try_command(tool, temp_function_name, tempFunctionNames, final_directory, txBound):
     global tool_output, verbose
     command = getToolCommand(temp_function_name, tool, tempFunctionNames, txBound)
-    # print(command)
     result = subprocess.run([command, ""], shell=True, cwd=final_directory, stdout=subprocess.PIPE)
     # if verbose:
     #    print(result.stdout.decode('utf-8'))
@@ -552,15 +551,10 @@ def validInit(arg):
     delete_directory(final_directory)
 
 
-class Mode(Enum):
-    epa = "epa"
-    states = "states"
-
-
 def make_global_variables(config):
     global fileName, preconditions, dot, statesNames, functions, statePreconditions, contractName, functionVariables, functionPreconditions, txBound, statePreconditionsModeState, statesModeState
     fileName = "Contracts/" + config.fileName
-    print(config.fileName)
+    # print(config.fileName)
     functions = config.functions
     statePreconditions = config.statePreconditions
     statesNames = config.statesNamesModeState
@@ -571,7 +565,7 @@ def make_global_variables(config):
     txBound = config.txBound
     statePreconditionsModeState = config.statePreconditionsModeState
     statesModeState = config.statesModeState
-    print(config)
+    # print(config)
 
 
 def prepare_variables(mode, funcionesNumeros):  # ian
@@ -595,6 +589,24 @@ def prepare_variables(mode, funcionesNumeros):  # ian
     extraConditionsThreads = extraConditions
 
 
+def reduceCombinations2(): # Cambié arg por 99 para reconocer dónde se crea. Saqué lógica de threads.
+    global fileName, preconditionsThreads, statesThreads, extraConditionsThreads, contractName
+    final_directory = create_directory(99)
+    fileNameTemp = create_file(99, final_directory, fileName, contractName)
+    body, functionCombinations = get_valid_preconditions_output(preconditionsThreads, extraConditionsThreads)
+    write_file(fileNameTemp, body, contractName)
+    # if not verbose:
+    #     delete_directory(final_directory)
+    return fileNameTemp, functionCombinations, final_directory
+
+
+def mock_res():
+    pre = ['!((max_block > blockNumber)) && !((max_block < blockNumber && goal <= balance)) && !((max_block < blockNumber && !funded && goal > balance)) && true', '(max_block > blockNumber) && !((max_block < blockNumber && goal <= balance)) && !((max_block < blockNumber && !funded && goal > balance)) && true', '!((max_block > blockNumber)) && (max_block < blockNumber && goal <= balance) && !((max_block < blockNumber && !funded && goal > balance)) && true', '!((max_block > blockNumber)) && !((max_block < blockNumber && goal <= balance)) && (max_block < blockNumber && !funded && goal > balance) && true']
+    sta = [[0, 0, 0, 4], [1, 0, 0, 4], [0, 2, 0, 4], [0, 0, 3, 4]]
+    ext = ['true', 'true', 'true', 'true']
+    # [[2, 0, 1], [3, 3, 3], [1, 1, 3], [1, 1, 0], [0, 3, 3], [1, 0, 3], [0, 2, 3], [2, 2, 3], [0, 0, 3], [3, 3, 2]]
+    return pre, sta, ext
+
 
 def main():
     global config, dot, preconditionsThreads, statesThreads, states, preconditions, extraConditionsThreads, extraConditions
@@ -606,10 +618,38 @@ def main():
     prepare_variables(mode, funcionesNumeros)
 
     if (echidna):
+        if mode == Mode.epa:
+            print(f"Estamos en modo epa")
+            # tenemos que hacer reduceCombinations().
+            contrato_creado, function_combinations, dir = reduceCombinations2()  # se crea un archivo con 8 "tests"
+            print(f"Se creó el contrato {contrato_creado} \n "
+                  f"Y cuenta con las siguientes funciones: {function_combinations}")
+            # corremos echidna para el contrato creado.
+            failed_tests = EchidnaRunner(dir).run_contract(contrato_creado)
+            print(failed_tests)
+            preconditionsTemp = []
+            statesTemp = []
+            extraConditionsTemp = []
+            for function in failed_tests:
+                indexPreconditionRequire = function[0]
+                print_combination(indexPreconditionRequire, statesThreads)
+                preconditionsTemp.append(preconditionsThreads[indexPreconditionRequire])
+                statesTemp.append(statesThreads[indexPreconditionRequire])
+                extraConditionsTemp.append(extraConditionsThreads[indexPreconditionRequire])
+            preconditionsThreads = preconditionsTemp
+            statesThreads = statesTemp
+            extraConditionsThreads = extraConditionsTemp
+            print("---"), print(preconditionsThreads), print(statesThreads), print(extraConditionsThreads)
+            # ahora toca validCombinations
+            contrato = ContractCreator(dir).create_transitions_contract(preconditionsThreads, statesThreads, preconditionsThreads, extraConditionsThreads, 0)
+            res = EchidnaRunner(dir).run_contract(contrato)
+            GraphManager('_prueba_epa').build_graph(res, [])
+            print("-- prueba --"), print(res)
+            return
         start = time.time()
         dir = create_directory('_echidna')
-        tr_failed = ThreadsEchidna(dir).create_and_run_transitions_threads()
-        init_failed = ThreadsEchidna(dir).create_and_run_init_threads()
+        tr_failed = ThreadsEchidna(dir, len(preconditions)).create_and_run_transitions_threads()
+        init_failed = ThreadsEchidna(dir, len(config.constructors)).create_and_run_init_threads()
         Printer().print_results(tr_failed, init_failed)
         GraphManager("echidna").build_graph(tr_failed, init_failed)
         end = time.time()
@@ -716,14 +756,14 @@ if __name__ == "__main__":
     statesMode = False
     echidna = False
     configFile = sys.argv[1]
-    print(f"Config file: {configFile}")
-    print(f"Flag: {sys.argv[2]}")
+    # print(f"Config file: {configFile}")
+    # print(f"Flags: {sys.argv[2]}")
     verbose = False
     time_opt = False
 
     if (len(sys.argv) > 2) and sys.argv[2] == "-echidna":
         echidna = True
-        mode = Mode.states
+        mode = Mode.epa if len(sys.argv) > 3 and sys.argv[3] == '-e' else Mode.states
         config = __import__(configFile, level=0)
         main()
 
@@ -741,9 +781,8 @@ if __name__ == "__main__":
             epaMode = True
 
     if epaMode:
-        mode = Mode.epa
-        print(configFile)
         config = __import__(configFile, level=0)
+        mode = Mode.epa
         main()
 
     if statesMode:
