@@ -3,44 +3,43 @@ import subprocess
 import inspect
 import os
 import shutil
-import numpy  as np
+import numpy as np
 import graphviz
 from threading import Thread
 from time import sleep
 from enum import Enum
 import sys
+
 sys.path.append('../')
-from file_manager import create_directory, delete_directory, create_file, write_file, write_file_from_string, read_from_file
+from file_manager import create_directory, delete_directory, create_file, write_file, write_file_from_string, \
+    read_from_file
+
 
 class EchidnaRunner:
-    def __init__(self, preconditions, states, extraConditions, dir):
-        self.preconditions = preconditions
-        self.states = states
-        self.extraConditions = extraConditions
-        self.preconditionsThreads = preconditions
-        self.statesThreads = states
-        self.extraConditionsThreads = extraConditions
-        self.directory = dir
+    def __init__(self, directory):
+        self.directory = directory
 
-    def run_all_contracts(self, transitions_contract, init_contract):
-        result_init = ""
+    def run_all_contracts(self, transitions_contract, init_contract=None):
         result = self.set_up_and_run(0, transitions_contract, contractName)
-        #result = read_from_file("resultados_echidna_False.txt")
+        # result = read_from_file("resultados_echidna_False.txt")
         transition_tests_that_failed = self.process_output(result)
-        for i in range(len(config.constructors)):
-            unres = self.set_up_and_run(i, init_contract, contractName, True)
-            result_init += unres
-        #result_init = read_from_file("resultados_echidna_True.txt")
-        init_tests_that_failed = self.process_output(result_init)
+        init_tests_that_failed = []  # después borrar y sacar el if
+        if init_contract:
+            result_init = ""
+            for i in range(len(config.constructors)):
+                unres = self.set_up_and_run(i, init_contract, contractName, True)
+                result_init += unres
+            # result_init = read_from_file("resultados_echidna_True.txt")
+            init_tests_that_failed = self.process_output(result_init)
         return transition_tests_that_failed, init_tests_that_failed
 
     def set_up_and_run(self, index, fileNameTemp, contractName, init=False):
         toolComm = self.create_echidna_command(fileNameTemp, contractName, self.directory)
-        # acá deberíamos 1: generalizarla para cualquier contrato, 2: hacer que se puedan ingresar distintos parámetros al constructor.
+        # acá deberíamos 1: generalizarla para cualquier contrato, 2: hacer que se puedan ingresar distintos parámetros al constructor.
         self.hardcode_constructor_parameters(fileNameTemp, index)
         if init:
             self.transform_contract_for_init(fileNameTemp)
-        print(f"El comando a correr es {toolComm} en el directorio {self.directory}") 
+        print(f"El comando a correr es {toolComm} en el directorio {self.directory}")
         result = self.run_echidna_command(toolComm)
         write_file_from_string(f"resultados_echidna_{init}.txt", result)
         return result
@@ -49,7 +48,7 @@ class EchidnaRunner:
         tests_that_failed = []
         for line in tool_result.splitlines():
             if "failed!" in line:
-                failed_test = line.split()[0][2:-3] # vcIxJxK(): -> IxJxK.
+                failed_test = line.split()[0][2:-3]  # vcIxJxK(): -> IxJxK.
                 i, j, k = get_params_from_function_name(failed_test)
                 tests_that_failed.append([i, j, k])
         return tests_that_failed
@@ -61,10 +60,11 @@ class EchidnaRunner:
                 print(f"{output}  {output_combination(test[0], states)}")
         else:
             for test in tests_that_failed:
-                print_output(test[0], test[2], test[1], states, states) #print_output recibe como segundo param la función y tercero el assert.
+                print_output(test[0], test[2], test[1], states,
+                             states)  # print_output recibe como segundo param la función y tercero el assert.
 
     def run_echidna_command(self, toolComm):
-        result = subprocess.run([toolComm, ""], shell = True, cwd=self.directory, stdout=subprocess.PIPE)
+        result = subprocess.run([toolComm, ""], shell=True, cwd=self.directory, stdout=subprocess.PIPE)
         return result.stdout.decode('utf-8')
 
     # Esta función está implementada específicamente para crowdfunding, generalizarla. 
@@ -78,46 +78,50 @@ class EchidnaRunner:
         constructor_lines = new_constructor_lines
 
         # Buscamos la línea en la que comienza el constructor y en la que termina, para actualizar ese rango.
-        constructor_start_line = next((index for index, line in enumerate(inputfile) if line.strip().startswith('constructor(')), None)
-        constructor_end_line = next((index for index, line in enumerate(inputfile[constructor_start_line:]) if line.strip() == '}'), None) + constructor_start_line + 1
+        constructor_start_line = next(
+            (index for index, line in enumerate(inputfile) if line.strip().startswith('constructor(')), None)
+        constructor_end_line = next(
+            (index for index, line in enumerate(inputfile[constructor_start_line:]) if line.strip() == '}'),
+            None) + constructor_start_line + 1
 
         inputfile[constructor_start_line:constructor_end_line] = list(map(lambda x: x + "\n", constructor_lines))
 
         write_file_from_string(fileNameTemp, inputfile)
-        return 
+        return
 
     def build_constructor_from_config(self, index):
         return ["constructor() public {"] + config.constructors[index] + ["}"]
 
     def get_constructor_from_file(self, inputfile):
-        #inputfile es una lista de strings. tiene uno por cada línea del contrato.
+        # inputfile es una lista de strings. tiene uno por cada línea del contrato.
         res = ""
         for i in range(len(inputfile)):
             line = inputfile[i]
             if ('constructor(' in line):
                 while True:
                     res += line
-                    if ('}' in line): # Si tenemos un constructor que haga algo adentro con llaves {}, cambiar esto.
+                    if ('}' in line):  # Si tenemos un constructor que haga algo adentro con llaves {}, cambiar esto.
                         return inspect.cleandoc(res).replace('  ', '')
                     i += 1
                     line = inputfile[i]
         raise NameError('No se encontró el constructor del contrato.')
 
     def transform_contract_for_init(self, fileNameTemp):
-        new_contract_body = self.remove_everything_after_constructor(fileNameTemp)   
+        new_contract_body = self.remove_everything_after_constructor(fileNameTemp)
         write_file_from_string(fileNameTemp, new_contract_body)
-    
+
     def remove_everything_after_constructor(self, fileNameTemp):
         lines = open(fileNameTemp, 'r').readlines()
-        constructor_line = next((index for index, line in enumerate(lines) if line.strip().startswith('constructor(')), None)
+        constructor_line = next((index for index, line in enumerate(lines) if line.strip().startswith('constructor(')),
+                                None)
         end_line = next((index for index, line in enumerate(lines[constructor_line:]) if line.strip() == '}'), None)
         lines = lines[:constructor_line + end_line + 1]
         lines.append("}")
         return lines
 
     def create_echidna_command(self, fileNameTemp, contractName, directory):
-        config_file = self.create_config_file(directory, 50000, 100, 0) # parámetros de crowdfunding
-        commandResult =  f"echidna {fileNameTemp} --contract {contractName} --config {config_file}"
+        config_file = self.create_config_file(directory, 50000, 100, 0)  # parámetros de crowdfunding
+        commandResult = f"echidna {fileNameTemp} --contract {contractName} --config {config_file}"
         return commandResult
 
     def create_config_file(self, directory, testLimit, maxValue, balanceContract, shrinkLimit=0):
@@ -136,28 +140,34 @@ class EchidnaRunner:
         print("----------- Se creó una configFile para esos tests -------------------")
         return new_file_name
 
+
 class ContractProcessor:
-    def __init__(self, states, preconditions, extraConditions, directory):
+    def __init__(self, preconditions_require, states, preconditions, extraConditions, directory, thread_id):
+        self.preconditions_require = preconditions_require
         self.preconditions = preconditions
         self.states = states
         self.extraConditions = extraConditions
         self.directory = directory
+        self.thread_id = thread_id
 
     def create_all_contracts(self):
         return self.create_transitions_contract(), self.create_init_contract()
 
     def create_transitions_contract(self):
-        fileNameTemp = create_file("_transitions", self.directory, fileName, contractName)
-        print(f"Se creó el archivo {fileNameTemp}")
-        body, fuctionCombinations = get_valid_transitions_output(self.preconditions, self.preconditions, self.extraConditions, self.extraConditions, functions, self.states)
+        fileNameTemp = create_file(f"_transitions_{self.thread_id}", self.directory, fileName, contractName)
+        body, fuctionCombinations = get_valid_transitions_output(self.preconditions_require, self.preconditions,
+                                                                 self.extraConditions, self.extraConditions, functions,
+                                                                 self.states)
+        print(f"functionCombinations: {fuctionCombinations}")
         write_file(fileNameTemp, body, contractName)
         return fileNameTemp
 
     def create_init_contract(self):
-        fileNameTemp = create_file("init", self.directory, fileName, contractName)
+        fileNameTemp = create_file(f"_init_{self.thread_id}", self.directory, fileName, contractName)
         body, fuctionCombinations = get_init_output(preconditions, extraConditions)
         write_file(fileNameTemp, body, contractName)
-        return fileNameTemp    
+        return fileNameTemp
+
 
 class Printer:
     def print_results(self, transition_tests_that_failed, init_tests_that_failed):
@@ -171,7 +181,9 @@ class Printer:
                 print(f"{output}  {output_combination(test[0], states)}")
         else:
             for test in tests_that_failed:
-                print_output(test[0], test[2], test[1], states, states) #print_output recibe como segundo param la función y tercero el assert.
+                print_output(test[0], test[2], test[1], states,
+                             states)  # print_output recibe como segundo param la función y tercero el assert.
+
 
 class GraphManager:
     def __init__(self, nombre):
@@ -192,13 +204,15 @@ class GraphManager:
         for test in tests_that_failed:
             add_node_to_graph(test[0], test[1], test[2], states, states, self.graph)
 
-    def add_init_node_to_graph(self, init_test): # ian
+    def add_init_node_to_graph(self, init_test):  # ian
         global states
         print(f"El test a agregar al grafo de init es: {init_test}")
         indexPreconditionAssert = init_test[0]
         self.graph.node("init", "init")
-        self.graph.node(combinationToString(states[indexPreconditionAssert]), output_combination(indexPreconditionAssert, states))
-        self.graph.edge("init",combinationToString(states[indexPreconditionAssert]) , "constructor")
+        self.graph.node(combinationToString(states[indexPreconditionAssert]),
+                        output_combination(indexPreconditionAssert, states))
+        self.graph.edge("init", combinationToString(states[indexPreconditionAssert]), "constructor")
+
 
 def getCombinations(funcionesNumeros):
     global statePreconditions
@@ -222,14 +236,14 @@ def getCombinations(funcionesNumeros):
 
     for partialResult in results:
         paddingResult = []
-        paddingResult = [0 for i in range(count)] 
+        paddingResult = [0 for i in range(count)]
         for i in range(count):
-            if len(partialResult) > i and partialResult[i] >=0:
+            if len(partialResult) > i and partialResult[i] >= 0:
                 indice = partialResult[i]
-                paddingResult[indice-1] = indice
+                paddingResult[indice - 1] = indice
         statesTemp.append(paddingResult)
     statesTemp2 = []
-    
+
     for combination in statesTemp:
         isCorrect = True
         for iNumber, number in enumerate(combination):
@@ -238,13 +252,14 @@ def getCombinations(funcionesNumeros):
                     if number == 0:
                         if statePreconditions[iNumber] == x and combination[idx] != 0:
                             isCorrect = False
-                    elif statePreconditions[iNumber] == x and not((idx+1) in combination):
+                    elif statePreconditions[iNumber] == x and not ((idx + 1) in combination):
                         isCorrect = False
-        
+
         if isCorrect:
             statesTemp2.append(combination)
-            
+
     return statesTemp2
+
 
 def getPreconditions(funcionesNumeros):
     global states, statePreconditions
@@ -255,11 +270,12 @@ def getPreconditions(funcionesNumeros):
             if precondition != "":
                 precondition += " && "
             if number in result:
-                precondition += statePreconditions[number-1]
+                precondition += statePreconditions[number - 1]
             else:
-                precondition += "!(" + statePreconditions[number-1] + ")"
+                precondition += "!(" + statePreconditions[number - 1] + ")"
         preconditions.append(precondition)
     return preconditions
+
 
 def combinationToString(combination):
     output = ""
@@ -267,42 +283,50 @@ def combinationToString(combination):
         output += str(i) + "-"
     return output
 
+
 def functionOutput(number):
     return "function vc" + number + "(" + functionVariables + ") payable public {"
 
+
 def getToolCommand(includeNumber, toolCommand, combinations, txBound):
     global contractName
-    command = toolCommand + " " 
+    command = toolCommand + " "
     command = command + "/txBound:" + str(txBound) + " "
     for indexCombination, combi in enumerate(combinations):
-        if combi != includeNumber: 
-            command += "/ignoreMethod:vc"+ combi +"@" + contractName + " "
+        if combi != includeNumber:
+            command += "/ignoreMethod:vc" + combi + "@" + contractName + " "
     return command
+
 
 def get_extra_condition_output(condition):
     extraConditionOutput = ""
     if condition != "" and condition != None:
-        extraConditionOutput = "require("+condition+");\n"
-    return extraConditionOutput 
+        extraConditionOutput = "require(" + condition + ");\n"
+    return extraConditionOutput
 
-def output_transitions_function(preconditionRequire, function, preconditionAssert, functionIndex, extraConditionPre, extraConditionPost):
+
+def output_transitions_function(preconditionRequire, function, preconditionAssert, functionIndex, extraConditionPre,
+                                extraConditionPost):
     if mode == Mode.epa:
         precondictionFunction = functionPreconditions[functionIndex]
     else:
         precondictionFunction = "true"
     extraConditionOutputPre = get_extra_condition_output(extraConditionPre)
     extraConditionOutputPost = get_extra_condition_output(extraConditionPost)
-    verisolFucntionOutput = "require("+preconditionRequire+");\nrequire("+precondictionFunction+");\n" + extraConditionOutputPre + function + "\n"  + "assert(!(" + preconditionAssert + "&& " + extraConditionPost + "));"
+    verisolFucntionOutput = "require(" + preconditionRequire + ");\nrequire(" + precondictionFunction + ");\n" + extraConditionOutputPre + function + "\n" + "assert(!(" + preconditionAssert + "&& " + extraConditionPost + "));"
     return verisolFucntionOutput
+
 
 def output_init_function(preconditionAssert, extraCondition):
     extraConditionOutput = get_extra_condition_output(extraCondition)
-    verisolFucntionOutput =  extraConditionOutput + "assert(!(" + preconditionAssert + "));"
+    verisolFucntionOutput = extraConditionOutput + "assert(!(" + preconditionAssert + "));"
     return verisolFucntionOutput
+
 
 def output_valid_state(preconditionRequire, extraCondition):
     extraConditionOutput = get_extra_condition_output(extraCondition)
-    return "require("+preconditionRequire+");\n" + extraConditionOutput + "assert(false);\n"
+    return "require(" + preconditionRequire + ");\n" + extraConditionOutput + "assert(false);\n"
+
 
 def output_combination(indexCombination, tempCombinations):
     combination = tempCombinations[indexCombination]
@@ -310,22 +334,25 @@ def output_combination(indexCombination, tempCombinations):
     for function in combination:
         if function != 0:
             if mode == Mode.epa:
-                output += functions[function-1] +"\n"
+                output += functions[function - 1] + "\n"
             else:
-                output += statesNames[function-1]
+                output += statesNames[function - 1]
 
     if output == "":
         output = "Vacio\n"
     return output
+
 
 def print_combination(indexCombination, tempCombinations):
     output = output_combination(indexCombination, tempCombinations)
     if time == False:
         print(output + "---------")
 
+
 def get_params_from_function_name(temp_function_name):
     array = temp_function_name.split('x')
     return int(array[0]), int(array[1]), int(array[2])
+
 
 def get_valid_preconditions_output(preconditions, extraConditions):
     temp_output = ""
@@ -338,7 +365,8 @@ def get_valid_preconditions_output(preconditions, extraConditions):
         temp_output += temp_function + "}\n"
     return temp_output, tempFunctionNames
 
-def get_valid_transitions_output(preconditionsThread, preconditions, extraConditionsTemp, extraConditions, functions, statesThread): 
+
+def get_valid_transitions_output(preconditionsThread, preconditions, extraConditionsTemp, extraConditions, functions, statesThread):
     global mode
     temp_output = ""
     tempFunctionNames = []
@@ -348,40 +376,45 @@ def get_valid_transitions_output(preconditionsThread, preconditions, extraCondit
                 extraConditionPre = extraConditionsTemp[indexPreconditionRequire]
                 extraConditionPost = extraConditions[indexPreconditionAssert]
                 if (indexFunction + 1) in statesThread[indexPreconditionRequire] and mode == Mode.epa:
-                    functionName = get_temp_function_name(indexPreconditionRequire, indexPreconditionAssert, indexFunction)
+                    functionName = get_temp_function_name(indexPreconditionRequire, indexPreconditionAssert,
+                                                          indexFunction)
                     tempFunctionNames.append(functionName)
                     temp_function = functionOutput(functionName) + "\n"
                     temp_function += output_transitions_function(preconditionRequire, function, preconditionAssert, indexFunction, extraConditionPre, extraConditionPost)
                     temp_output += temp_function + "}\n"
                 elif mode == Mode.states:
-                    functionName = get_temp_function_name(indexPreconditionRequire, indexPreconditionAssert, indexFunction)
+                    functionName = get_temp_function_name(preconditions.index(preconditionRequire), indexPreconditionAssert, indexFunction) # cambié esta línea.
                     tempFunctionNames.append(functionName)
                     temp_function = functionOutput(functionName) + "\n"
-                    temp_function += output_transitions_function(preconditionRequire, function, preconditionAssert, indexFunction, extraConditionPre, extraConditionPost)
+                    temp_function += output_transitions_function(preconditionRequire, function, preconditionAssert,
+                                                                 indexFunction, extraConditionPre, extraConditionPost)
                     temp_output += temp_function + "}\n"
     return temp_output, tempFunctionNames
 
-def get_init_output(preconditions, extraConditions): 
+
+def get_init_output(preconditions, extraConditions):
     temp_output = ""
     tempFunctionNames = []
     for indexPreconditionAssert, preconditionAssert in enumerate(preconditions):
-        functionName = get_temp_function_name(indexPreconditionAssert, "0" , "0")
+        functionName = get_temp_function_name(indexPreconditionAssert, "0", "0")
         tempFunctionNames.append(functionName)
         temp_function = functionOutput(functionName) + "\n"
         temp_function += output_init_function(preconditionAssert, extraConditions[indexPreconditionAssert])
         temp_output += temp_function + "}\n"
     return temp_output, tempFunctionNames
 
-def try_preconditions(tool, tempFunctionNames, final_directory, statesTemp, preconditionsTemp, extraConditionsTemp, arg): 
+
+def try_preconditions(tool, tempFunctionNames, final_directory, statesTemp, preconditionsTemp, extraConditionsTemp,
+                      arg):
     global txBound
     preconditionsTemp2 = []
     statesTemp2 = []
     extraConditionsTemp2 = []
-    
+
     for functionName in tempFunctionNames:
         if time == False:
             print(functionName + "---" + str(arg))
-        indexPreconditionRequire, _ , _ = get_params_from_function_name(functionName)
+        indexPreconditionRequire, _, _ = get_params_from_function_name(functionName)
         if try_command(tool, functionName, tempFunctionNames, final_directory, txBound):
             print_combination(indexPreconditionRequire, statesTemp)
             preconditionsTemp2.append(preconditionsTemp[indexPreconditionRequire])
@@ -389,8 +422,9 @@ def try_preconditions(tool, tempFunctionNames, final_directory, statesTemp, prec
             extraConditionsTemp2.append(extraConditionsTemp[indexPreconditionRequire])
     return preconditionsTemp2, statesTemp2, extraConditionsTemp2
 
+
 def try_transaction(tool, tempFunctionNames, final_directory, statesTemp, states, arg):
-    global txBound 
+    global txBound
     for functionName in tempFunctionNames:
         if time == False:
             print(functionName + "---" + str(arg))
@@ -399,38 +433,49 @@ def try_transaction(tool, tempFunctionNames, final_directory, statesTemp, states
             add_node_to_graph(indexPreconditionRequire, indexPreconditionAssert, indexFunction, statesTemp, states)
             print_output(indexPreconditionRequire, indexFunction, indexPreconditionAssert, statesTemp, states)
 
+
 def try_init(tool, tempFunctionNames, final_directory, states):
     global dot
     for functionName in tempFunctionNames:
         indexPreconditionAssert, _, _ = get_params_from_function_name(functionName)
         if try_command(tool, functionName, tempFunctionNames, final_directory, 1):
             dot.node("init", "init")
-            dot.node(combinationToString(states[indexPreconditionAssert]), output_combination(indexPreconditionAssert, states))
-            dot.edge("init",combinationToString(states[indexPreconditionAssert]) , "constructor")
+            dot.node(combinationToString(states[indexPreconditionAssert]),
+                     output_combination(indexPreconditionAssert, states))
+            dot.edge("init", combinationToString(states[indexPreconditionAssert]), "constructor")
+
 
 def try_command(tool, temp_function_name, tempFunctionNames, final_directory, txBound):
     global tool_output, verbose
     command = getToolCommand(temp_function_name, tool, tempFunctionNames, txBound)
     # print(command)
-    result = subprocess.run([command, ""], shell = True, cwd=final_directory, stdout=subprocess.PIPE)
-    #if verbose:
+    result = subprocess.run([command, ""], shell=True, cwd=final_directory, stdout=subprocess.PIPE)
+    # if verbose:
     #    print(result.stdout.decode('utf-8'))
     return tool_output in str(result.stdout.decode('utf-8'))
+
 
 def get_temp_function_name(indexPrecondtion, indexAssert, indexFunction):
     return str(indexPrecondtion) + "x" + str(indexAssert) + "x" + str(indexFunction)
 
+
 def print_output(indexPreconditionRequire, indexFunction, indexPreconditionAssert, combinations, fullCombination):
     print(indexFunction)
-    output ="Desde el estado: "+ output_combination(indexPreconditionRequire, combinations) + "\nHaciendo: " + functions[indexFunction] + "\nLlegas al estado: " + output_combination(indexPreconditionAssert, fullCombination) + "\n---------"
-    #if time == False:
+    output = "Desde el estado: " + output_combination(indexPreconditionRequire, combinations) + "\nHaciendo: " + \
+             functions[indexFunction] + "\nLlegas al estado: " + output_combination(indexPreconditionAssert,
+                                                                                    fullCombination) + "\n---------"
+    # if time == False:
     print(output)
+
 
 def add_node_to_graph(indexPreconditionRequire, indexPreconditionAssert, indexFunction, statesTemp, states, dot):
     global functions
-    dot.node(combinationToString(statesTemp[indexPreconditionRequire]), output_combination(indexPreconditionRequire, statesTemp))
+    dot.node(combinationToString(statesTemp[indexPreconditionRequire]),
+             output_combination(indexPreconditionRequire, statesTemp))
     dot.node(combinationToString(states[indexPreconditionAssert]), output_combination(indexPreconditionAssert, states))
-    dot.edge(combinationToString(statesTemp[indexPreconditionRequire]),combinationToString(states[indexPreconditionAssert]) , label=functions[indexFunction])
+    dot.edge(combinationToString(statesTemp[indexPreconditionRequire]),
+             combinationToString(states[indexPreconditionAssert]), label=functions[indexFunction])
+
 
 def reduceCombinations(arg):
     global fileName, preconditionsThreads, statesThreads, extraConditionsThreads, contractName
@@ -439,58 +484,54 @@ def reduceCombinations(arg):
     extraConditionsTemp = extraConditionsThreads[arg]
     final_directory = create_directory(arg)
     fileNameTemp = create_file(arg, final_directory, fileName, contractName)
-    body,fuctionCombinations = get_valid_preconditions_output(preconditionsTemp, extraConditionsTemp)
+    body, fuctionCombinations = get_valid_preconditions_output(preconditionsTemp, extraConditionsTemp)
     write_file(fileNameTemp, body, contractName)
     tool = "Verisol " + fileNameTemp + " " + contractName
-    preconditionsTemp2, statesTemp2, extraConditionsTemp2 = try_preconditions(tool, fuctionCombinations, final_directory, statesTemp, preconditionsTemp, extraConditionsTemp , arg)
+    preconditionsTemp2, statesTemp2, extraConditionsTemp2 = try_preconditions(tool, fuctionCombinations,
+                                                                              final_directory, statesTemp,
+                                                                              preconditionsTemp, extraConditionsTemp,
+                                                                              arg)
     preconditionsThreads[arg] = preconditionsTemp2
     statesThreads[arg] = statesTemp2
     extraConditionsThreads[arg] = extraConditionsTemp
     if not verbose:
         delete_directory(final_directory)
 
-def validCombinations(arg, tool="verisol"):
+
+def validCombinations(arg):  # arg = [i]
     global preconditionsThreads, statesThreads, extraConditionsThreads, extraConditions, preconditions, states, contractName, fileName, dot
-    preconditionsTemp = preconditionsThreads
-    statesTemp = statesThreads
-    extraConditionsTemp = extraConditionsThreads
     final_directory = create_directory(arg)
     fileNameTemp = create_file(arg, final_directory, fileName, contractName)
-
-    body, fuctionCombinations = get_valid_transitions_output(preconditionsTemp, preconditions, extraConditionsTemp, extraConditions, functions, statesTemp)
-    write_file(fileNameTemp, body, contractName, echidna_runner)
-    print("----------- Se creó un archivo temporal con todos los tests ----------")
-    if (tool == 'echidna'):
-        result = echidna_runner.set_up_and_run(fileNameTemp, contractName, final_directory)
-        return
-    else:
-        toolComm = "Verisol " + fileNameTemp + " " + contractName
-    try_transaction(toolComm, fuctionCombinations, final_directory, statesTemp, states, arg)
+    body, fuctionCombinations = get_valid_transitions_output(preconditionsThreads[arg], preconditions,
+                                                             extraConditionsThreads[arg], extraConditions, functions,
+                                                             statesThreads[arg])
+    write_file(fileNameTemp, body, contractName)
+    tool = "Verisol " + fileNameTemp + " " + contractName
+    try_transaction(tool, fuctionCombinations, final_directory, statesThreads[arg], states, arg)
     if not verbose:
         delete_directory(final_directory)
 
-def validInit(arg, tool="verisol"):
+
+def validInit(arg):
     global preconditionsThreads, extraConditions, preconditions, states, contractName, fileName, dot
     final_directory = create_directory(arg)
     fileNameTemp = create_file(arg, final_directory, fileName, contractName)
 
     body, fuctionCombinations = get_init_output(preconditions, extraConditions)
-    write_file(fileNameTemp, body, contractName, echidna_runner)
-    if (tool == 'echidna'):
-        print("Estoy en validInit() con echidna")
-        result = echidna_runner.set_up_and_run(fileNameTemp, contractName, final_directory, True)
-        return
-    else:
-        toolComm = "Verisol " + fileNameTemp + " " + contractName
-    try_init(toolComm, fuctionCombinations, final_directory, states)
+    write_file(fileNameTemp, body, contractName)
+
+    tool = "Verisol " + fileNameTemp + " " + contractName
+    try_init(tool, fuctionCombinations, final_directory, states)
     delete_directory(final_directory)
+
 
 class Mode(Enum):
     epa = "epa"
     states = "states"
 
+
 def make_global_variables(config):
-    global a, fileName, preconditions, dot, statesNames, functions, statePreconditions, contractName, functionVariables, functionPreconditions, txBound, statePreconditionsModeState, statesModeState
+    global fileName, preconditions, dot, statesNames, functions, statePreconditions, contractName, functionVariables, functionPreconditions, txBound, statePreconditionsModeState, statesModeState
     fileName = "Contracts/" + config.fileName
     print(config.fileName)
     functions = config.functions
@@ -505,16 +546,17 @@ def make_global_variables(config):
     statesModeState = config.statesModeState
     print(config)
 
-def prepare_variables(mode, funcionesNumeros):
+
+def prepare_variables(mode, funcionesNumeros):  # ian
     global states, preconditions, extraConditions, statesThreads, preconditionsThreads, extraConditionsThreads
-    if mode == Mode.epa :
+    if mode == Mode.epa:
         states = getCombinations(funcionesNumeros)
         preconditions = getPreconditions(funcionesNumeros)
         try:
             extraConditions = [config.epaExtraConditions for i in range(len(states))]
         except:
             extraConditions = ["true" for i in range(len(states))]
-    else :
+    else:
         preconditions = statePreconditionsModeState
         states = statesModeState
         try:
@@ -525,21 +567,43 @@ def prepare_variables(mode, funcionesNumeros):
     statesThreads = states
     extraConditionsThreads = extraConditions
 
+
+def each_thread_do(preconditions_require, states, preconditions, extraConditions, dir, thread_id, results):
+    tr_contract = ContractProcessor(preconditions_require, states, preconditions, extraConditions, dir, thread_id).create_transitions_contract()
+    tr_failed, init_failed = EchidnaRunner(dir).run_all_contracts(tr_contract)
+    results[thread_id] = (tr_failed, init_failed)
+
+
+def join_results(results):
+    tr_failed = [elem for result in results for elem in result[0]]
+    init_failed = [elem for result in results for elem in result[1]]
+    return tr_failed, init_failed
+
+
+
 def main():
-    global config, dot, preconditionsThreads, statesThreads, states, preconditions, extraConditionsThreads, extraConditions, echidna_runner
+    global config, dot, preconditionsThreads, statesThreads, states, preconditions, extraConditionsThreads, extraConditions
     make_global_variables(config)
 
     funcionesNumeros = list(range(1, len(functions) + 1))
-    
+
     extraConditions = []
     prepare_variables(mode, funcionesNumeros)
 
     if (echidna):
         dir = create_directory('_echidna')
-        tr_contracts, init_contracts = ContractProcessor(states, preconditions, extraConditions, dir).create_all_contracts()
-        tr_failed, init_failed = EchidnaRunner(preconditions, states, extraConditions, dir).run_all_contracts(tr_contracts, init_contracts)
+        preconditions_require = np.array_split(preconditions, len(preconditions))
+        results = [None] * len(preconditions_require)
+        threads = [Thread(target=each_thread_do, args=(preconditions_require[i], states, preconditions, extraConditions, dir, i, results)) for i in range(len(preconditions))]
+        for thread in threads:
+            thread.start()
+            sleep(2)
+        for thread in threads:
+            thread.join()
+        tr_failed, init_failed = join_results(results)
         Printer().print_results(tr_failed, init_failed)
-        GraphManager("echidna").build_graph(tr_failed, init_failed)        
+        print(f"- Init states found: {init_failed} (count: {len(init_failed)}) \n - Transitions found: {tr_failed} (count: {len(tr_failed)})")
+        GraphManager("echidna").build_graph(tr_failed, init_failed)
         return
 
     threadCount = 10
@@ -559,18 +623,18 @@ def main():
         print("Length")
         print(len(preconditions))
 
-    if mode == Mode.epa :
+    if mode == Mode.epa:
         for i in range(threadCount):
-            thread = Thread(target = reduceCombinations, args = [i])
+            thread = Thread(target=reduceCombinations, args=[i])
             thread.start()
             threads.append(thread)
 
         for thread in threads:
             thread.join()
 
-    preconditionsThreads = [x for x in preconditionsThreads if x != []]
-    statesThreads = [x for x in statesThreads if x != []]
-    extraConditionsThreads = [x for x in extraConditionsThreads if x != []]
+    preconditionsThreads = [x for x in preconditionsThreads if x.size != 0]
+    statesThreads = [x for x in statesThreads if x.size != 0]
+    extraConditionsThreads = [x for x in extraConditionsThreads if x.size != 0]
 
     preconditionsThreads = np.concatenate(preconditionsThreads)
     statesThreads = np.concatenate(statesThreads)
@@ -579,6 +643,7 @@ def main():
     states = statesThreads
     preconditions = preconditionsThreads
     extraConditions = extraConditionsThreads
+    # Acá vuelven a quedar exactamente a como estaban en el config
     realThreadCount = threadCount if len(preconditionsThreads) > threadCount else len(preconditionsThreads)
 
     threads = []
@@ -592,7 +657,7 @@ def main():
         if time == False:
             print("MAYOR A 200")
         divideCount = len(preconditionsThreads)
-        divideThreads = int(divideCount/threadCount)
+        divideThreads = int(divideCount / threadCount)
         moduleThreadsConut = divideCount % threadCount
 
     preconditionsThreads = np.array_split(preconditionsThreads, divideCount)
@@ -602,26 +667,26 @@ def main():
     for y in range(divideThreads):
         threads = []
         for i in range(realThreadCount):
-            thread = Thread(target = validCombinations, args = [i + y * threadCount])
+            thread = Thread(target=validCombinations, args=[i + y * threadCount])
             thread.start()
             threads.append(thread)
 
         for thread in threads:
             thread.join()
     threads = []
-    
+
     for index in range(moduleThreadsConut):
-        thread = Thread(target = validCombinations, args = [threadCount * divideThreads + index])
+        thread = Thread(target=validCombinations, args=[threadCount * divideThreads + index])
         thread.start()
         threads.append(thread)
-    
-    thread = Thread(target = validInit, args = [len(preconditionsThreads)])
+
+    thread = Thread(target=validInit, args=[len(preconditionsThreads)])
     thread.start()
     threads.append(thread)
     for thread in threads:
         thread.join()
     print("ENDED")
-    tempFileName = configFile.replace('Config','')
+    tempFileName = configFile.replace('Config', '')
     dot.render("graph/" + tempFileName + "_" + str(mode))
 
 
@@ -643,9 +708,9 @@ if __name__ == "__main__":
     print(f"Flag: {sys.argv[2]}")
     verbose = False
     time = False
-    
+
     if (len(sys.argv) > 2) and sys.argv[2] == "-echidna":
-        echidna = True 
+        echidna = True
         mode = Mode.states
         config = __import__(configFile, level=0)
         main()
@@ -662,7 +727,7 @@ if __name__ == "__main__":
         if len(sys.argv) > 3 and sys.argv[3] == "-a":
             statesMode = True
             epaMode = True
-    
+
     if epaMode:
         mode = Mode.epa
         print(configFile)
@@ -673,4 +738,3 @@ if __name__ == "__main__":
         config = __import__(configFile, level=0)
         mode = Mode.states
         main()
-

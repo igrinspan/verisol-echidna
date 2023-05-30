@@ -1,779 +1,142 @@
-[2023-05-25 19:45:29.81] Compiling /Users/iangrinspan/Documents/1C2023/Beca/verisol-echidna/verisol-test-main/output_echidna/OutputTemp_transitions.sol... Done! (9.045406s)
-Analyzing contract: /Users/iangrinspan/Documents/1C2023/Beca/verisol-echidna/verisol-test-main/output_echidna/OutputTemp_transitions.sol:Crowdfunding
-[2023-05-25 19:45:39.44] Running slither on /Users/iangrinspan/Documents/1C2023/Beca/verisol-echidna/verisol-test-main/output_echidna/OutputTemp_transitions.sol... Done! (15.40321s)
-[2023-05-25 19:45:57.89] [status] tests: 5/106, values: [], fuzzing: 1083/50000, cov: 11537, corpus: 12
-[2023-05-25 19:46:00.91] [status] tests: 5/106, values: [], fuzzing: 2194/50000, cov: 12003, corpus: 19
-[2023-05-25 19:46:03.94] [status] tests: 6/106, values: [], fuzzing: 3406/50000, cov: 12281, corpus: 22
-[2023-05-25 19:46:06.96] [status] tests: 6/106, values: [], fuzzing: 4600/50000, cov: 12281, corpus: 22
-[2023-05-25 19:46:10.03] [status] tests: 6/106, values: [], fuzzing: 5654/50000, cov: 12326, corpus: 23
-[2023-05-25 19:46:13.04] [status] tests: 6/106, values: [], fuzzing: 6397/50000, cov: 12375, corpus: 24
-[2023-05-25 19:46:16.05] [status] tests: 6/106, values: [], fuzzing: 7503/50000, cov: 12464, corpus: 26
-[2023-05-25 19:46:19.06] [status] tests: 7/106, values: [], fuzzing: 8765/50000, cov: 12558, corpus: 27
-[2023-05-25 19:46:22.08] [status] tests: 7/106, values: [], fuzzing: 9863/50000, cov: 12653, corpus: 28
-[2023-05-25 19:46:25.10] [status] tests: 7/106, values: [], fuzzing: 11018/50000, cov: 12653, corpus: 28
-[2023-05-25 19:46:28.12] [status] tests: 8/106, values: [], fuzzing: 12142/50000, cov: 12656, corpus: 29
-[2023-05-25 19:46:31.13] [status] tests: 8/106, values: [], fuzzing: 13253/50000, cov: 12659, corpus: 30
-[2023-05-25 19:46:34.17] [status] tests: 8/106, values: [], fuzzing: 14364/50000, cov: 12659, corpus: 30
-[2023-05-25 19:46:37.19] [status] tests: 8/106, values: [], fuzzing: 15475/50000, cov: 12659, corpus: 30
-[2023-05-25 19:46:40.22] [status] tests: 8/106, values: [], fuzzing: 16568/50000, cov: 12659, corpus: 30
-[2023-05-25 19:46:43.25] [status] tests: 8/106, values: [], fuzzing: 17777/50000, cov: 12659, corpus: 30
-[2023-05-25 19:46:46.27] [status] tests: 8/106, values: [], fuzzing: 18888/50000, cov: 12743, corpus: 31
-[2023-05-25 19:46:49.30] [status] tests: 8/106, values: [], fuzzing: 19983/50000, cov: 12743, corpus: 31
-[2023-05-25 19:46:52.32] [status] tests: 9/106, values: [], fuzzing: 21197/50000, cov: 12795, corpus: 33
-[2023-05-25 19:46:55.33] [status] tests: 10/106, values: [], fuzzing: 22369/50000, cov: 13340, corpus: 35
-[2023-05-25 19:46:58.36] [status] tests: 11/106, values: [], fuzzing: 23567/50000, cov: 13450, corpus: 37
-[2023-05-25 19:47:01.38] [status] tests: 11/106, values: [], fuzzing: 24716/50000, cov: 13658, corpus: 39
-[2023-05-25 19:47:04.39] [status] tests: 11/106, values: [], fuzzing: 25827/50000, cov: 13662, corpus: 40
-[2023-05-25 19:47:07.41] [status] tests: 11/106, values: [], fuzzing: 27039/50000, cov: 13719, corpus: 42
-[2023-05-25 19:47:10.45] [status] tests: 11/106, values: [], fuzzing: 28256/50000, cov: 13726, corpus: 44
-[2023-05-25 19:47:13.47] [status] tests: 11/106, values: [], fuzzing: 29421/50000, cov: 13872, corpus: 47
-[2023-05-25 19:47:16.49] [status] tests: 11/106, values: [], fuzzing: 30532/50000, cov: 13872, corpus: 47
-[2023-05-25 19:47:19.50] [status] tests: 11/106, values: [], fuzzing: 31744/50000, cov: 13872, corpus: 47
-[2023-05-25 19:47:22.53] [status] tests: 11/106, values: [], fuzzing: 32912/50000, cov: 13922, corpus: 48
-[2023-05-25 19:47:25.56] [status] tests: 11/106, values: [], fuzzing: 34059/50000, cov: 13922, corpus: 48
-[2023-05-25 19:47:28.59] [status] tests: 11/106, values: [], fuzzing: 35170/50000, cov: 13922, corpus: 48
-[2023-05-25 19:47:31.61] [status] tests: 11/106, values: [], fuzzing: 36382/50000, cov: 13922, corpus: 48
-[2023-05-25 19:47:34.63] [status] tests: 11/106, values: [], fuzzing: 37577/50000, cov: 13922, corpus: 48
-[2023-05-25 19:47:37.65] [status] tests: 11/106, values: [], fuzzing: 38753/50000, cov: 13971, corpus: 49
-[2023-05-25 19:47:40.67] [status] tests: 11/106, values: [], fuzzing: 39864/50000, cov: 13971, corpus: 49
-[2023-05-25 19:47:43.69] [status] tests: 11/106, values: [], fuzzing: 41043/50000, cov: 13971, corpus: 49
-[2023-05-25 19:47:46.71] [status] tests: 11/106, values: [], fuzzing: 42252/50000, cov: 13971, corpus: 49
-[2023-05-25 19:47:49.73] [status] tests: 11/106, values: [], fuzzing: 43390/50000, cov: 13971, corpus: 49
-[2023-05-25 19:47:52.74] [status] tests: 11/106, values: [], fuzzing: 44501/50000, cov: 13971, corpus: 49
-[2023-05-25 19:47:55.77] [status] tests: 11/106, values: [], fuzzing: 45743/50000, cov: 13971, corpus: 49
-[2023-05-25 19:47:58.79] [status] tests: 11/106, values: [], fuzzing: 46939/50000, cov: 13971, corpus: 49
-[2023-05-25 19:48:01.80] [status] tests: 11/106, values: [], fuzzing: 48151/50000, cov: 13971, corpus: 49
-[2023-05-25 19:48:04.83] [status] tests: 11/106, values: [], fuzzing: 49262/50000, cov: 13971, corpus: 49
-vc4x0x3():  passed! 🎉
-vc1x4x2():  passed! 🎉
-vc3x2x3():  passed! 🎉
-vc3x0x1(): failed!💥  
-  Call sequence:
-    vc2x1x0() from: 0x0000000000000000000000000000000000020000 Value: 0x23 Time delay: 225906 seconds Block delay: 23408
-    vc2x2x1() from: 0x0000000000000000000000000000000000020000 Value: 0x57 Time delay: 554465 seconds Block delay: 55538
-    vc3x4x3() from: 0x0000000000000000000000000000000000030000 Value: 0x12 Time delay: 437396 seconds Block delay: 3661
-    vc1x0x0() from: 0x0000000000000000000000000000000000010000 Value: 0x2b Time delay: 65535 seconds Block delay: 1984
-    vc0x1x0() from: 0x0000000000000000000000000000000000020000 Time delay: 289607 seconds Block delay: 23275
-    vc4x3x1() from: 0x0000000000000000000000000000000000030000 Value: 0x44 Time delay: 404997 seconds Block delay: 30042
-    vc0x1x0() from: 0x0000000000000000000000000000000000010000 Value: 0x1f Time delay: 390247 seconds Block delay: 11942
-    vc3x2x1() from: 0x0000000000000000000000000000000000020000 Value: 0x2 Time delay: 136393 seconds Block delay: 127
-    vc1x2x2() from: 0x0000000000000000000000000000000000020000 Value: 0x39 Time delay: 405856 seconds Block delay: 23275
-    vc3x1x0() from: 0x0000000000000000000000000000000000030000 Value: 0x5e Time delay: 115085 seconds Block delay: 2511
-    vc3x2x0() from: 0x0000000000000000000000000000000000020000 Value: 0x2 Time delay: 358061 seconds Block delay: 1362
-    vc4x3x0() from: 0x0000000000000000000000000000000000020000 Value: 0x34 Time delay: 419861 seconds Block delay: 12155
-    vc1x2x0() from: 0x0000000000000000000000000000000000020000 Value: 0x13
-    vc2x3x3() from: 0x0000000000000000000000000000000000020000 Value: 0x2c Time delay: 136392 seconds Block delay: 42101
-    vc0x1x3() from: 0x0000000000000000000000000000000000010000 Value: 0x2f Time delay: 16802 seconds Block delay: 4896
-    vc1x0x0() from: 0x0000000000000000000000000000000000010000 Value: 0x1a Time delay: 338920 seconds Block delay: 15005
-    vc0x0x1() from: 0x0000000000000000000000000000000000010000 Value: 0x9 Time delay: 415353 seconds Block delay: 30256
-    vc1x1x0() from: 0x0000000000000000000000000000000000030000 Value: 0x4 Time delay: 390247 seconds Block delay: 1362
-    vc4x3x1() from: 0x0000000000000000000000000000000000030000 Value: 0x58 Time delay: 19029 seconds Block delay: 32147
-    vc3x4x1() from: 0x0000000000000000000000000000000000010000 Value: 0x27 Time delay: 376096 seconds Block delay: 2526
-    vc0x0x1() from: 0x0000000000000000000000000000000000010000 Value: 0x26 Time delay: 511822 seconds Block delay: 127
-    vc1x2x0() from: 0x0000000000000000000000000000000000030000 Value: 0x60 Time delay: 412373 seconds Block delay: 23722
-    vc2x1x1() from: 0x0000000000000000000000000000000000030000 Value: 0x2f Time delay: 100835 seconds Block delay: 23885
-    vc0x1x1() from: 0x0000000000000000000000000000000000020000 Value: 0x4f Time delay: 45142 seconds Block delay: 1123
-    vc2x3x1() from: 0x0000000000000000000000000000000000020000 Value: 0x33 Time delay: 38059 seconds Block delay: 38350
-    vc2x4x2() from: 0x0000000000000000000000000000000000010000 Value: 0x21 Time delay: 490448 seconds Block delay: 4462
-    vc2x3x0() from: 0x0000000000000000000000000000000000030000 Value: 0x60 Time delay: 73040 seconds Block delay: 38100
-    vc3x4x3() from: 0x0000000000000000000000000000000000010000 Value: 0x5c Time delay: 225906 seconds Block delay: 5952
-    vc3x3x3() from: 0x0000000000000000000000000000000000020000 Value: 0x56 Time delay: 521319 seconds Block delay: 1362
-    vc2x0x1() from: 0x0000000000000000000000000000000000020000 Value: 0x59 Time delay: 290003 seconds Block delay: 60054
-    vc2x0x1() from: 0x0000000000000000000000000000000000030000 Value: 0x1b Time delay: 209859 seconds Block delay: 3661
-    vc2x0x1() from: 0x0000000000000000000000000000000000030000 Value: 0x60 Time delay: 16802 seconds Block delay: 24311
-    vc3x4x0() from: 0x0000000000000000000000000000000000010000 Value: 0x5b Time delay: 255 seconds Block delay: 561
-    vc1x1x3() from: 0x0000000000000000000000000000000000030000 Value: 0x4e Time delay: 390247 seconds Block delay: 30304
-    vc4x3x1() from: 0x0000000000000000000000000000000000020000 Value: 0x3 Time delay: 486320 seconds Block delay: 38100
-    vc2x0x0() from: 0x0000000000000000000000000000000000030000 Value: 0x1f Time delay: 116188 seconds Block delay: 23885
-    vc3x3x0() from: 0x0000000000000000000000000000000000030000 Value: 0x5a Time delay: 526194 seconds Block delay: 54872
-    vc4x3x1() from: 0x0000000000000000000000000000000000010000 Value: 0x61 Time delay: 255 seconds Block delay: 127
-    vc1x3x0() from: 0x0000000000000000000000000000000000030000 Value: 0x35 Time delay: 437838 seconds Block delay: 19933
-    vc1x3x3() from: 0x0000000000000000000000000000000000020000 Value: 0x4 Time delay: 207289 seconds Block delay: 4670
-    vc0x3x3() from: 0x0000000000000000000000000000000000020000 Value: 0x3e Time delay: 303536 seconds Block delay: 49885
-    vc2x4x1() from: 0x0000000000000000000000000000000000020000 Value: 0x7 Time delay: 490448 seconds Block delay: 2512
-    vc2x0x1() from: 0x0000000000000000000000000000000000020000 Value: 0x57 Time delay: 344203 seconds Block delay: 30042
-    vc0x0x0() from: 0x0000000000000000000000000000000000030000 Value: 0xb Time delay: 439556 seconds Block delay: 53011
-    vc3x3x2() from: 0x0000000000000000000000000000000000030000 Value: 0x20 Time delay: 24867 seconds Block delay: 6721
-    GetFunds() from: 0x0000000000000000000000000000000000010000 Time delay: 33271 seconds Block delay: 42399
-    vc4x3x2() from: 0x0000000000000000000000000000000000030000 Value: 0x2f Time delay: 482712 seconds Block delay: 5019
-    vc3x0x3() from: 0x0000000000000000000000000000000000020000 Value: 0x44 Time delay: 289607 seconds Block delay: 4223
-    vc1x0x1() from: 0x0000000000000000000000000000000000030000 Value: 0x21 Time delay: 439556 seconds Block delay: 1088
-    vc2x2x0() from: 0x0000000000000000000000000000000000020000 Value: 0x17 Time delay: 401699 seconds Block delay: 23275
-    vc2x4x2() from: 0x0000000000000000000000000000000000010000 Value: 0x45 Time delay: 82672 seconds Block delay: 54809
-    vc0x2x3() from: 0x0000000000000000000000000000000000030000 Value: 0x34 Time delay: 342736 seconds Block delay: 5054
-    vc1x4x0() from: 0x0000000000000000000000000000000000020000 Value: 0x21 Time delay: 127251 seconds Block delay: 5021
-    vc2x2x1() from: 0x0000000000000000000000000000000000020000 Value: 0x5e Time delay: 448552 seconds Block delay: 46422
-    vc4x3x0() from: 0x0000000000000000000000000000000000020000 Value: 0x21 Time delay: 82670 seconds Block delay: 11942
-    vc2x3x1() from: 0x0000000000000000000000000000000000030000 Value: 0x43 Time delay: 67960 seconds Block delay: 23275
-    t() from: 0x0000000000000000000000000000000000020000 Time delay: 198598 seconds Block delay: 53562
-    vc1x4x2() from: 0x0000000000000000000000000000000000010000 Value: 0x42 Time delay: 198598 seconds Block delay: 53011
-    vc0x0x0() from: 0x0000000000000000000000000000000000010000 Value: 0x18 Time delay: 338920 seconds Block delay: 32
-    vc3x2x2() from: 0x0000000000000000000000000000000000020000 Value: 0x35 Time delay: 420078 seconds Block delay: 18429
-    vc1x0x0() from: 0x0000000000000000000000000000000000010000 Value: 0xf Time delay: 275394 seconds Block delay: 59983
-    vc0x0x1() from: 0x0000000000000000000000000000000000010000 Value: 0x37 Time delay: 33605 seconds Block delay: 5053
-    vc2x4x3() from: 0x0000000000000000000000000000000000010000 Value: 0xd Time delay: 166184 seconds Block delay: 5
-    vc2x3x3() from: 0x0000000000000000000000000000000000010000 Value: 0x12 Time delay: 434894 seconds Block delay: 23275
-    vc0x0x0() from: 0x0000000000000000000000000000000000010000 Value: 0x2f Time delay: 379552 seconds Block delay: 23403
-    vc2x4x0() from: 0x0000000000000000000000000000000000020000 Time delay: 361136 seconds Block delay: 38043
-    vc4x3x1() from: 0x0000000000000000000000000000000000010000 Value: 0x48 Time delay: 407328 seconds Block delay: 5054
-    vc3x2x1() from: 0x0000000000000000000000000000000000020000 Value: 0x3b Time delay: 3 seconds Block delay: 17145
-    vc4x2x3() from: 0x0000000000000000000000000000000000020000 Value: 0x32 Time delay: 463588 seconds Block delay: 11826
-    vc2x4x1() from: 0x0000000000000000000000000000000000030000 Time delay: 31594 seconds Block delay: 7323
-    vc4x3x1() from: 0x0000000000000000000000000000000000030000 Value: 0x45 Time delay: 49735 seconds Block delay: 5816
-    vc0x3x3() from: 0x0000000000000000000000000000000000030000 Value: 0x5c Time delay: 322371 seconds Block delay: 30011
-    vc2x1x1() from: 0x0000000000000000000000000000000000010000 Time delay: 344203 seconds Block delay: 15368
-    vc1x3x1() from: 0x0000000000000000000000000000000000010000 Value: 0x5e Time delay: 3 seconds Block delay: 19933
-    vc0x3x1() from: 0x0000000000000000000000000000000000020000 Value: 0x1c Time delay: 405856 seconds Block delay: 4
-    vc3x4x3() from: 0x0000000000000000000000000000000000010000 Value: 0x26 Time delay: 415353 seconds Block delay: 36859
-    vc1x3x2() from: 0x0000000000000000000000000000000000030000 Value: 0x22 Time delay: 195123 seconds Block delay: 50499
-    vc1x4x3() from: 0x0000000000000000000000000000000000010000 Value: 0x5a Time delay: 82670 seconds Block delay: 6234
-    vc3x1x2() from: 0x0000000000000000000000000000000000020000 Value: 0x22 Time delay: 322369 seconds Block delay: 33357
-    vc2x3x0() from: 0x0000000000000000000000000000000000010000 Value: 0x4e Time delay: 271957 seconds Block delay: 23275
-    vc2x0x0() from: 0x0000000000000000000000000000000000010000 Value: 0xf Time delay: 305572 seconds Block delay: 34272
-    vc0x0x3() from: 0x0000000000000000000000000000000000030000 Value: 0x34 Time delay: 207289 seconds Block delay: 561
-    vc4x0x2() from: 0x0000000000000000000000000000000000010000 Value: 0x4e Time delay: 405856 seconds Block delay: 15369
-    vc2x3x2() from: 0x0000000000000000000000000000000000010000 Value: 0x33 Time delay: 448552 seconds Block delay: 32
-    vc1x4x0() from: 0x0000000000000000000000000000000000020000 Value: 0x2d Time delay: 254414 seconds Block delay: 4462
-    vc3x3x2() from: 0x0000000000000000000000000000000000020000 Value: 0x45 Time delay: 33605 seconds Block delay: 53166
-    vc0x1x0() from: 0x0000000000000000000000000000000000010000 Value: 0xb Time delay: 33271 seconds Block delay: 11942
-    vc4x3x0() from: 0x0000000000000000000000000000000000030000 Value: 0x57
-    vc3x0x1() from: 0x0000000000000000000000000000000000030000 Value: 0x2d Time delay: 136394 seconds Block delay: 5021
-
-
-vc1x2x0():  passed! 🎉
-vc1x0x2():  passed! 🎉
-vc2x1x3(): failed!💥  
-  Call sequence:
-    vc0x4x0() from: 0x0000000000000000000000000000000000010000 Value: 0xb Time delay: 6 seconds Block delay: 11905
-    vc4x4x1() from: 0x0000000000000000000000000000000000010000 Value: 0x46 Time delay: 100835 seconds Block delay: 33357
-    vc4x1x2() from: 0x0000000000000000000000000000000000010000 Value: 0x4 Time delay: 478623 seconds Block delay: 42595
-    vc2x1x0() from: 0x0000000000000000000000000000000000010000 Time delay: 525476 seconds Block delay: 2512
-    vc3x3x0() from: 0x0000000000000000000000000000000000010000 Value: 0x6 Time delay: 166184 seconds Block delay: 9920
-    vc2x1x0() from: 0x0000000000000000000000000000000000010000 Value: 0x5c Time delay: 379552 seconds Block delay: 30784
-    vc3x1x3() from: 0x0000000000000000000000000000000000010000 Value: 0x5e
-    vc4x1x0() from: 0x0000000000000000000000000000000000010000 Value: 0x57 Time delay: 149311 seconds Block delay: 1943
-    vc3x0x3() from: 0x0000000000000000000000000000000000010000 Value: 0xb Time delay: 440097 seconds Block delay: 2
-    vc4x3x0() from: 0x0000000000000000000000000000000000020000 Value: 0x23
-    vc4x0x2() from: 0x0000000000000000000000000000000000010000 Value: 0x2d Time delay: 379977 seconds Block delay: 1631
-    vc0x2x3() from: 0x0000000000000000000000000000000000010000 Time delay: 437838 seconds Block delay: 7323
-    vc0x2x1() from: 0x0000000000000000000000000000000000010000 Value: 0x30
-    vc2x2x3() from: 0x0000000000000000000000000000000000010000 Value: 0x4e
-    vc4x4x0() from: 0x0000000000000000000000000000000000020000 Value: 0x19 Time delay: 20198 seconds Block delay: 17724
-    vc3x3x3() from: 0x0000000000000000000000000000000000010000 Time delay: 407328 seconds Block delay: 24594
-    vc0x4x2() from: 0x0000000000000000000000000000000000010000 Value: 0x57 Time delay: 45142 seconds Block delay: 5023
-    vc3x3x0() from: 0x0000000000000000000000000000000000010000 Value: 0x6 Time delay: 111322 seconds Block delay: 25840
-    vc1x2x0() from: 0x0000000000000000000000000000000000010000 Value: 0x43
-    vc2x1x1() from: 0x0000000000000000000000000000000000010000 Value: 0x39 Time delay: 519847 seconds Block delay: 6234
-    vc1x4x1() from: 0x0000000000000000000000000000000000010000 Value: 0x4
-    vc2x0x0() from: 0x0000000000000000000000000000000000010000 Value: 0x4
-    vc4x1x2() from: 0x0000000000000000000000000000000000010000 Value: 0x28 Time delay: 332369 seconds Block delay: 30784
-    *wait* Time delay: 198598 seconds Block delay: 42101
-    vc1x1x0() from: 0x0000000000000000000000000000000000010000 Value: 0x2f Time delay: 166184 seconds Block delay: 60267
-    vc3x0x3() from: 0x0000000000000000000000000000000000020000 Value: 0x15 Time delay: 463587 seconds Block delay: 1984
-    vc1x0x2() from: 0x0000000000000000000000000000000000020000 Value: 0x27 Time delay: 349825 seconds Block delay: 6164
-    vc1x0x2() from: 0x0000000000000000000000000000000000020000 Value: 0x14 Time delay: 322370 seconds Block delay: 6234
-    vc2x2x2() from: 0x0000000000000000000000000000000000010000 Value: 0x35
-    vc2x0x3() from: 0x0000000000000000000000000000000000020000 Value: 0x1b
-    vc1x2x1() from: 0x0000000000000000000000000000000000010000 Value: 0x21 Time delay: 127634 seconds Block delay: 55734
-    vc2x1x3() from: 0x0000000000000000000000000000000000010000 Time delay: 519847 seconds Block delay: 30784
-
-
+[2023-05-29 23:09:24.20] Compiling /Users/iangrinspan/Documents/1C2023/Beca/verisol-echidna/verisol-test-main/output_echidna/OutputTemp_transitions_0.sol... Done! (2.190334s)
+Analyzing contract: /Users/iangrinspan/Documents/1C2023/Beca/verisol-echidna/verisol-test-main/output_echidna/OutputTemp_transitions_0.sol:Crowdfunding
+[2023-05-29 23:09:26.46] Running slither on /Users/iangrinspan/Documents/1C2023/Beca/verisol-echidna/verisol-test-main/output_echidna/OutputTemp_transitions_0.sol... Done! (2.588109s)
+[2023-05-29 23:09:32.08] [status] tests: 1/26, values: [], fuzzing: 1950/50000, cov: 3302, corpus: 10
+[2023-05-29 23:09:35.08] [status] tests: 1/26, values: [], fuzzing: 3330/50000, cov: 3647, corpus: 12
+[2023-05-29 23:09:38.11] [status] tests: 1/26, values: [], fuzzing: 4776/50000, cov: 3647, corpus: 12
+[2023-05-29 23:09:41.25] [status] tests: 1/26, values: [], fuzzing: 5846/50000, cov: 3647, corpus: 12
+[2023-05-29 23:09:44.29] [status] tests: 1/26, values: [], fuzzing: 6757/50000, cov: 3647, corpus: 12
+[2023-05-29 23:09:47.33] [status] tests: 1/26, values: [], fuzzing: 7511/50000, cov: 3647, corpus: 12
+[2023-05-29 23:09:50.33] [status] tests: 1/26, values: [], fuzzing: 8521/50000, cov: 3647, corpus: 12
+[2023-05-29 23:09:53.34] [status] tests: 1/26, values: [], fuzzing: 9166/50000, cov: 3647, corpus: 13
+[2023-05-29 23:09:56.35] [status] tests: 1/26, values: [], fuzzing: 10564/50000, cov: 3647, corpus: 14
+[2023-05-29 23:09:59.35] [status] tests: 1/26, values: [], fuzzing: 11809/50000, cov: 3806, corpus: 16
+[2023-05-29 23:10:02.74] [status] tests: 1/26, values: [], fuzzing: 12718/50000, cov: 3806, corpus: 16
+[2023-05-29 23:10:05.77] [status] tests: 1/26, values: [], fuzzing: 13976/50000, cov: 3806, corpus: 16
+[2023-05-29 23:10:08.79] [status] tests: 1/26, values: [], fuzzing: 15096/50000, cov: 3806, corpus: 16
+[2023-05-29 23:10:11.81] [status] tests: 1/26, values: [], fuzzing: 16595/50000, cov: 3806, corpus: 16
+[2023-05-29 23:10:14.83] [status] tests: 1/26, values: [], fuzzing: 18161/50000, cov: 3806, corpus: 16
+[2023-05-29 23:10:17.84] [status] tests: 1/26, values: [], fuzzing: 19820/50000, cov: 3806, corpus: 16
+[2023-05-29 23:10:20.84] [status] tests: 1/26, values: [], fuzzing: 21498/50000, cov: 3806, corpus: 16
+[2023-05-29 23:10:23.86] [status] tests: 1/26, values: [], fuzzing: 23071/50000, cov: 3806, corpus: 16
+[2023-05-29 23:10:26.87] [status] tests: 1/26, values: [], fuzzing: 24621/50000, cov: 3806, corpus: 16
+[2023-05-29 23:10:29.88] [status] tests: 1/26, values: [], fuzzing: 26214/50000, cov: 3806, corpus: 16
+[2023-05-29 23:10:32.91] [status] tests: 1/26, values: [], fuzzing: 27718/50000, cov: 3806, corpus: 16
+[2023-05-29 23:10:35.91] [status] tests: 1/26, values: [], fuzzing: 29435/50000, cov: 3806, corpus: 16
+[2023-05-29 23:10:38.92] [status] tests: 1/26, values: [], fuzzing: 30920/50000, cov: 3806, corpus: 16
+[2023-05-29 23:10:41.93] [status] tests: 1/26, values: [], fuzzing: 32598/50000, cov: 3806, corpus: 16
+[2023-05-29 23:10:44.94] [status] tests: 1/26, values: [], fuzzing: 34125/50000, cov: 3806, corpus: 16
+[2023-05-29 23:10:47.95] [status] tests: 1/26, values: [], fuzzing: 35728/50000, cov: 3806, corpus: 16
+[2023-05-29 23:10:50.97] [status] tests: 1/26, values: [], fuzzing: 37260/50000, cov: 3806, corpus: 16
+[2023-05-29 23:10:53.97] [status] tests: 1/26, values: [], fuzzing: 38792/50000, cov: 3806, corpus: 16
+[2023-05-29 23:10:56.97] [status] tests: 1/26, values: [], fuzzing: 40407/50000, cov: 3806, corpus: 16
+[2023-05-29 23:10:59.98] [status] tests: 1/26, values: [], fuzzing: 41919/50000, cov: 3806, corpus: 16
+[2023-05-29 23:11:02.99] [status] tests: 1/26, values: [], fuzzing: 43629/50000, cov: 3806, corpus: 16
+[2023-05-29 23:11:06.01] [status] tests: 1/26, values: [], fuzzing: 45888/50000, cov: 3806, corpus: 16
+[2023-05-29 23:11:09.03] [status] tests: 1/26, values: [], fuzzing: 49223/50000, cov: 3806, corpus: 16
 vc0x4x2():  passed! 🎉
 vc0x0x0():  passed! 🎉
-vc4x1x0():  passed! 🎉
-vc2x2x2():  passed! 🎉
-vc3x1x1():  passed! 🎉
-vc2x4x2():  passed! 🎉
-vc3x3x0():  passed! 🎉
-vc4x1x1():  passed! 🎉
-vc2x2x0(): failed!💥  
-  Call sequence:
-    Claim() from: 0x0000000000000000000000000000000000020000 Time delay: 292304 seconds Block delay: 5020
-    vc2x1x1() from: 0x0000000000000000000000000000000000010000 Value: 0x5e Time delay: 112444 seconds Block delay: 6234
-    vc0x3x0() from: 0x0000000000000000000000000000000000030000 Value: 0x26 Time delay: 24867 seconds Block delay: 24311
-    vc0x4x1() from: 0x0000000000000000000000000000000000010000 Value: 0x5d Time delay: 38059 seconds Block delay: 30784
-    vc2x3x3() from: 0x0000000000000000000000000000000000010000 Value: 0x2 Time delay: 361136 seconds Block delay: 6721
-    vc3x3x2() from: 0x0000000000000000000000000000000000010000 Value: 0x23 Time delay: 127 seconds Block delay: 45819
-    vc2x2x1() from: 0x0000000000000000000000000000000000020000 Value: 0x5e Time delay: 440097 seconds Block delay: 5020
-    vc0x3x2() from: 0x0000000000000000000000000000000000030000 Value: 0x22 Time delay: 254414 seconds Block delay: 127
-    vc0x0x3() from: 0x0000000000000000000000000000000000020000 Time delay: 463588 seconds Block delay: 58783
-    vc4x0x0() from: 0x0000000000000000000000000000000000010000 Value: 0x57 Time delay: 225906 seconds Block delay: 53678
-    vc4x1x0() from: 0x0000000000000000000000000000000000030000 Value: 0x21 Time delay: 407328 seconds Block delay: 11905
-    vc4x1x2() from: 0x0000000000000000000000000000000000030000 Value: 0x56 Time delay: 440097 seconds Block delay: 60364
-    vc1x4x2() from: 0x0000000000000000000000000000000000020000 Value: 0x60 Time delay: 448552 seconds Block delay: 1362
-    vc0x0x1() from: 0x0000000000000000000000000000000000020000 Value: 0x53 Time delay: 207289 seconds Block delay: 1123
-    vc0x0x3() from: 0x0000000000000000000000000000000000010000 Value: 0x1b Time delay: 5 seconds Block delay: 53678
-    vc1x2x1() from: 0x0000000000000000000000000000000000020000 Value: 0x34 Time delay: 322247 seconds Block delay: 44923
-    vc4x3x3() from: 0x0000000000000000000000000000000000010000 Value: 0x35 Time delay: 112444 seconds Block delay: 49415
-    vc1x2x1() from: 0x0000000000000000000000000000000000010000 Value: 0x62 Time delay: 405856 seconds Block delay: 49269
-    vc0x4x1() from: 0x0000000000000000000000000000000000030000 Value: 0x53 Time delay: 437838 seconds Block delay: 45819
-    vc2x2x0() from: 0x0000000000000000000000000000000000030000 Value: 0x21 Time delay: 440097 seconds Block delay: 11942
-
-
-vc4x0x0():  passed! 🎉
 vc0x4x0():  passed! 🎉
-vc2x2x1():  passed! 🎉
-vc4x0x1():  passed! 🎉
 Claim():  passed! 🎉
-vc1x4x3(): failed!💥  
-  Call sequence:
-    vc4x3x0() from: 0x0000000000000000000000000000000000010000 Value: 0x63 Time delay: 207289 seconds Block delay: 32147
-    vc2x1x0() from: 0x0000000000000000000000000000000000010000 Value: 0x3 Time delay: 2 seconds Block delay: 7323
-    vc0x4x0() from: 0x0000000000000000000000000000000000020000 Value: 0x22 Time delay: 547623 seconds Block delay: 30256
-    vc3x4x2() from: 0x0000000000000000000000000000000000020000 Value: 0x52 Time delay: 322373 seconds Block delay: 8881
-    vc2x2x2() from: 0x0000000000000000000000000000000000010000 Value: 0x44 Time delay: 522178 seconds Block delay: 2511
-    vc0x1x2() from: 0x0000000000000000000000000000000000030000 Value: 0x17 Time delay: 156190 seconds Block delay: 9966
-    Claim() from: 0x0000000000000000000000000000000000030000 Time delay: 24718 seconds Block delay: 7323
-    vc0x2x0() from: 0x0000000000000000000000000000000000010000 Value: 0x1c Time delay: 275394 seconds Block delay: 5022
-    vc1x1x1() from: 0x0000000000000000000000000000000000010000 Value: 0x3 Time delay: 100835 seconds Block delay: 5023
-    vc3x2x1() from: 0x0000000000000000000000000000000000030000 Value: 0x12 Time delay: 127251 seconds Block delay: 36859
-    vc3x3x0() from: 0x0000000000000000000000000000000000020000 Value: 0x23 Time delay: 437838 seconds Block delay: 59982
-    vc3x1x2() from: 0x0000000000000000000000000000000000010000 Value: 0x21 Time delay: 3 seconds Block delay: 5
-    vc2x2x2() from: 0x0000000000000000000000000000000000030000 Value: 0x5e Time delay: 271957 seconds Block delay: 5021
-    vc0x0x0() from: 0x0000000000000000000000000000000000030000 Value: 0x2b Time delay: 512439 seconds Block delay: 5054
-    vc0x0x1() from: 0x0000000000000000000000000000000000020000 Value: 0x62 Time delay: 46466 seconds Block delay: 5019
-    vc4x4x3() from: 0x0000000000000000000000000000000000010000 Time delay: 322370 seconds Block delay: 53349
-    vc3x3x0() from: 0x0000000000000000000000000000000000030000 Value: 0x9 Time delay: 344203 seconds Block delay: 45852
-    vc4x3x2() from: 0x0000000000000000000000000000000000030000 Value: 0x2b Time delay: 117472 seconds Block delay: 11826
-    vc4x4x1() from: 0x0000000000000000000000000000000000030000 Value: 0x4b Time delay: 434894 seconds Block delay: 55538
-    vc2x2x3() from: 0x0000000000000000000000000000000000030000 Value: 0x44 Time delay: 547623 seconds Block delay: 9966
-    vc2x2x2() from: 0x0000000000000000000000000000000000010000 Value: 0x41 Time delay: 437838 seconds Block delay: 59552
-    vc1x4x2() from: 0x0000000000000000000000000000000000010000 Value: 0x24 Time delay: 206186 seconds Block delay: 36859
-    vc2x4x2() from: 0x0000000000000000000000000000000000010000 Value: 0x29 Time delay: 318197 seconds Block delay: 5952
-    vc2x2x0() from: 0x0000000000000000000000000000000000010000 Time delay: 322247 seconds Block delay: 800
-    vc0x1x2() from: 0x0000000000000000000000000000000000010000 Value: 0x3b Time delay: 434894 seconds Block delay: 1
-    vc1x3x2() from: 0x0000000000000000000000000000000000030000 Value: 0x18 Time delay: 275394 seconds Block delay: 800
-    vc4x0x3() from: 0x0000000000000000000000000000000000030000 Value: 0x23 Time delay: 322373 seconds Block delay: 42595
-    vc4x2x1() from: 0x0000000000000000000000000000000000010000 Value: 0x50 Time delay: 293307 seconds Block delay: 51389
-    vc3x3x2() from: 0x0000000000000000000000000000000000010000 Value: 0x57 Time delay: 150273 seconds Block delay: 1
-    vc3x4x2() from: 0x0000000000000000000000000000000000030000 Value: 0x17 Time delay: 525476 seconds Block delay: 11942
-    vc1x2x1() from: 0x0000000000000000000000000000000000010000 Value: 0x3e Time delay: 73040 seconds Block delay: 59982
-    vc3x0x3() from: 0x0000000000000000000000000000000000020000 Value: 0x39 Time delay: 100835 seconds Block delay: 5
-    vc2x3x3() from: 0x0000000000000000000000000000000000010000 Value: 0x5e Time delay: 404997 seconds Block delay: 32
-    vc2x0x2() from: 0x0000000000000000000000000000000000030000 Value: 0x4 Time delay: 401699 seconds Block delay: 34720
-    vc1x2x2() from: 0x0000000000000000000000000000000000030000 Value: 0x1e Time delay: 236501 seconds Block delay: 4462
-    vc3x0x2() from: 0x0000000000000000000000000000000000020000 Value: 0x22 Time delay: 112444 seconds Block delay: 3661
-    vc2x1x0() from: 0x0000000000000000000000000000000000010000 Value: 0x43 Time delay: 517431 seconds Block delay: 127
-    vc1x3x2() from: 0x0000000000000000000000000000000000020000 Value: 0x20 Time delay: 206186 seconds Block delay: 53166
-    vc1x2x1() from: 0x0000000000000000000000000000000000030000 Value: 0x33 Time delay: 522178 seconds Block delay: 2497
-    vc0x4x3() from: 0x0000000000000000000000000000000000030000 Value: 0x55 Time delay: 444463 seconds Block delay: 42101
-    vc1x4x0() from: 0x0000000000000000000000000000000000020000 Value: 0x41 Time delay: 115085 seconds Block delay: 7323
-    vc1x3x2() from: 0x0000000000000000000000000000000000010000 Value: 0x1d Time delay: 136392 seconds Block delay: 60267
-    vc4x4x1() from: 0x0000000000000000000000000000000000030000 Value: 0x1 Time delay: 439556 seconds Block delay: 58783
-    vc0x0x3() from: 0x0000000000000000000000000000000000010000 Value: 0x22 Time delay: 322371 seconds Block delay: 18429
-    vc3x0x2() from: 0x0000000000000000000000000000000000030000 Value: 0x1e Time delay: 136394 seconds Block delay: 53678
-    vc2x2x2() from: 0x0000000000000000000000000000000000010000 Value: 0xa Time delay: 150273 seconds Block delay: 4462
-    vc4x3x1() from: 0x0000000000000000000000000000000000020000 Value: 0x6 Time delay: 322372 seconds Block delay: 40343
-    vc4x1x3() from: 0x0000000000000000000000000000000000020000 Value: 0x4b Time delay: 547623 seconds Block delay: 18429
-    vc2x0x3() from: 0x0000000000000000000000000000000000010000 Value: 0x11 Time delay: 401699 seconds Block delay: 59552
-    vc2x0x3() from: 0x0000000000000000000000000000000000020000 Value: 0x7 Time delay: 535597 seconds Block delay: 5018
-    vc1x1x2() from: 0x0000000000000000000000000000000000020000 Value: 0x56 Time delay: 414736 seconds Block delay: 60248
-    remove(0x1fffffffe,[0x21, 0x1fffffffe, 0x0, 0xffffffff, 0x0, 0x30000, 0xffffffff, 0x0, 0xffffffff, 0x0, 0x2fffffffd, 0x1fffffffe, 0x2fffffffd, 0x1fffffffe, 0xa329c0648769a73afac7f9381e08fb43dbea72, 0x2fffffffd, 0x2fffffffd, 0x2fffffffd, 0x2fffffffd, 0x2fffffffd, 0x2fffffffd, 0x2fffffffd, 0x2fffffffd, 0x1fffffffe, 0x0, 0x1fffffffe, 0x2fffffffd, 0xa329c0648769a73afac7f9381e08fb43dbea72, 0xa329c0648769a73afac7f9381e08fb43dbea72, 0x30000, 0x1fffffffe, 0x10000]) from: 0x0000000000000000000000000000000000030000 Time delay: 209930 seconds Block delay: 32
-    vc1x0x2() from: 0x0000000000000000000000000000000000020000 Value: 0x2 Time delay: 322372 seconds Block delay: 2497
-    vc3x1x3() from: 0x0000000000000000000000000000000000010000 Value: 0x5 Time delay: 547623 seconds Block delay: 9920
-    vc3x1x1() from: 0x0000000000000000000000000000000000010000 Value: 0x5d Time delay: 38059 seconds Block delay: 5
-    vc2x4x2() from: 0x0000000000000000000000000000000000030000 Value: 0x56 Time delay: 136394 seconds Block delay: 45819
-    vc2x1x3() from: 0x0000000000000000000000000000000000030000 Value: 0x23 Time delay: 82671 seconds Block delay: 15367
-    vc0x2x2() from: 0x0000000000000000000000000000000000030000 Value: 0x33 Time delay: 401699 seconds Block delay: 45819
-    vc1x0x2() from: 0x0000000000000000000000000000000000010000 Value: 0x19 Time delay: 33605 seconds Block delay: 57086
-    vc0x2x0() from: 0x0000000000000000000000000000000000010000 Value: 0x11 Time delay: 1 seconds Block delay: 53451
-    vc1x4x3() from: 0x0000000000000000000000000000000000020000 Value: 0x4 Time delay: 522178 seconds Block delay: 18429
-
-
 vc0x3x2():  passed! 🎉
-vc1x3x0():  passed! 🎉
-vc3x2x0():  passed! 🎉
 vc0x3x0():  passed! 🎉
-vc4x0x2(): failed!💥  
-  Call sequence:
-    vc1x0x0() from: 0x0000000000000000000000000000000000030000 Value: 0x2 Time delay: 322372 seconds Block delay: 47075
-    vc0x2x0() from: 0x0000000000000000000000000000000000030000 Value: 0x33 Time delay: 437838 seconds Block delay: 38350
-    vc3x2x1() from: 0x0000000000000000000000000000000000020000 Value: 0x3 Time delay: 545709 seconds Block delay: 60054
-    vc3x2x2() from: 0x0000000000000000000000000000000000010000 Value: 0x2b Time delay: 172101 seconds Block delay: 42595
-    vc0x3x1() from: 0x0000000000000000000000000000000000020000 Value: 0x3e Time delay: 240205 seconds Block delay: 23653
-    vc4x3x0() from: 0x0000000000000000000000000000000000020000 Value: 0x62 Time delay: 322247 seconds Block delay: 4462
-    vc2x3x2() from: 0x0000000000000000000000000000000000020000 Value: 0x3 Time delay: 303345 seconds Block delay: 5140
-    vc0x1x2() from: 0x0000000000000000000000000000000000030000 Value: 0x5b Time delay: 344203 seconds Block delay: 42691
-    t() from: 0x0000000000000000000000000000000000020000 Time delay: 551399 seconds Block delay: 30784
-    vc2x2x1() from: 0x0000000000000000000000000000000000020000 Value: 0x21 Time delay: 2 seconds Block delay: 53562
-    vc4x1x3() from: 0x0000000000000000000000000000000000020000 Value: 0x45 Time delay: 569114 seconds Block delay: 47075
-    vc2x0x0() from: 0x0000000000000000000000000000000000010000 Value: 0x4 Time delay: 4 seconds Block delay: 2
-    vc0x3x2() from: 0x0000000000000000000000000000000000020000 Value: 0x3e Time delay: 254414 seconds Block delay: 36859
-    vc0x2x0() from: 0x0000000000000000000000000000000000030000 Value: 0x5a Time delay: 390247 seconds Block delay: 15369
-    vc3x2x2() from: 0x0000000000000000000000000000000000030000 Value: 0x34 Time delay: 352297 seconds Block delay: 17935
-    vc1x4x1() from: 0x0000000000000000000000000000000000010000 Value: 0x55 Time delay: 4177 seconds Block delay: 5021
-    vc2x2x3() from: 0x0000000000000000000000000000000000020000 Value: 0x55 Time delay: 526194 seconds Block delay: 54809
-    vc2x1x1() from: 0x0000000000000000000000000000000000030000 Value: 0x62 Time delay: 318197 seconds Block delay: 4896
-    vc4x0x2() from: 0x0000000000000000000000000000000000030000 Value: 0x5 Time delay: 322370 seconds Block delay: 53562
-    vc1x3x1() from: 0x0000000000000000000000000000000000010000 Value: 0x4e Time delay: 512030 seconds Block delay: 11826
-    vc4x1x0() from: 0x0000000000000000000000000000000000030000 Value: 0x4e Time delay: 439556 seconds Block delay: 2393
-    vc1x3x1() from: 0x0000000000000000000000000000000000020000 Value: 0x2c Time delay: 6 seconds Block delay: 1984
-    vc4x1x3() from: 0x0000000000000000000000000000000000020000 Value: 0x60 Time delay: 414736 seconds Block delay: 38350
-    vc0x4x1() from: 0x0000000000000000000000000000000000010000 Value: 0x5e Time delay: 32767 seconds Block delay: 9966
-    vc1x4x2() from: 0x0000000000000000000000000000000000020000 Value: 0xe Time delay: 289607 seconds Block delay: 11349
-    vc3x4x0() from: 0x0000000000000000000000000000000000010000 Value: 0x35 Time delay: 526194 seconds Block delay: 4
-    vc3x0x1() from: 0x0000000000000000000000000000000000020000 Value: 0x43 Time delay: 322373 seconds Block delay: 53451
-    vc3x3x3() from: 0x0000000000000000000000000000000000030000 Value: 0x45 Time delay: 100753 seconds Block delay: 4
-    vc3x1x1() from: 0x0000000000000000000000000000000000020000 Value: 0x55 Time delay: 292304 seconds Block delay: 60364
-    vc0x0x1() from: 0x0000000000000000000000000000000000030000 Value: 0x3b Time delay: 31594 seconds Block delay: 30042
-    vc1x0x3() from: 0x0000000000000000000000000000000000030000 Value: 0x19 Time delay: 207289 seconds Block delay: 1088
-    vc3x2x1() from: 0x0000000000000000000000000000000000030000 Value: 0x28 Time delay: 209930 seconds Block delay: 3661
-    vc3x1x2() from: 0x0000000000000000000000000000000000030000 Value: 0x4b Time delay: 19029 seconds Block delay: 57086
-    vc4x2x3() from: 0x0000000000000000000000000000000000030000 Value: 0x5b Time delay: 50417 seconds Block delay: 5053
-    Donate() from: 0x0000000000000000000000000000000000020000 Value: 0x11 Time delay: 447588 seconds Block delay: 8447
-    vc4x0x0() from: 0x0000000000000000000000000000000000010000 Value: 0x27 Time delay: 482712 seconds Block delay: 11826
-    vc2x1x0() from: 0x0000000000000000000000000000000000020000 Value: 0x15 Time delay: 547623 seconds Block delay: 53678
-    vc3x0x2() from: 0x0000000000000000000000000000000000030000 Value: 0x11 Time delay: 1 seconds Block delay: 54809
-    vc2x0x3() from: 0x0000000000000000000000000000000000010000 Value: 0x55 Time delay: 412373 seconds Block delay: 32147
-    vc4x2x3() from: 0x0000000000000000000000000000000000020000 Value: 0x35 Time delay: 420078 seconds Block delay: 22909
-    vc4x0x0() from: 0x0000000000000000000000000000000000020000 Value: 0x44 Time delay: 116188 seconds Block delay: 3661
-    vc2x3x1() from: 0x0000000000000000000000000000000000010000 Value: 0x29 Time delay: 289607 seconds Block delay: 4462
-    vc0x0x0() from: 0x0000000000000000000000000000000000010000 Value: 0x4 Time delay: 100835 seconds Block delay: 20757
-    vc2x2x3() from: 0x0000000000000000000000000000000000010000 Value: 0x35 Time delay: 45142 seconds Block delay: 16089
-    vc4x2x1() from: 0x0000000000000000000000000000000000020000 Value: 0x3e Time delay: 322247 seconds Block delay: 24987
-    vc3x0x3() from: 0x0000000000000000000000000000000000010000 Value: 0x7 Time delay: 404997 seconds Block delay: 9284
-    vc4x3x2() from: 0x0000000000000000000000000000000000020000 Value: 0x1c Time delay: 305572 seconds Block delay: 50499
-    vc3x4x1() from: 0x0000000000000000000000000000000000020000 Value: 0x61 Time delay: 360264 seconds Block delay: 53349
-    vc2x1x0() from: 0x0000000000000000000000000000000000030000 Value: 0x2 Time delay: 271957 seconds Block delay: 11349
-    vc4x2x0() from: 0x0000000000000000000000000000000000030000 Value: 0x63 Time delay: 390247 seconds Block delay: 60054
-    vc0x4x0() from: 0x0000000000000000000000000000000000020000 Value: 0x11 Time delay: 111322 seconds Block delay: 7323
-    vc3x1x1() from: 0x0000000000000000000000000000000000010000 Value: 0x57 Time delay: 463587 seconds Block delay: 5021
-    vc1x1x3() from: 0x0000000000000000000000000000000000030000 Value: 0x6 Time delay: 254414 seconds Block delay: 53349
-    vc1x0x0() from: 0x0000000000000000000000000000000000010000 Value: 0x3 Time delay: 360624 seconds Block delay: 36859
-    vc4x0x2() from: 0x0000000000000000000000000000000000010000 Value: 0x8 Time delay: 322247 seconds Block delay: 32
-
-
-vc3x1x3():  passed! 🎉
-vc2x0x1():  passed! 🎉
-vc2x1x0():  passed! 🎉
-vc2x0x3(): failed!💥  
-  Call sequence:
-    vc1x0x2() from: 0x0000000000000000000000000000000000020000 Value: 0x2 Time delay: 322372 seconds Block delay: 2497
-    vc3x1x3() from: 0x0000000000000000000000000000000000010000 Value: 0x5 Time delay: 547623 seconds Block delay: 9920
-    vc3x1x1() from: 0x0000000000000000000000000000000000010000 Value: 0x5d Time delay: 38059 seconds Block delay: 5
-    vc2x4x2() from: 0x0000000000000000000000000000000000030000 Value: 0x56 Time delay: 136394 seconds Block delay: 45819
-    vc2x1x3() from: 0x0000000000000000000000000000000000030000 Value: 0x23 Time delay: 82671 seconds Block delay: 15367
-    vc0x2x2() from: 0x0000000000000000000000000000000000030000 Value: 0x33 Time delay: 401699 seconds Block delay: 45819
-    vc1x0x2() from: 0x0000000000000000000000000000000000010000 Value: 0x19 Time delay: 33605 seconds Block delay: 57086
-    vc0x2x0() from: 0x0000000000000000000000000000000000010000 Value: 0x11 Time delay: 1 seconds Block delay: 53451
-    vc1x4x3() from: 0x0000000000000000000000000000000000020000 Value: 0x4 Time delay: 522178 seconds Block delay: 18429
-    vc0x4x3() from: 0x0000000000000000000000000000000000030000 Value: 0x1 Time delay: 75492 seconds Block delay: 30011
-    vc3x2x3() from: 0x0000000000000000000000000000000000010000 Value: 0x34 Time delay: 487078 seconds Block delay: 5140
-    vc1x3x0() from: 0x0000000000000000000000000000000000010000 Value: 0x34 Time delay: 376096 seconds Block delay: 19933
-    vc2x0x3() from: 0x0000000000000000000000000000000000030000 Value: 0x53 Time delay: 554465 seconds Block delay: 60054
-
-
-vc4x2x0():  passed! 🎉
-vc3x0x3():  passed! 🎉
-vc2x4x1():  passed! 🎉
-vc1x2x2():  passed! 🎉
-vc3x2x1():  passed! 🎉
-vc3x3x3(): failed!💥  
-  Call sequence:
-    vc1x0x0() from: 0x0000000000000000000000000000000000010000 Value: 0x2
-    vc0x2x0() from: 0x0000000000000000000000000000000000020000 Value: 0x33 Time delay: 437838 seconds Block delay: 38350
-    vc1x1x0() from: 0x0000000000000000000000000000000000010000 Value: 0x4 Time delay: 177764 seconds Block delay: 18957
-    Claim() from: 0x0000000000000000000000000000000000010000 Time delay: 90284 seconds Block delay: 957
-    vc3x3x3() from: 0x0000000000000000000000000000000000010000 Value: 0x18
-    vc4x2x2() from: 0x0000000000000000000000000000000000010000 Value: 0x34 Time delay: 426115 seconds Block delay: 3661
-    vc0x3x1() from: 0x0000000000000000000000000000000000010000 Value: 0x5e Time delay: 140589 seconds Block delay: 30784
-    vc4x0x3() from: 0x0000000000000000000000000000000000010000 Value: 0x13 Time delay: 136393 seconds Block delay: 32737
-    vc0x4x3() from: 0x0000000000000000000000000000000000010000 Value: 0x5e
-    vc3x3x1() from: 0x0000000000000000000000000000000000010000 Value: 0x8 Time delay: 4177 seconds Block delay: 4223
-    vc3x0x1() from: 0x0000000000000000000000000000000000010000 Value: 0x32 Time delay: 24867 seconds Block delay: 27404
-    vc0x0x0() from: 0x0000000000000000000000000000000000010000 Value: 0x5e Time delay: 3 seconds Block delay: 12493
-    vc3x4x2() from: 0x0000000000000000000000000000000000010000 Value: 0x4 Time delay: 4177 seconds Block delay: 3661
-    vc0x3x0() from: 0x0000000000000000000000000000000000010000 Value: 0x4a Time delay: 3 seconds Block delay: 42595
-    vc3x3x0() from: 0x0000000000000000000000000000000000010000 Value: 0xc Time delay: 31594 seconds Block delay: 23653
-    vc4x1x3() from: 0x0000000000000000000000000000000000010000 Value: 0x5c Time delay: 436727 seconds Block delay: 32
-    vc4x1x1() from: 0x0000000000000000000000000000000000010000 Value: 0x14 Time delay: 564401 seconds Block delay: 38100
-    vc0x2x3() from: 0x0000000000000000000000000000000000010000 Value: 0x19 Time delay: 115085 seconds Block delay: 3
-    vc3x0x0() from: 0x0000000000000000000000000000000000020000 Value: 0x4b
-    vc0x4x3() from: 0x0000000000000000000000000000000000010000 Time delay: 440097 seconds Block delay: 45852
-    vc4x3x1() from: 0x0000000000000000000000000000000000020000 Value: 0x2 Time delay: 414736 seconds Block delay: 32147
-    vc2x1x0() from: 0x0000000000000000000000000000000000010000 Value: 0x64 Time delay: 111322 seconds Block delay: 34720
-    vc0x1x1() from: 0x0000000000000000000000000000000000010000 Time delay: 166184 seconds Block delay: 5140
-    vc1x3x2() from: 0x0000000000000000000000000000000000010000 Value: 0x20 Time delay: 271957 seconds Block delay: 11942
-    vc1x2x0() from: 0x0000000000000000000000000000000000010000 Value: 0x44 Time delay: 115085 seconds Block delay: 5053
-    Donate() from: 0x0000000000000000000000000000000000010000 Value: 0x4b Time delay: 322372 seconds Block delay: 36859
-    vc1x0x2() from: 0x0000000000000000000000000000000000020000 Value: 0x4b
-    vc1x2x3() from: 0x0000000000000000000000000000000000010000 Value: 0x23
-    vc4x4x0() from: 0x0000000000000000000000000000000000010000 Value: 0x3a Time delay: 33605 seconds Block delay: 38100
-    vc2x2x2() from: 0x0000000000000000000000000000000000010000 Value: 0x59 Time delay: 33605 seconds Block delay: 6721
-    vc4x3x1() from: 0x0000000000000000000000000000000000010000 Value: 0x17 Time delay: 50417 seconds Block delay: 127
-    vc1x2x2() from: 0x0000000000000000000000000000000000010000 Value: 0xe Time delay: 127 seconds Block delay: 30042
-    vc1x3x3() from: 0x0000000000000000000000000000000000010000 Value: 0x1a Time delay: 85150 seconds Block delay: 1984
-    *wait* Time delay: 463588 seconds Block delay: 30011
-    vc3x1x2() from: 0x0000000000000000000000000000000000010000 Value: 0x34 Time delay: 2 seconds Block delay: 3
-    vc1x0x3() from: 0x0000000000000000000000000000000000020000 Time delay: 150273 seconds Block delay: 5054
-    vc3x3x1() from: 0x0000000000000000000000000000000000010000 Time delay: 522178 seconds Block delay: 30304
-    vc4x4x2() from: 0x0000000000000000000000000000000000010000 Value: 0x6 Time delay: 511822 seconds Block delay: 30304
-    vc0x4x2() from: 0x0000000000000000000000000000000000020000 Value: 0x57 Time delay: 37811 seconds Block delay: 631
-    vc1x0x0() from: 0x0000000000000000000000000000000000010000 Value: 0x62 Time delay: 322370 seconds Block delay: 19933
-    vc3x4x2() from: 0x0000000000000000000000000000000000010000 Value: 0x57 Time delay: 434894 seconds Block delay: 17883
-    vc1x4x3() from: 0x0000000000000000000000000000000000020000 Value: 0x19
-    vc4x4x1() from: 0x0000000000000000000000000000000000020000 Value: 0x11
-    vc2x0x1() from: 0x0000000000000000000000000000000000010000 Value: 0x11 Time delay: 522178 seconds Block delay: 9966
-    vc3x0x2() from: 0x0000000000000000000000000000000000010000 Value: 0x36 Time delay: 162687 seconds Block delay: 23978
-    vc4x1x1() from: 0x0000000000000000000000000000000000010000 Value: 0x11 Time delay: 519847 seconds Block delay: 53011
-    vc3x1x1() from: 0x0000000000000000000000000000000000010000 Value: 0x4a Time delay: 5 seconds Block delay: 11349
-    vc2x2x1() from: 0x0000000000000000000000000000000000010000 Time delay: 415353 seconds Block delay: 42101
-    vc3x2x0() from: 0x0000000000000000000000000000000000010000 Value: 0x2b Time delay: 547623 seconds Block delay: 49415
-    vc1x3x3() from: 0x0000000000000000000000000000000000010000 Value: 0x5e
-    vc2x4x1() from: 0x0000000000000000000000000000000000010000 Value: 0x32 Time delay: 156190 seconds Block delay: 23722
-    vc2x1x0() from: 0x0000000000000000000000000000000000010000 Time delay: 447588 seconds Block delay: 30042
-    vc2x1x1() from: 0x0000000000000000000000000000000000010000 Value: 0x20 Time delay: 3 seconds Block delay: 35248
-    vc3x0x2() from: 0x0000000000000000000000000000000000010000 Time delay: 66543 seconds Block delay: 11826
-    vc3x4x0() from: 0x0000000000000000000000000000000000010000 Time delay: 4 seconds Block delay: 23440
-    vc0x0x3() from: 0x0000000000000000000000000000000000020000 Time delay: 490448 seconds Block delay: 2511
-    vc2x2x1() from: 0x0000000000000000000000000000000000010000 Value: 0x19 Time delay: 322372 seconds Block delay: 32
-    vc1x0x2() from: 0x0000000000000000000000000000000000020000 Value: 0x44 Time delay: 446991 seconds Block delay: 15375
-    vc2x1x0() from: 0x0000000000000000000000000000000000010000 Time delay: 38059 seconds Block delay: 5140
-    vc1x2x0() from: 0x0000000000000000000000000000000000020000 Value: 0x4b
-    vc0x2x2() from: 0x0000000000000000000000000000000000010000 Value: 0x50
-    vc1x2x2() from: 0x0000000000000000000000000000000000010000 Value: 0x44 Time delay: 420078 seconds Block delay: 3
-    vc2x2x3() from: 0x0000000000000000000000000000000000010000 Value: 0x45 Time delay: 379552 seconds Block delay: 5952
-    vc3x4x0() from: 0x0000000000000000000000000000000000020000 Value: 0x11 Time delay: 404997 seconds Block delay: 47075
-    vc4x2x3() from: 0x0000000000000000000000000000000000010000 Value: 0x2 Time delay: 569114 seconds Block delay: 6513
-    vc1x3x1() from: 0x0000000000000000000000000000000000010000 Value: 0x62
-    vc1x4x1() from: 0x0000000000000000000000000000000000010000 Value: 0x39 Time delay: 3 seconds Block delay: 12493
-    vc3x0x3() from: 0x0000000000000000000000000000000000020000 Value: 0x44 Time delay: 259280 seconds Block delay: 21567
-    vc0x1x1() from: 0x0000000000000000000000000000000000010000 Value: 0x24 Time delay: 1 seconds Block delay: 800
-    vc3x0x0() from: 0x0000000000000000000000000000000000010000 Value: 0x46
-    vc2x2x1() from: 0x0000000000000000000000000000000000010000 Value: 0x13
-    t() from: 0x0000000000000000000000000000000000010000 Time delay: 198598 seconds Block delay: 30011
-    vc4x4x3() from: 0x0000000000000000000000000000000000010000 Value: 0x8 Time delay: 435658 seconds Block delay: 5022
-    vc1x4x2() from: 0x0000000000000000000000000000000000010000 Value: 0x26 Time delay: 318197 seconds Block delay: 12155
-    vc3x1x0() from: 0x0000000000000000000000000000000000010000 Time delay: 436727 seconds Block delay: 12053
-    vc3x4x0() from: 0x0000000000000000000000000000000000010000 Value: 0x18 Time delay: 322372 seconds Block delay: 59552
-    vc0x0x0() from: 0x0000000000000000000000000000000000010000 Value: 0x43 Time delay: 91993 seconds Block delay: 1362
-    vc2x2x3() from: 0x0000000000000000000000000000000000010000 Time delay: 289607 seconds Block delay: 2526
-    vc3x2x3() from: 0x0000000000000000000000000000000000010000 Time delay: 318197 seconds Block delay: 12338
-    vc0x4x0() from: 0x0000000000000000000000000000000000020000 Value: 0x4b Time delay: 10732 seconds Block delay: 2901
-    vc2x4x2() from: 0x0000000000000000000000000000000000020000 Value: 0x33 Time delay: 275394 seconds Block delay: 19933
-    vc1x2x1() from: 0x0000000000000000000000000000000000010000 Value: 0x4f Time delay: 322374 seconds Block delay: 21204
-    vc3x0x1() from: 0x0000000000000000000000000000000000010000 Value: 0x34 Time delay: 254414 seconds Block delay: 5237
-    vc1x4x3() from: 0x0000000000000000000000000000000000010000 Value: 0x45 Time delay: 322373 seconds Block delay: 31232
-    vc3x1x2() from: 0x0000000000000000000000000000000000020000 Value: 0x30 Time delay: 33605 seconds Block delay: 12493
-    vc0x0x3() from: 0x0000000000000000000000000000000000010000 Value: 0x4d Time delay: 360624 seconds Block delay: 22699
-    vc3x0x3() from: 0x0000000000000000000000000000000000010000 Value: 0xb Time delay: 292304 seconds Block delay: 5237
-    vc1x3x2() from: 0x0000000000000000000000000000000000010000 Value: 0x59 Time delay: 225906 seconds Block delay: 42595
-    vc3x4x0() from: 0x0000000000000000000000000000000000010000 Value: 0x6
-    vc4x2x0() from: 0x0000000000000000000000000000000000010000 Value: 0x2 Time delay: 376096 seconds Block delay: 42431
-    vc1x1x3() from: 0x0000000000000000000000000000000000010000 Value: 0x1f Time delay: 136392 seconds Block delay: 50499
-    vc2x1x3() from: 0x0000000000000000000000000000000000020000 Value: 0x5e
-    t() from: 0x0000000000000000000000000000000000010000 Time delay: 440097 seconds Block delay: 5021
-    vc0x0x1() from: 0x0000000000000000000000000000000000020000
-    vc0x3x0() from: 0x0000000000000000000000000000000000010000 Value: 0x2 Time delay: 4 seconds Block delay: 4223
-    vc4x2x0() from: 0x0000000000000000000000000000000000010000 Value: 0x3e Time delay: 100835 seconds Block delay: 32147
-    vc0x1x1() from: 0x0000000000000000000000000000000000010000 Time delay: 420078 seconds Block delay: 4223
-    vc4x3x0() from: 0x0000000000000000000000000000000000010000 Value: 0x2b Time delay: 248564 seconds Block delay: 53349
-    vc3x1x0() from: 0x0000000000000000000000000000000000010000 Value: 0x2
-    vc3x3x3() from: 0x0000000000000000000000000000000000010000 Value: 0x25 Time delay: 117472 seconds Block delay: 5020
-
-
-vc4x2x1():  passed! 🎉
-vc1x0x1():  passed! 🎉
-vc4x4x0():  passed! 🎉
-vc1x3x3(): failed!💥  
-  Call sequence:
-    vc3x4x1() from: 0x0000000000000000000000000000000000010000 Value: 0x34 Time delay: 277232 seconds Block delay: 1362
-    vc0x0x0() from: 0x0000000000000000000000000000000000010000 Value: 0x15
-    vc3x0x0() from: 0x0000000000000000000000000000000000010000 Value: 0x2f Time delay: 525476 seconds Block delay: 1984
-    vc2x1x2() from: 0x0000000000000000000000000000000000010000 Value: 0x9 Time delay: 135921 seconds Block delay: 23275
-    vc1x4x3() from: 0x0000000000000000000000000000000000020000 Value: 0x1 Time delay: 414579 seconds Block delay: 15368
-    vc4x1x1() from: 0x0000000000000000000000000000000000010000 Value: 0x37 Time delay: 305572 seconds Block delay: 4
-    vc3x4x3() from: 0x0000000000000000000000000000000000010000 Time delay: 322372 seconds Block delay: 1984
-    vc0x1x2() from: 0x0000000000000000000000000000000000010000 Time delay: 303345 seconds Block delay: 24987
-    Donate() from: 0x0000000000000000000000000000000000020000 Value: 0x22 Time delay: 294856 seconds Block delay: 59982
-    vc3x0x1() from: 0x0000000000000000000000000000000000010000 Value: 0x24 Time delay: 3 seconds Block delay: 255
-    vc2x4x1() from: 0x0000000000000000000000000000000000010000 Time delay: 557650 seconds Block delay: 42101
-    vc0x4x0() from: 0x0000000000000000000000000000000000010000 Value: 0x5 Time delay: 448552 seconds Block delay: 4896
-    Donate() from: 0x0000000000000000000000000000000000010000 Time delay: 322371 seconds Block delay: 3
-    vc1x0x3() from: 0x0000000000000000000000000000000000010000 Time delay: 257564 seconds Block delay: 16089
-    vc1x3x3() from: 0x0000000000000000000000000000000000010000 Value: 0x4b Time delay: 34692 seconds Block delay: 15034
-    vc0x3x1() from: 0x0000000000000000000000000000000000020000 Time delay: 292304 seconds Block delay: 12155
-    vc3x2x3() from: 0x0000000000000000000000000000000000020000 Value: 0xe Time delay: 289607 seconds Block delay: 6234
-    vc3x4x2() from: 0x0000000000000000000000000000000000010000 Value: 0x62
-    vc1x0x0() from: 0x0000000000000000000000000000000000010000 Value: 0x44
-    vc2x4x1() from: 0x0000000000000000000000000000000000020000 Value: 0x2 Time delay: 67960 seconds Block delay: 23275
-    vc1x2x3() from: 0x0000000000000000000000000000000000010000 Value: 0x48
-    vc3x0x2() from: 0x0000000000000000000000000000000000010000 Value: 0x1a Time delay: 254414 seconds Block delay: 2511
-    vc4x1x2() from: 0x0000000000000000000000000000000000020000 Value: 0x60 Time delay: 45142 seconds Block delay: 12053
-    vc3x4x0() from: 0x0000000000000000000000000000000000010000 Value: 0x50 Time delay: 100835 seconds Block delay: 800
-    vc1x3x2() from: 0x0000000000000000000000000000000000010000 Value: 0x21 Time delay: 116188 seconds Block delay: 22699
-    vc0x0x3() from: 0x0000000000000000000000000000000000010000 Value: 0x8 Time delay: 555126 seconds Block delay: 46422
-    vc2x1x0() from: 0x0000000000000000000000000000000000010000 Time delay: 111322 seconds Block delay: 23653
-    Claim() from: 0x0000000000000000000000000000000000020000 Time delay: 526194 seconds Block delay: 1362
-    vc2x3x0() from: 0x0000000000000000000000000000000000020000 Value: 0x3
-    vc1x2x1() from: 0x0000000000000000000000000000000000010000 Value: 0x1c
-    vc4x0x3() from: 0x0000000000000000000000000000000000010000 Value: 0x35 Time delay: 440097 seconds Block delay: 58783
-    vc3x3x0() from: 0x0000000000000000000000000000000000010000 Time delay: 414736 seconds Block delay: 561
-    vc2x1x0() from: 0x0000000000000000000000000000000000010000 Value: 0x20
-    *wait* Time delay: 82670 seconds Block delay: 4896
-    vc2x1x0() from: 0x0000000000000000000000000000000000010000 Value: 0x34 Time delay: 207289 seconds Block delay: 59981
-    vc3x4x2() from: 0x0000000000000000000000000000000000020000 Value: 0x35 Time delay: 440097 seconds Block delay: 30304
-    vc0x2x2() from: 0x0000000000000000000000000000000000010000 Value: 0x4 Time delay: 166184 seconds Block delay: 23653
-    vc0x1x2() from: 0x0000000000000000000000000000000000010000 Value: 0x18
-    vc0x3x0() from: 0x0000000000000000000000000000000000010000 Value: 0x4 Time delay: 521319 seconds Block delay: 11349
-    Claim() from: 0x0000000000000000000000000000000000010000
-    vc3x4x1() from: 0x0000000000000000000000000000000000010000 Value: 0x4 Time delay: 289607 seconds Block delay: 2511
-    vc0x4x3() from: 0x0000000000000000000000000000000000010000 Value: 0x5e Time delay: 420078 seconds Block delay: 18429
-    vc2x1x3() from: 0x0000000000000000000000000000000000010000 Value: 0x60
-    vc2x2x3() from: 0x0000000000000000000000000000000000010000 Value: 0x57 Time delay: 375600 seconds Block delay: 58167
-    Donate() from: 0x0000000000000000000000000000000000010000 Value: 0x3f Time delay: 82672 seconds Block delay: 9966
-    vc2x3x2() from: 0x0000000000000000000000000000000000010000 Value: 0x1 Time delay: 69789 seconds Block delay: 4190
-    vc2x2x3() from: 0x0000000000000000000000000000000000010000 Value: 0x13 Time delay: 11403 seconds Block delay: 12151
-    vc0x1x0() from: 0x0000000000000000000000000000000000010000 Value: 0x29
-    vc3x0x0() from: 0x0000000000000000000000000000000000020000 Value: 0x4
-    vc1x1x0() from: 0x0000000000000000000000000000000000010000 Value: 0x29 Time delay: 3 seconds Block delay: 1123
-    vc2x0x1() from: 0x0000000000000000000000000000000000010000 Value: 0x57
-    vc0x3x2() from: 0x0000000000000000000000000000000000010000 Value: 0x26 Time delay: 400981 seconds Block delay: 38346
-    vc0x0x2() from: 0x0000000000000000000000000000000000010000 Value: 0x5
-    vc2x0x3() from: 0x0000000000000000000000000000000000010000 Value: 0x11 Time delay: 405856 seconds Block delay: 38100
-    vc2x3x2() from: 0x0000000000000000000000000000000000010000 Time delay: 111322 seconds Block delay: 4462
-    vc2x0x1() from: 0x0000000000000000000000000000000000010000 Value: 0x57 Time delay: 322374 seconds Block delay: 36859
-    vc1x3x3() from: 0x0000000000000000000000000000000000010000 Value: 0x47 Time delay: 1 seconds Block delay: 127
-
-
-vc1x1x3():  passed! 🎉
 vc0x1x0():  passed! 🎉
-vc1x0x0():  passed! 🎉
 vc0x2x0():  passed! 🎉
-vc3x2x2():  passed! 🎉
-vc1x1x0():  passed! 🎉
 vc0x3x3():  passed! 🎉
 vc0x1x1():  passed! 🎉
-vc2x1x1():  passed! 🎉
-vc1x2x3():  passed! 🎉
-vc4x2x3():  passed! 🎉
-vc1x3x1():  passed! 🎉
-vc3x4x1():  passed! 🎉
-vc4x4x3(): failed!💥  
-  Call sequence:
-    vc4x3x0() from: 0x0000000000000000000000000000000000010000 Value: 0x63 Time delay: 207289 seconds Block delay: 32147
-    vc2x1x0() from: 0x0000000000000000000000000000000000010000 Value: 0x3 Time delay: 2 seconds Block delay: 7323
-    vc0x4x0() from: 0x0000000000000000000000000000000000020000 Value: 0x22 Time delay: 547623 seconds Block delay: 30256
-    vc3x4x2() from: 0x0000000000000000000000000000000000020000 Value: 0x52 Time delay: 322373 seconds Block delay: 8881
-    vc2x2x2() from: 0x0000000000000000000000000000000000010000 Value: 0x44 Time delay: 522178 seconds Block delay: 2511
-    vc0x1x2() from: 0x0000000000000000000000000000000000030000 Value: 0x17 Time delay: 156190 seconds Block delay: 9966
-    Claim() from: 0x0000000000000000000000000000000000030000 Time delay: 24718 seconds Block delay: 7323
-    vc0x2x0() from: 0x0000000000000000000000000000000000010000 Value: 0x1c Time delay: 275394 seconds Block delay: 5022
-    vc1x1x1() from: 0x0000000000000000000000000000000000010000 Value: 0x3 Time delay: 100835 seconds Block delay: 5023
-    vc3x2x1() from: 0x0000000000000000000000000000000000030000 Value: 0x12 Time delay: 127251 seconds Block delay: 36859
-    vc3x3x0() from: 0x0000000000000000000000000000000000020000 Value: 0x23 Time delay: 437838 seconds Block delay: 59982
-    vc3x1x2() from: 0x0000000000000000000000000000000000010000 Value: 0x21 Time delay: 3 seconds Block delay: 5
-    vc2x2x2() from: 0x0000000000000000000000000000000000030000 Value: 0x5e Time delay: 271957 seconds Block delay: 5021
-    vc0x0x0() from: 0x0000000000000000000000000000000000030000 Value: 0x2b Time delay: 512439 seconds Block delay: 5054
-    vc0x0x1() from: 0x0000000000000000000000000000000000020000 Value: 0x62 Time delay: 46466 seconds Block delay: 5019
-    vc4x4x3() from: 0x0000000000000000000000000000000000010000 Time delay: 322370 seconds Block delay: 53349
-    vc3x3x0() from: 0x0000000000000000000000000000000000030000 Value: 0x9 Time delay: 344203 seconds Block delay: 45852
-    vc4x3x2() from: 0x0000000000000000000000000000000000030000 Value: 0x2b Time delay: 117472 seconds Block delay: 11826
-    vc4x4x1() from: 0x0000000000000000000000000000000000030000 Value: 0x4b Time delay: 434894 seconds Block delay: 55538
-    vc2x2x3() from: 0x0000000000000000000000000000000000030000 Value: 0x44 Time delay: 547623 seconds Block delay: 9966
-    vc2x2x2() from: 0x0000000000000000000000000000000000010000 Value: 0x41 Time delay: 437838 seconds Block delay: 59552
-    vc1x4x2() from: 0x0000000000000000000000000000000000010000 Value: 0x24 Time delay: 206186 seconds Block delay: 36859
-    vc2x4x2() from: 0x0000000000000000000000000000000000010000 Value: 0x29 Time delay: 318197 seconds Block delay: 5952
-    vc2x2x0() from: 0x0000000000000000000000000000000000010000 Time delay: 322247 seconds Block delay: 800
-    vc0x1x2() from: 0x0000000000000000000000000000000000010000 Value: 0x3b Time delay: 434894 seconds Block delay: 1
-    vc1x3x2() from: 0x0000000000000000000000000000000000030000 Value: 0x18 Time delay: 275394 seconds Block delay: 800
-    vc4x0x3() from: 0x0000000000000000000000000000000000030000 Value: 0x23 Time delay: 322373 seconds Block delay: 42595
-    vc4x2x1() from: 0x0000000000000000000000000000000000010000 Value: 0x50 Time delay: 293307 seconds Block delay: 51389
-    vc3x3x2() from: 0x0000000000000000000000000000000000010000 Value: 0x57 Time delay: 150273 seconds Block delay: 1
-    vc3x4x2() from: 0x0000000000000000000000000000000000030000 Value: 0x17 Time delay: 525476 seconds Block delay: 11942
-    vc1x2x1() from: 0x0000000000000000000000000000000000010000 Value: 0x3e Time delay: 73040 seconds Block delay: 59982
-    vc3x0x3() from: 0x0000000000000000000000000000000000020000 Value: 0x39 Time delay: 100835 seconds Block delay: 5
-    vc2x3x3() from: 0x0000000000000000000000000000000000010000 Value: 0x5e Time delay: 404997 seconds Block delay: 32
-    vc2x0x2() from: 0x0000000000000000000000000000000000030000 Value: 0x4 Time delay: 401699 seconds Block delay: 34720
-    vc1x2x2() from: 0x0000000000000000000000000000000000030000 Value: 0x1e Time delay: 236501 seconds Block delay: 4462
-    vc3x0x2() from: 0x0000000000000000000000000000000000020000 Value: 0x22 Time delay: 112444 seconds Block delay: 3661
-    vc2x1x0() from: 0x0000000000000000000000000000000000010000 Value: 0x43 Time delay: 517431 seconds Block delay: 127
-    vc1x3x2() from: 0x0000000000000000000000000000000000020000 Value: 0x20 Time delay: 206186 seconds Block delay: 53166
-    vc1x2x1() from: 0x0000000000000000000000000000000000030000 Value: 0x33 Time delay: 522178 seconds Block delay: 2497
-    vc0x4x3() from: 0x0000000000000000000000000000000000030000 Value: 0x55 Time delay: 444463 seconds Block delay: 42101
-    vc1x4x0() from: 0x0000000000000000000000000000000000020000 Value: 0x41 Time delay: 115085 seconds Block delay: 7323
-    vc1x3x2() from: 0x0000000000000000000000000000000000010000 Value: 0x1d Time delay: 136392 seconds Block delay: 60267
-    vc4x4x1() from: 0x0000000000000000000000000000000000030000 Value: 0x1 Time delay: 439556 seconds Block delay: 58783
-    vc3x0x2() from: 0x0000000000000000000000000000000000030000 Value: 0x1e Time delay: 136394 seconds Block delay: 53678
-    vc2x2x2() from: 0x0000000000000000000000000000000000010000 Value: 0xa Time delay: 150273 seconds Block delay: 4462
-    vc2x2x0() from: 0x0000000000000000000000000000000000020000 Value: 0x34 Time delay: 512439 seconds Block delay: 5
-    vc4x3x1() from: 0x0000000000000000000000000000000000020000 Value: 0x6 Time delay: 322372 seconds Block delay: 40343
-    vc4x1x3() from: 0x0000000000000000000000000000000000020000 Value: 0x4b Time delay: 547623 seconds Block delay: 18429
-    vc2x0x3() from: 0x0000000000000000000000000000000000010000 Value: 0x11 Time delay: 401699 seconds Block delay: 59552
-    vc2x0x3() from: 0x0000000000000000000000000000000000020000 Value: 0x7 Time delay: 535597 seconds Block delay: 5018
-    vc1x1x2() from: 0x0000000000000000000000000000000000020000 Value: 0x56 Time delay: 414736 seconds Block delay: 60248
-    remove(0x1fffffffe,[0x21, 0x1fffffffe, 0x0, 0xffffffff, 0x0, 0x30000, 0xffffffff, 0x0, 0xffffffff, 0x0, 0x2fffffffd, 0x1fffffffe, 0x2fffffffd, 0x1fffffffe, 0xa329c0648769a73afac7f9381e08fb43dbea72, 0x2fffffffd, 0x2fffffffd, 0x2fffffffd, 0x2fffffffd, 0x2fffffffd, 0x2fffffffd, 0x2fffffffd, 0x2fffffffd, 0x1fffffffe, 0x0, 0x1fffffffe, 0x2fffffffd, 0xa329c0648769a73afac7f9381e08fb43dbea72, 0xa329c0648769a73afac7f9381e08fb43dbea72, 0x30000, 0x1fffffffe, 0x10000]) from: 0x0000000000000000000000000000000000030000 Time delay: 209930 seconds Block delay: 32
-    vc1x0x2() from: 0x0000000000000000000000000000000000020000 Value: 0x2 Time delay: 322372 seconds Block delay: 2497
-    vc3x1x3() from: 0x0000000000000000000000000000000000010000 Value: 0x5 Time delay: 547623 seconds Block delay: 9920
-    vc3x1x1() from: 0x0000000000000000000000000000000000010000 Value: 0x5d Time delay: 38059 seconds Block delay: 5
-    vc2x4x2() from: 0x0000000000000000000000000000000000030000 Value: 0x56 Time delay: 136394 seconds Block delay: 45819
-    vc2x1x3() from: 0x0000000000000000000000000000000000030000 Value: 0x23 Time delay: 82671 seconds Block delay: 15367
-    vc0x2x2() from: 0x0000000000000000000000000000000000030000 Value: 0x33 Time delay: 401699 seconds Block delay: 45819
-    vc1x0x2() from: 0x0000000000000000000000000000000000010000 Value: 0x19 Time delay: 33605 seconds Block delay: 57086
-    vc0x2x0() from: 0x0000000000000000000000000000000000010000 Value: 0x11 Time delay: 1 seconds Block delay: 53451
-    vc1x4x3() from: 0x0000000000000000000000000000000000020000 Value: 0x4 Time delay: 522178 seconds Block delay: 18429
-    vc1x1x2() from: 0x0000000000000000000000000000000000030000 Value: 0x46 Time delay: 289607 seconds Block delay: 11905
-    vc2x3x1() from: 0x0000000000000000000000000000000000020000 Value: 0x17 Time delay: 128831 seconds Block delay: 34272
-    vc0x3x2() from: 0x0000000000000000000000000000000000020000 Value: 0x2b Time delay: 522178 seconds Block delay: 35248
-    vc3x2x3() from: 0x0000000000000000000000000000000000020000 Time delay: 354788 seconds Block delay: 36859
-    vc4x1x3() from: 0x0000000000000000000000000000000000030000 Time delay: 322371 seconds Block delay: 30142
-    vc2x1x0() from: 0x0000000000000000000000000000000000020000 Value: 0x62 Time delay: 490448 seconds Block delay: 18429
-    vc1x0x2() from: 0x0000000000000000000000000000000000020000 Value: 0x34 Time delay: 401699 seconds Block delay: 1123
-    vc2x3x3() from: 0x0000000000000000000000000000000000010000 Value: 0x2f Time delay: 401699 seconds Block delay: 6
-    vc4x2x2() from: 0x0000000000000000000000000000000000010000 Value: 0x11 Time delay: 379552 seconds Block delay: 32147
-    vc4x2x1() from: 0x0000000000000000000000000000000000010000 Value: 0x27 Time delay: 512439 seconds Block delay: 5140
-    vc4x2x2() from: 0x0000000000000000000000000000000000020000 Value: 0xb Time delay: 231381 seconds Block delay: 800
-    vc3x2x1() from: 0x0000000000000000000000000000000000020000 Value: 0x3e Time delay: 65535 seconds Block delay: 53011
-    vc1x1x0() from: 0x0000000000000000000000000000000000030000 Value: 0x62 Time delay: 436727 seconds Block delay: 9920
-    vc3x2x3() from: 0x0000000000000000000000000000000000010000 Value: 0x21 Time delay: 404997 seconds Block delay: 59981
-    vc0x0x1() from: 0x0000000000000000000000000000000000020000 Value: 0x2c Time delay: 31594 seconds Block delay: 24987
-    vc4x2x1() from: 0x0000000000000000000000000000000000030000 Value: 0x4e
-    vc3x4x3() from: 0x0000000000000000000000000000000000010000 Value: 0x18 Time delay: 271957 seconds Block delay: 1088
-    vc1x1x2() from: 0x0000000000000000000000000000000000020000 Value: 0x3e Time delay: 65535 seconds Block delay: 19933
-    vc4x0x2() from: 0x0000000000000000000000000000000000010000 Value: 0x43 Time delay: 322372 seconds Block delay: 32767
-    vc2x4x0() from: 0x0000000000000000000000000000000000010000 Value: 0x7 Time delay: 206186 seconds Block delay: 42229
-    vc3x3x0() from: 0x0000000000000000000000000000000000020000 Value: 0x2 Time delay: 434894 seconds Block delay: 39345
-    vc2x2x2() from: 0x0000000000000000000000000000000000010000 Value: 0x4e Time delay: 100835 seconds Block delay: 2512
-    vc2x4x2() from: 0x0000000000000000000000000000000000010000 Value: 0x21 Time delay: 11424 seconds Block delay: 22909
-    vc4x0x0() from: 0x0000000000000000000000000000000000030000 Value: 0x26
-    vc1x3x3() from: 0x0000000000000000000000000000000000030000 Value: 0x3 Time delay: 521319 seconds Block delay: 6
-    vc3x0x1() from: 0x0000000000000000000000000000000000010000 Value: 0x27 Time delay: 379552 seconds Block delay: 12053
-    t() from: 0x0000000000000000000000000000000000030000 Time delay: 117472 seconds Block delay: 32147
-    vc1x4x3() from: 0x0000000000000000000000000000000000010000 Value: 0x5d Time delay: 322369 seconds Block delay: 42101
-    vc0x0x2() from: 0x0000000000000000000000000000000000010000 Value: 0x27 Time delay: 116188 seconds Block delay: 5023
-    vc3x2x0() from: 0x0000000000000000000000000000000000030000 Value: 0xa Time delay: 414736 seconds Block delay: 33357
-    vc3x0x1() from: 0x0000000000000000000000000000000000030000 Value: 0x2c Time delay: 324043 seconds Block delay: 38100
-    vc4x4x3() from: 0x0000000000000000000000000000000000010000 Value: 0x5b Time delay: 5 seconds Block delay: 5020
-
-
-vc2x3x1():  passed! 🎉
-vc4x4x1():  passed! 🎉
 GetFunds():  passed! 🎉
-vc1x3x2():  passed! 🎉
 remove(address,address[]):  passed! 🎉
-vc3x3x1():  passed! 🎉
-vc2x3x3():  passed! 🎉
 vc0x1x2():  passed! 🎉
-vc3x1x2():  passed! 🎉
-vc4x1x3():  passed! 🎉
 vc0x2x2():  passed! 🎉
 vc0x0x1():  passed! 🎉
-vc1x0x3():  passed! 🎉
-vc3x4x0():  passed! 🎉
-vc2x3x0():  passed! 🎉
 t():  passed! 🎉
-vc2x0x2():  passed! 🎉
-vc1x2x1():  passed! 🎉
-vc4x3x1():  passed! 🎉
-vc4x2x2():  passed! 🎉
-vc1x1x1():  passed! 🎉
-vc2x3x2():  passed! 🎉
-vc4x1x2():  passed! 🎉
 vc0x2x1():  passed! 🎉
-vc2x4x0():  passed! 🎉
 vc0x4x1():  passed! 🎉
-vc4x3x0():  passed! 🎉
-vc4x3x3():  passed! 🎉
-vc3x4x3():  passed! 🎉
 vc0x1x3():  passed! 🎉
-vc2x0x0():  passed! 🎉
 Donate():  passed! 🎉
-vc4x3x2():  passed! 🎉
-vc1x4x1():  passed! 🎉
 vc0x4x3():  passed! 🎉
 vc0x2x3():  passed! 🎉
-vc2x4x3():  passed! 🎉
-vc1x1x2():  passed! 🎉
-vc2x2x3(): failed!💥  
-  Call sequence:
-    vc0x4x0() from: 0x0000000000000000000000000000000000020000 Value: 0xb Time delay: 6 seconds Block delay: 11905
-    vc4x4x1() from: 0x0000000000000000000000000000000000010000 Value: 0x4b
-    vc4x1x2() from: 0x0000000000000000000000000000000000010000 Value: 0x4 Time delay: 478623 seconds Block delay: 42595
-    vc2x1x0() from: 0x0000000000000000000000000000000000010000 Value: 0x21 Time delay: 525476 seconds Block delay: 2512
-    vc3x3x0() from: 0x0000000000000000000000000000000000010000 Value: 0x20 Time delay: 166184 seconds Block delay: 9920
-    vc2x1x0() from: 0x0000000000000000000000000000000000010000 Value: 0x1d Time delay: 379552 seconds Block delay: 30784
-    vc3x1x3() from: 0x0000000000000000000000000000000000010000 Value: 0x5e
-    vc4x1x0() from: 0x0000000000000000000000000000000000010000 Time delay: 487078 seconds Block delay: 2862
-    vc3x0x3() from: 0x0000000000000000000000000000000000010000 Value: 0xb Time delay: 440097 seconds Block delay: 2
-    vc4x3x0() from: 0x0000000000000000000000000000000000020000 Value: 0x23 Time delay: 135921 seconds Block delay: 1984
-    vc4x0x2() from: 0x0000000000000000000000000000000000010000 Value: 0x1b Time delay: 491552 seconds Block delay: 36476
-    vc0x2x3() from: 0x0000000000000000000000000000000000010000
-    vc0x2x1() from: 0x0000000000000000000000000000000000010000 Value: 0x30 Time delay: 511822 seconds Block delay: 5237
-    vc2x2x3() from: 0x0000000000000000000000000000000000010000 Value: 0x4e Time delay: 510582 seconds Block delay: 38100
-
-
-vc1x4x0():  passed! 🎉
 vc0x3x1():  passed! 🎉
-vc3x4x2():  passed! 🎉
 vc0x0x2():  passed! 🎉
-vc3x0x2():  passed! 🎉
 vc0x0x3(): failed!💥  
   Call sequence:
-    vc0x4x0() from: 0x0000000000000000000000000000000000030000 Value: 0xb Time delay: 6 seconds Block delay: 11905
-    vc4x4x1() from: 0x0000000000000000000000000000000000020000 Value: 0x4b Time delay: 100835 seconds Block delay: 33357
-    vc4x4x2() from: 0x0000000000000000000000000000000000010000 Value: 0x22 Time delay: 4 seconds Block delay: 32737
-    vc2x4x1() from: 0x0000000000000000000000000000000000020000 Value: 0x55 Time delay: 332369 seconds Block delay: 30304
-    vc3x3x3() from: 0x0000000000000000000000000000000000030000 Value: 0x5c Time delay: 111322 seconds Block delay: 30784
-    vc1x3x1() from: 0x0000000000000000000000000000000000020000 Value: 0x19
-    vc4x3x1() from: 0x0000000000000000000000000000000000020000 Value: 0x8
-    vc2x4x3() from: 0x0000000000000000000000000000000000030000 Value: 0x4f Time delay: 115085 seconds Block delay: 3154
-    vc3x2x3() from: 0x0000000000000000000000000000000000030000 Value: 0x4b Time delay: 254414 seconds Block delay: 34272
-    vc1x0x1() from: 0x0000000000000000000000000000000000020000 Value: 0x23 Time delay: 390247 seconds Block delay: 45261
-    vc0x0x3() from: 0x0000000000000000000000000000000000010000 Value: 0x3 Time delay: 323779 seconds Block delay: 5
-    vc0x3x1() from: 0x0000000000000000000000000000000000020000 Value: 0x55 Time delay: 225906 seconds Block delay: 36859
-    vc1x4x2() from: 0x0000000000000000000000000000000000030000 Value: 0x3e Time delay: 436727 seconds Block delay: 8447
-    vc4x4x0() from: 0x0000000000000000000000000000000000030000 Value: 0x48 Time delay: 415353 seconds Block delay: 59982
-    vc3x3x2() from: 0x0000000000000000000000000000000000030000 Value: 0x5e Time delay: 332369 seconds Block delay: 30784
-    vc3x0x3() from: 0x0000000000000000000000000000000000010000 Value: 0x3e Time delay: 415353 seconds Block delay: 561
-    vc4x1x3() from: 0x0000000000000000000000000000000000020000 Value: 0x21 Time delay: 118502 seconds Block delay: 13464
-    vc4x4x2() from: 0x0000000000000000000000000000000000020000 Time delay: 156190 seconds Block delay: 58783
-    vc2x4x3() from: 0x0000000000000000000000000000000000010000 Value: 0x4e Time delay: 405856 seconds Block delay: 127
-    vc1x4x2() from: 0x0000000000000000000000000000000000020000 Value: 0x18 Time delay: 361136 seconds Block delay: 9920
-    vc0x3x0() from: 0x0000000000000000000000000000000000020000 Value: 0x4 Time delay: 6 seconds Block delay: 60364
-    vc4x1x0() from: 0x0000000000000000000000000000000000020000 Value: 0x4 Time delay: 289607 seconds Block delay: 1362
-    vc2x4x0() from: 0x0000000000000000000000000000000000020000 Value: 0x45 Time delay: 434894 seconds Block delay: 6234
-    vc3x4x1() from: 0x0000000000000000000000000000000000010000 Value: 0x57 Time delay: 117472 seconds Block delay: 2526
-    vc2x2x0() from: 0x0000000000000000000000000000000000030000 Value: 0x11 Time delay: 554465 seconds Block delay: 53562
-    vc0x0x1() from: 0x0000000000000000000000000000000000020000 Value: 0x3e Time delay: 414579 seconds Block delay: 53011
-    Donate() from: 0x0000000000000000000000000000000000020000 Value: 0x23 Time delay: 38059 seconds Block delay: 53451
-    vc4x4x3() from: 0x0000000000000000000000000000000000030000 Value: 0x33 Time delay: 6 seconds Block delay: 12053
-    vc1x4x2() from: 0x0000000000000000000000000000000000030000 Value: 0x5e Time delay: 135921 seconds Block delay: 6234
-    vc4x0x0() from: 0x0000000000000000000000000000000000020000 Value: 0x18 Time delay: 67960 seconds Block delay: 53011
-    vc4x2x2() from: 0x0000000000000000000000000000000000030000 Value: 0x24 Time delay: 344203 seconds Block delay: 5022
-    vc4x1x1() from: 0x0000000000000000000000000000000000020000 Value: 0x4 Time delay: 100835 seconds Block delay: 30011
-    vc3x0x0() from: 0x0000000000000000000000000000000000010000 Value: 0x34 Time delay: 415353 seconds Block delay: 11826
-    vc0x2x3() from: 0x0000000000000000000000000000000000010000 Value: 0x13 Time delay: 478623 seconds Block delay: 42595
-    vc2x0x0() from: 0x0000000000000000000000000000000000010000 Value: 0x4b Time delay: 82671 seconds Block delay: 50499
-    vc4x0x0() from: 0x0000000000000000000000000000000000030000 Value: 0x1e Time delay: 82670 seconds Block delay: 3
-    vc1x3x1() from: 0x0000000000000000000000000000000000010000 Value: 0x38 Time delay: 196497 seconds Block delay: 15369
-    vc4x1x1() from: 0x0000000000000000000000000000000000010000 Value: 0x56 Time delay: 166184 seconds Block delay: 18429
-    vc2x1x3() from: 0x0000000000000000000000000000000000010000 Value: 0x55 Time delay: 414736 seconds Block delay: 2
-    vc4x4x0() from: 0x0000000000000000000000000000000000020000 Value: 0x34 Time delay: 360624 seconds Block delay: 4
-    vc4x1x1() from: 0x0000000000000000000000000000000000010000 Value: 0x3e Time delay: 322372 seconds Block delay: 19933
-    vc0x2x1() from: 0x0000000000000000000000000000000000030000 Value: 0x11
-    vc0x3x2() from: 0x0000000000000000000000000000000000010000 Value: 0x24 Time delay: 482712 seconds Block delay: 20243
-    vc4x2x3() from: 0x0000000000000000000000000000000000030000 Value: 0x57 Time delay: 457191 seconds Block delay: 12053
-    vc1x3x3() from: 0x0000000000000000000000000000000000010000 Value: 0x1d Time delay: 281757 seconds Block delay: 60364
-    vc0x1x1() from: 0x0000000000000000000000000000000000020000 Value: 0x34 Time delay: 379552 seconds Block delay: 1
-    vc2x2x2() from: 0x0000000000000000000000000000000000020000 Value: 0x44 Time delay: 414736 seconds Block delay: 30042
-    vc3x2x1() from: 0x0000000000000000000000000000000000020000 Time delay: 526194 seconds Block delay: 12338
-    vc3x2x1() from: 0x0000000000000000000000000000000000020000 Value: 0x20 Time delay: 33271 seconds Block delay: 42101
-    vc3x1x3() from: 0x0000000000000000000000000000000000030000 Value: 0x21 Time delay: 554465 seconds Block delay: 14401
-    vc0x2x2() from: 0x0000000000000000000000000000000000030000 Value: 0x24 Time delay: 478623 seconds Block delay: 59983
-    vc3x0x2() from: 0x0000000000000000000000000000000000010000 Value: 0x1e Time delay: 82672 seconds Block delay: 53678
-    vc0x1x3() from: 0x0000000000000000000000000000000000010000 Value: 0x1d Time delay: 318197 seconds Block delay: 4223
-    vc3x2x1() from: 0x0000000000000000000000000000000000010000 Value: 0x44 Time delay: 73040 seconds Block delay: 27404
-    vc2x4x2() from: 0x0000000000000000000000000000000000020000 Value: 0x29
-    vc0x0x3() from: 0x0000000000000000000000000000000000030000 Value: 0x4e Time delay: 322373 seconds Block delay: 24311
+    vc0x4x3() from: 0x0000000000000000000000000000000000020000 Value: 0x27 Time delay: 172101 seconds Block delay: 11905
+    remove(0x0,[0x1fffffffe, 0x1fffffffe, 0x2fffffffd, 0xffffffff, 0x1fffffffe, 0x1fffffffe, 0x30000, 0x1fffffffe, 0xffffffff, 0x2fffffffd, 0x10000, 0x2fffffffd, 0x2fffffffd, 0x20000, 0x0, 0x2fffffffd, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0x10000, 0x30000, 0x1fffffffe]) from: 0x0000000000000000000000000000000000020000 Time delay: 512439 seconds Block delay: 5053
+    vc0x3x1() from: 0x0000000000000000000000000000000000010000 Value: 0x34 Time delay: 66543 seconds Block delay: 36401
+    t() from: 0x0000000000000000000000000000000000010000 Time delay: 322371 seconds Block delay: 24987
+    vc0x2x0() from: 0x0000000000000000000000000000000000030000 Value: 0x19 Time delay: 490446 seconds Block delay: 35248
+    vc0x1x0() from: 0x0000000000000000000000000000000000020000 Value: 0x2 Time delay: 415353 seconds Block delay: 38167
+    vc0x4x1() from: 0x0000000000000000000000000000000000020000 Value: 0x2b Time delay: 127 seconds Block delay: 9724
+    vc0x3x0() from: 0x0000000000000000000000000000000000020000 Value: 0x1 Time delay: 525476 seconds Block delay: 11905
+    vc0x1x3() from: 0x0000000000000000000000000000000000010000 Value: 0x2f Time delay: 73040 seconds Block delay: 59981
+    vc0x0x1() from: 0x0000000000000000000000000000000000030000 Value: 0x5e Time delay: 447588 seconds Block delay: 60267
+    vc0x4x1() from: 0x0000000000000000000000000000000000010000 Value: 0x34 Time delay: 3 seconds Block delay: 30042
+    vc0x2x3() from: 0x0000000000000000000000000000000000030000 Value: 0x50 Time delay: 404997 seconds Block delay: 45261
+    vc0x4x1() from: 0x0000000000000000000000000000000000030000 Value: 0x41 Time delay: 522670 seconds Block delay: 9966
+    vc0x2x2() from: 0x0000000000000000000000000000000000020000 Value: 0x27 Time delay: 16802 seconds Block delay: 4223
+    Claim() from: 0x0000000000000000000000000000000000010000 Time delay: 412373 seconds Block delay: 32
+    vc0x0x2() from: 0x0000000000000000000000000000000000020000 Value: 0xf Time delay: 479797 seconds Block delay: 41339
+    vc0x1x1() from: 0x0000000000000000000000000000000000010000 Value: 0x2b Time delay: 82671 seconds Block delay: 22699
+    Claim() from: 0x0000000000000000000000000000000000030000 Time delay: 521319 seconds Block delay: 47075
+    vc0x2x0() from: 0x0000000000000000000000000000000000020000 Value: 0x4e
+    Donate() from: 0x0000000000000000000000000000000000030000 Value: 0x21 Time delay: 166184 seconds Block delay: 11826
+    GetFunds() from: 0x0000000000000000000000000000000000010000 Time delay: 588255 seconds Block delay: 15367
+    Donate() from: 0x0000000000000000000000000000000000010000 Value: 0x21 Time delay: 73040 seconds Block delay: 15369
+    Donate() from: 0x0000000000000000000000000000000000030000 Value: 0x3 Time delay: 414736 seconds Block delay: 35248
+    vc0x2x3() from: 0x0000000000000000000000000000000000010000 Value: 0x21 Time delay: 373567 seconds Block delay: 1123
+    Donate() from: 0x0000000000000000000000000000000000030000 Value: 0x29 Time delay: 32767 seconds Block delay: 127
+    vc0x3x3() from: 0x0000000000000000000000000000000000030000 Value: 0x23 Time delay: 33605 seconds Block delay: 12155
+    vc0x3x2() from: 0x0000000000000000000000000000000000030000 Value: 0x19 Time delay: 292304 seconds Block delay: 54155
+    vc0x3x3() from: 0x0000000000000000000000000000000000020000 Value: 0x53 Time delay: 135921 seconds Block delay: 60248
+    vc0x1x1() from: 0x0000000000000000000000000000000000030000 Value: 0x37 Time delay: 322371 seconds Block delay: 4896
+    vc0x0x2() from: 0x0000000000000000000000000000000000020000 Value: 0x53 Time delay: 65535 seconds Block delay: 5020
+    vc0x2x3() from: 0x0000000000000000000000000000000000030000 Value: 0x5d Time delay: 322374 seconds Block delay: 11349
+    vc0x3x0() from: 0x0000000000000000000000000000000000010000 Value: 0x5e Time delay: 73040 seconds Block delay: 12053
+    vc0x4x1() from: 0x0000000000000000000000000000000000020000 Value: 0x5e Time delay: 322247 seconds Block delay: 59981
+    remove(0x2fffffffd,[0x20000, 0xa329c0648769a73afac7f9381e08fb43dbea72, 0xa329c0648769a73afac7f9381e08fb43dbea72, 0xa329c0648769a73afac7f9381e08fb43dbea72, 0xa329c0648769a73afac7f9381e08fb43dbea72, 0xa329c0648769a73afac7f9381e08fb43dbea72, 0xa329c0648769a73afac7f9381e08fb43dbea72, 0xa329c0648769a73afac7f9381e08fb43dbea72, 0x20000, 0xffffffff, 0x1fffffffe, 0x10000, 0x2fffffffd, 0x10000, 0x30000, 0x1fffffffe, 0x30000, 0xffffffff, 0x0, 0xffffffff, 0x1fffffffe, 0x2fffffffd, 0x0, 0x30000, 0xffffffff, 0xffffffff, 0x1fffffffe, 0x0]) from: 0x0000000000000000000000000000000000010000 Time delay: 292304 seconds Block delay: 2497
+    remove(0x1fffffffe,[0x20000, 0x20000, 0x20000, 0x20000, 0x20000, 0x20000, 0x20000, 0x20000, 0x20000, 0x20000, 0x20000, 0x2fffffffd, 0x2fffffffd, 0x1fffffffe, 0xffffffff, 0xffffffff, 0x1fffffffe, 0xffffffff, 0x20000, 0x1fffffffe, 0x2fffffffd, 0x30000, 0x0, 0x1fffffffe, 0x0, 0x30000, 0x2fffffffd, 0xa329c0648769a73afac7f9381e08fb43dbea72, 0x1fffffffe, 0xffffffff, 0x10000, 0x1fffffffe, 0x30000, 0xffffffff, 0x20000, 0xffffffff, 0x0]) from: 0x0000000000000000000000000000000000030000 Time delay: 136392 seconds Block delay: 25531
+    vc0x2x0() from: 0x0000000000000000000000000000000000020000 Value: 0x1 Time delay: 322373 seconds Block delay: 23978
+    vc0x3x3() from: 0x0000000000000000000000000000000000020000 Value: 0x21 Time delay: 263173 seconds Block delay: 9966
+    vc0x3x2() from: 0x0000000000000000000000000000000000030000 Value: 0x23 Time delay: 254414 seconds Block delay: 5053
+    vc0x0x0() from: 0x0000000000000000000000000000000000010000 Value: 0x28 Time delay: 289103 seconds Block delay: 53451
+    GetFunds() from: 0x0000000000000000000000000000000000020000 Time delay: 156190 seconds Block delay: 11905
+    vc0x2x2() from: 0x0000000000000000000000000000000000020000 Value: 0x39 Time delay: 156581 seconds Block delay: 11942
+    vc0x0x1() from: 0x0000000000000000000000000000000000010000 Value: 0x4b Time delay: 127 seconds Block delay: 15368
+    vc0x0x1() from: 0x0000000000000000000000000000000000020000 Value: 0x4b Time delay: 73040 seconds Block delay: 58783
+    vc0x1x3() from: 0x0000000000000000000000000000000000030000 Value: 0x4e Time delay: 190206 seconds Block delay: 30042
+    vc0x2x1() from: 0x0000000000000000000000000000000000020000 Value: 0x19 Time delay: 256014 seconds Block delay: 11905
+    vc0x3x0() from: 0x0000000000000000000000000000000000030000 Value: 0x4f Time delay: 322370 seconds Block delay: 24987
+    vc0x4x0() from: 0x0000000000000000000000000000000000010000 Value: 0x4 Time delay: 127251 seconds Block delay: 50499
+    vc0x2x0() from: 0x0000000000000000000000000000000000030000 Value: 0x3 Time delay: 277232 seconds Block delay: 20243
+    Claim() from: 0x0000000000000000000000000000000000020000 Time delay: 2 seconds Block delay: 35248
+    vc0x4x0() from: 0x0000000000000000000000000000000000030000 Value: 0x12 Time delay: 195123 seconds Block delay: 1123
+    vc0x3x2() from: 0x0000000000000000000000000000000000030000 Value: 0x3 Time delay: 32767 seconds Block delay: 2526
+    vc0x1x0() from: 0x0000000000000000000000000000000000010000 Value: 0x41 Time delay: 4177 seconds Block delay: 58783
+    vc0x0x2() from: 0x0000000000000000000000000000000000010000 Value: 0x1b Time delay: 588255 seconds Block delay: 561
+    vc0x2x0() from: 0x0000000000000000000000000000000000020000 Value: 0x21 Time delay: 5 seconds Block delay: 2526
+    vc0x4x1() from: 0x0000000000000000000000000000000000030000 Value: 0x5 Time delay: 115085 seconds Block delay: 6721
+    vc0x3x2() from: 0x0000000000000000000000000000000000010000 Value: 0x2b Time delay: 172101 seconds Block delay: 11942
+    vc0x0x2() from: 0x0000000000000000000000000000000000010000 Value: 0x13 Time delay: 554465 seconds Block delay: 59981
+    vc0x3x1() from: 0x0000000000000000000000000000000000010000 Value: 0x2 Time delay: 2 seconds Block delay: 5019
+    vc0x1x0() from: 0x0000000000000000000000000000000000010000 Value: 0x3 Time delay: 2 seconds Block delay: 6234
+    vc0x3x0() from: 0x0000000000000000000000000000000000010000 Value: 0x35 Time delay: 303345 seconds Block delay: 16089
+    vc0x4x1() from: 0x0000000000000000000000000000000000020000 Value: 0x2 Time delay: 588255 seconds Block delay: 30011
+    t() from: 0x0000000000000000000000000000000000020000 Time delay: 407328 seconds Block delay: 54155
+    GetFunds() from: 0x0000000000000000000000000000000000020000 Time delay: 412373 seconds Block delay: 53678
+    vc0x4x0() from: 0x0000000000000000000000000000000000020000 Value: 0x1a Time delay: 463588 seconds Block delay: 53011
+    t() from: 0x0000000000000000000000000000000000010000 Time delay: 166184 seconds Block delay: 33357
+    vc0x0x3() from: 0x0000000000000000000000000000000000020000 Value: 0x4 Time delay: 482712 seconds Block delay: 5178
+    Claim() from: 0x0000000000000000000000000000000000020000 Time delay: 318197 seconds Block delay: 5018
+    vc0x3x1() from: 0x0000000000000000000000000000000000030000 Value: 0x28 Time delay: 420078 seconds Block delay: 30784
+    remove(0x30000,[0x2fffffffd, 0xa329c0648769a73afac7f9381e08fb43dbea72, 0xffffffff, 0x10000, 0x1fffffffe, 0x10000, 0x1fffffffe, 0x10000, 0x10000, 0x2fffffffd, 0x2fffffffd, 0xa329c0648769a73afac7f9381e08fb43dbea72, 0xa329c0648769a73afac7f9381e08fb43dbea72, 0x10000, 0x0, 0x2fffffffd, 0x30000]) from: 0x0000000000000000000000000000000000020000 Time delay: 136393 seconds Block delay: 2497
+    vc0x0x3() from: 0x0000000000000000000000000000000000020000 Value: 0x4e Time delay: 322373 seconds Block delay: 59981
+    vc0x0x2() from: 0x0000000000000000000000000000000000010000 Value: 0xd Time delay: 111322 seconds Block delay: 1
+    GetFunds() from: 0x0000000000000000000000000000000000030000 Time delay: 1 seconds Block delay: 35200
+    vc0x0x3() from: 0x0000000000000000000000000000000000020000 Value: 0x13 Time delay: 448552 seconds Block delay: 3
 
 
-vc2x1x2():  passed! 🎉
-vc4x4x2():  passed! 🎉
-vc3x0x0():  passed! 🎉
-vc3x1x0():  passed! 🎉
-vc3x3x2():  passed! 🎉
 AssertionFailed(..):  passed! 🎉
-Unique instructions: 13971
+Unique instructions: 3806
 Unique codehashes: 1
-Corpus size: 49
-Seed: 4797447307120664427
+Corpus size: 16
+Seed: 4950813950093871064
