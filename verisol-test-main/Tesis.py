@@ -26,11 +26,11 @@ class ThreadsEchidna:
         self.dir = dir
         self.thread_count = thread_count
 
-    def create_and_run_transitions_threads(self):
+    def create_and_run_transitions_threads(self, constructor_idx=0):
         preconditions_require = np.array_split(preconditions, self.thread_count)
         results = [None] * self.thread_count
         self.threads = [Thread(target=self.run_transitions,
-                          args=(preconditions_require[i], states, preconditions, extraConditions, i, results))
+                          args=(preconditions_require[i], states, preconditions, extraConditions, i, results, constructor_idx))
                             for i in range(self.thread_count)]
         self.start_and_join_all_threads()
         return self.join_transitions_results(results)
@@ -41,9 +41,9 @@ class ThreadsEchidna:
         self.start_and_join_all_threads()
         return self.join_transitions_results(results)
 
-    def run_transitions(self, preconditions_require, states, preconditions, extraConditions, thread_id, results):
+    def run_transitions(self, preconditions_require, states, preconditions, extraConditions, thread_id, results, cons_idx=0):
         tr_contract = ContractCreator(self.dir).create_transitions_contract(preconditions_require, states, preconditions, extraConditions, thread_id)
-        tr_failed = EchidnaRunner(self.dir).run_contract(tr_contract)
+        tr_failed = EchidnaRunner(self.dir).run_contract(tr_contract, cons_idx)
         results[thread_id] = tr_failed
 
     def run_inits(self, thread_id, results):
@@ -63,7 +63,7 @@ class ThreadsEchidna:
     def start_all_threads(self):
         for thread in self.threads:
             thread.start()
-            sleep(2)
+            sleep(3)
 
     def join_all_threads(self):
         for thread in self.threads:
@@ -78,8 +78,8 @@ class EchidnaRunner:
         result = self.set_up_and_run(contract, contractName, True, constructor_index)
         return self.process_output(result)
 
-    def run_contract(self, contract):
-        result = self.set_up_and_run(contract, contractName)
+    def run_contract(self, contract, constructor_index=0):
+        result = self.set_up_and_run(contract, contractName, False, constructor_index)
         return self.process_output(result)
 
     def set_up_and_run(self, filename_temp, contract_name, init=False, index=0):
@@ -607,6 +607,69 @@ def mock_res():
     # [[2, 0, 1], [3, 3, 3], [1, 1, 3], [1, 1, 0], [0, 3, 3], [1, 0, 3], [0, 2, 3], [2, 2, 3], [0, 0, 3], [3, 3, 2]]
     return pre, sta, ext
 
+def logica_echidna_epa():
+    global preconditionsThreads, statesThreads, extraConditionsThreads
+    print(f"Estamos en modo epa")
+    # tenemos que hacer reduceCombinations().
+    contrato_creado, function_combinations, dir = reduceCombinations2()  # se crea un archivo con 8 "tests"
+    print(f"Se creó el contrato {contrato_creado} \n "
+          f"Y cuenta con las siguientes funciones: {function_combinations}")
+    # corremos echidna para el contrato creado.
+    failed_tests = EchidnaRunner(dir).run_contract(contrato_creado, 0)
+    print(failed_tests)
+    preconditionsTemp = []
+    statesTemp = []
+    extraConditionsTemp = []
+    for function in failed_tests:
+        indexPreconditionRequire = function[0]
+        print_combination(indexPreconditionRequire, statesThreads)
+        preconditionsTemp.append(preconditionsThreads[indexPreconditionRequire])
+        statesTemp.append(statesThreads[indexPreconditionRequire])
+        extraConditionsTemp.append(extraConditionsThreads[indexPreconditionRequire])
+    preconditionsThreads = preconditionsTemp
+    statesThreads = statesTemp
+    extraConditionsThreads = extraConditionsTemp
+    print("---"), print(preconditionsThreads), print(statesThreads), print(extraConditionsThreads)
+    # ahora toca validCombinations
+    contrato = ContractCreator(dir).create_transitions_contract(preconditionsThreads, statesThreads, preconditionsThreads, extraConditionsThreads, 0)
+    res = EchidnaRunner(dir).run_contract(contrato, 0)
+    res += EchidnaRunner(dir).run_contract(contrato, 1)
+    init_contract = ContractCreator(dir).create_init_contract()
+    init_failed1 = EchidnaRunner(dir).run_init_contract(init_contract, 0)
+    init_failed2 = EchidnaRunner(dir).run_init_contract(init_contract, 1)
+    init_failed3 = EchidnaRunner(dir).run_init_contract(init_contract, 2)
+    init_failed4 = EchidnaRunner(dir).run_init_contract(init_contract, 3)
+    init_failed5 = EchidnaRunner(dir).run_init_contract(init_contract, 4)
+    init_failed = init_failed1 + init_failed2 + init_failed3 + init_failed4 + init_failed5
+    init_failed_without_duplicates, res_without_duplicates = remove_duplicates_from_results(init_failed, res)
+    GraphManager('_prueba_epa_con_goal_0').build_graph(res_without_duplicates, init_failed_without_duplicates) # les saco los duplicados
+    print("-- prueba --"), print(res), print(init_failed)
+    return
+
+
+def remove_duplicates_from_results(init_failed, res):
+    res_without_duplicates = remove_duplicates(res)
+    init_failed_without_duplicates = remove_duplicates(init_failed)
+    return init_failed_without_duplicates, res_without_duplicates
+
+
+def remove_duplicates(list_of_lists):
+    list_of_lists.sort()
+    return list(res for res, _ in itertools.groupby(list_of_lists))
+
+
+def logica_echidna_states():
+    start = time.time()
+    dir = create_directory('_echidna')
+    tr_failed = ThreadsEchidna(dir, len(preconditions)).create_and_run_transitions_threads(0)
+    tr_failed += ThreadsEchidna(dir, len(preconditions)).create_and_run_transitions_threads(1)
+    tr_failed += ThreadsEchidna(dir, len(preconditions)).create_and_run_transitions_threads(5)
+    init_failed = ThreadsEchidna(dir, len(config.constructors)).create_and_run_init_threads()
+    tr_failed, init_failed = remove_duplicates_from_results(tr_failed, init_failed)
+    Printer().print_results(tr_failed, init_failed)
+    GraphManager("echidna").build_graph(tr_failed, init_failed)
+    end = time.time()
+    print(f"El tiempo total transcurrido fue de: {round(end - start, 2)} segundos.")
 
 def main():
     global config, dot, preconditionsThreads, statesThreads, states, preconditions, extraConditionsThreads, extraConditions
@@ -619,41 +682,8 @@ def main():
 
     if (echidna):
         if mode == Mode.epa:
-            print(f"Estamos en modo epa")
-            # tenemos que hacer reduceCombinations().
-            contrato_creado, function_combinations, dir = reduceCombinations2()  # se crea un archivo con 8 "tests"
-            print(f"Se creó el contrato {contrato_creado} \n "
-                  f"Y cuenta con las siguientes funciones: {function_combinations}")
-            # corremos echidna para el contrato creado.
-            failed_tests = EchidnaRunner(dir).run_contract(contrato_creado)
-            print(failed_tests)
-            preconditionsTemp = []
-            statesTemp = []
-            extraConditionsTemp = []
-            for function in failed_tests:
-                indexPreconditionRequire = function[0]
-                print_combination(indexPreconditionRequire, statesThreads)
-                preconditionsTemp.append(preconditionsThreads[indexPreconditionRequire])
-                statesTemp.append(statesThreads[indexPreconditionRequire])
-                extraConditionsTemp.append(extraConditionsThreads[indexPreconditionRequire])
-            preconditionsThreads = preconditionsTemp
-            statesThreads = statesTemp
-            extraConditionsThreads = extraConditionsTemp
-            print("---"), print(preconditionsThreads), print(statesThreads), print(extraConditionsThreads)
-            # ahora toca validCombinations
-            contrato = ContractCreator(dir).create_transitions_contract(preconditionsThreads, statesThreads, preconditionsThreads, extraConditionsThreads, 0)
-            res = EchidnaRunner(dir).run_contract(contrato)
-            GraphManager('_prueba_epa').build_graph(res, [])
-            print("-- prueba --"), print(res)
-            return
-        start = time.time()
-        dir = create_directory('_echidna')
-        tr_failed = ThreadsEchidna(dir, len(preconditions)).create_and_run_transitions_threads()
-        init_failed = ThreadsEchidna(dir, len(config.constructors)).create_and_run_init_threads()
-        Printer().print_results(tr_failed, init_failed)
-        GraphManager("echidna").build_graph(tr_failed, init_failed)
-        end = time.time()
-        print(f"El tiempo total transcurrido fue de: {round(end - start, 2)} segundos.")
+            return logica_echidna_epa()
+        logica_echidna_states()
         return
 
     threadCount = 10
@@ -738,7 +768,6 @@ def main():
     print("ENDED")
     tempFileName = configFile.replace('Config', '')
     dot.render("graph/" + tempFileName + "_" + str(mode))
-
 
 
 

@@ -1,21 +1,28 @@
-[2023-05-30 12:27:47.06] Compiling /Users/iangrinspan/Documents/1C2023/Beca/verisol-echidna/verisol-test-main/output_echidna/OutputTemp_init.sol... Done! (0.7868s)
+[2023-06-01 15:14:36.35] Compiling /Users/iangrinspan/Documents/1C2023/Beca/verisol-echidna/verisol-test-main/output_echidna/OutputTemp_init.sol... Done! (0.867606s)
 Analyzing contract: /Users/iangrinspan/Documents/1C2023/Beca/verisol-echidna/verisol-test-main/output_echidna/OutputTemp_init.sol:Crowdfunding
-[2023-05-30 12:27:47.86] Running slither on /Users/iangrinspan/Documents/1C2023/Beca/verisol-echidna/verisol-test-main/output_echidna/OutputTemp_init.sol... Done! (1.732981s)
-[2023-05-30 12:27:52.60] [status] tests: 1/6, values: [], fuzzing: 7392/100000, cov: 429, corpus: 1
-[2023-05-30 12:27:55.62] [status] tests: 1/6, values: [], fuzzing: 15096/100000, cov: 429, corpus: 1
-[2023-05-30 12:27:58.62] [status] tests: 1/6, values: [], fuzzing: 22691/100000, cov: 429, corpus: 1
-[2023-05-30 12:28:01.65] [status] tests: 1/6, values: [], fuzzing: 30354/100000, cov: 429, corpus: 1
-[2023-05-30 12:28:04.65] [status] tests: 1/6, values: [], fuzzing: 37970/100000, cov: 429, corpus: 1
-[2023-05-30 12:28:07.67] [status] tests: 1/6, values: [], fuzzing: 45535/100000, cov: 429, corpus: 1
-[2023-05-30 12:28:10.67] [status] tests: 1/6, values: [], fuzzing: 53076/100000, cov: 429, corpus: 1
-[2023-05-30 12:28:13.71] [status] tests: 1/6, values: [], fuzzing: 60734/100000, cov: 429, corpus: 1
-[2023-05-30 12:28:16.72] [status] tests: 1/6, values: [], fuzzing: 68266/100000, cov: 429, corpus: 1
-[2023-05-30 12:28:19.73] [status] tests: 1/6, values: [], fuzzing: 77609/100000, cov: 429, corpus: 1
-[2023-05-30 12:28:22.74] [status] tests: 1/6, values: [], fuzzing: 86876/100000, cov: 429, corpus: 1
-[2023-05-30 12:28:25.75] [status] tests: 1/6, values: [], fuzzing: 98630/100000, cov: 429, corpus: 1
+[2023-06-01 15:14:37.23] Running slither on /Users/iangrinspan/Documents/1C2023/Beca/verisol-echidna/verisol-test-main/output_echidna/OutputTemp_init.sol... Done! (1.918923s)
+[2023-06-01 15:14:42.15] [status] tests: 1/6, values: [], fuzzing: 6200/100000, cov: 429, corpus: 1
+[2023-06-01 15:14:45.16] [status] tests: 1/6, values: [], fuzzing: 11072/100000, cov: 429, corpus: 1
+[2023-06-01 15:14:48.17] [status] tests: 1/6, values: [], fuzzing: 16184/100000, cov: 429, corpus: 1
+[2023-06-01 15:14:51.18] [status] tests: 1/6, values: [], fuzzing: 21251/100000, cov: 429, corpus: 1
+[2023-06-01 15:14:54.19] [status] tests: 1/6, values: [], fuzzing: 26129/100000, cov: 429, corpus: 1
+[2023-06-01 15:14:57.20] [status] tests: 1/6, values: [], fuzzing: 31345/100000, cov: 429, corpus: 1
+[2023-06-01 15:15:00.22] [status] tests: 1/6, values: [], fuzzing: 36372/100000, cov: 429, corpus: 1
+[2023-06-01 15:15:03.23] [status] tests: 1/6, values: [], fuzzing: 41412/100000, cov: 429, corpus: 1
+[2023-06-01 15:15:06.24] [status] tests: 1/6, values: [], fuzzing: 46782/100000, cov: 429, corpus: 1
+[2023-06-01 15:15:09.25] [status] tests: 1/6, values: [], fuzzing: 52930/100000, cov: 429, corpus: 1
+[2023-06-01 15:15:12.25] [status] tests: 1/6, values: [], fuzzing: 59165/100000, cov: 429, corpus: 1
+[2023-06-01 15:15:15.26] [status] tests: 1/6, values: [], fuzzing: 66737/100000, cov: 429, corpus: 1
+[2023-06-01 15:15:18.27] [status] tests: 1/6, values: [], fuzzing: 74554/100000, cov: 429, corpus: 1
+[2023-06-01 15:15:21.28] [status] tests: 1/6, values: [], fuzzing: 82304/100000, cov: 429, corpus: 1
+[2023-06-01 15:15:24.28] [status] tests: 1/6, values: [], fuzzing: 89864/100000, cov: 429, corpus: 1
 vc0x0x0(): failed!💥  
   Call sequence:
-    vc0x0x0() Value: 0x1 Time delay: 482712 seconds Block delay: 1
+    vc2x0x0()
+    vc3x0x0() Time delay: 127251 seconds Block delay: 16089
+    vc4x0x0() Time delay: 463588 seconds Block delay: 8447
+    vc2x0x0() Value: 0x7
+    vc0x0x0() Value: 0x4 Time delay: 463588 seconds Block delay: 53011
 
 
 vc4x0x0():  passed! 🎉
@@ -26,4 +33,4 @@ AssertionFailed(..):  passed! 🎉
 Unique instructions: 429
 Unique codehashes: 1
 Corpus size: 1
-Seed: 4865067252474205456
+Seed: 8132152953528398857
