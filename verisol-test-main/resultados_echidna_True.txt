@@ -1,36 +1,29 @@
-[2023-06-01 15:14:36.35] Compiling /Users/iangrinspan/Documents/1C2023/Beca/verisol-echidna/verisol-test-main/output_echidna/OutputTemp_init.sol... Done! (0.867606s)
+[2023-06-01 22:19:34.25] Compiling /Users/iangrinspan/Documents/1C2023/Beca/verisol-echidna/verisol-test-main/output_echidna/OutputTemp_init.sol... Done! (0.553058s)
 Analyzing contract: /Users/iangrinspan/Documents/1C2023/Beca/verisol-echidna/verisol-test-main/output_echidna/OutputTemp_init.sol:Crowdfunding
-[2023-06-01 15:14:37.23] Running slither on /Users/iangrinspan/Documents/1C2023/Beca/verisol-echidna/verisol-test-main/output_echidna/OutputTemp_init.sol... Done! (1.918923s)
-[2023-06-01 15:14:42.15] [status] tests: 1/6, values: [], fuzzing: 6200/100000, cov: 429, corpus: 1
-[2023-06-01 15:14:45.16] [status] tests: 1/6, values: [], fuzzing: 11072/100000, cov: 429, corpus: 1
-[2023-06-01 15:14:48.17] [status] tests: 1/6, values: [], fuzzing: 16184/100000, cov: 429, corpus: 1
-[2023-06-01 15:14:51.18] [status] tests: 1/6, values: [], fuzzing: 21251/100000, cov: 429, corpus: 1
-[2023-06-01 15:14:54.19] [status] tests: 1/6, values: [], fuzzing: 26129/100000, cov: 429, corpus: 1
-[2023-06-01 15:14:57.20] [status] tests: 1/6, values: [], fuzzing: 31345/100000, cov: 429, corpus: 1
-[2023-06-01 15:15:00.22] [status] tests: 1/6, values: [], fuzzing: 36372/100000, cov: 429, corpus: 1
-[2023-06-01 15:15:03.23] [status] tests: 1/6, values: [], fuzzing: 41412/100000, cov: 429, corpus: 1
-[2023-06-01 15:15:06.24] [status] tests: 1/6, values: [], fuzzing: 46782/100000, cov: 429, corpus: 1
-[2023-06-01 15:15:09.25] [status] tests: 1/6, values: [], fuzzing: 52930/100000, cov: 429, corpus: 1
-[2023-06-01 15:15:12.25] [status] tests: 1/6, values: [], fuzzing: 59165/100000, cov: 429, corpus: 1
-[2023-06-01 15:15:15.26] [status] tests: 1/6, values: [], fuzzing: 66737/100000, cov: 429, corpus: 1
-[2023-06-01 15:15:18.27] [status] tests: 1/6, values: [], fuzzing: 74554/100000, cov: 429, corpus: 1
-[2023-06-01 15:15:21.28] [status] tests: 1/6, values: [], fuzzing: 82304/100000, cov: 429, corpus: 1
-[2023-06-01 15:15:24.28] [status] tests: 1/6, values: [], fuzzing: 89864/100000, cov: 429, corpus: 1
-vc0x0x0(): failed!💥  
+[2023-06-01 22:19:34.82] Running slither on /Users/iangrinspan/Documents/1C2023/Beca/verisol-echidna/verisol-test-main/output_echidna/OutputTemp_init.sol... Done! (1.144717s)
+[2023-06-01 22:19:35.97] [Worker 0] Test vc2x0x0() falsified!
+[2023-06-01 22:19:35.98] [Worker 0] New coverage: 230 instr, 1 contracts, 1 seqs in corpus
+[2023-06-01 22:19:38.96] [status] tests: 1/6, fuzzing: 21062/100000, values: [], cov: 230, corpus: 1
+[2023-06-01 22:19:41.96] [status] tests: 1/6, fuzzing: 42064/100000, values: [], cov: 230, corpus: 1
+[2023-06-01 22:19:44.96] [status] tests: 1/6, fuzzing: 63244/100000, values: [], cov: 230, corpus: 1
+[2023-06-01 22:19:47.96] [status] tests: 1/6, fuzzing: 84268/100000, values: [], cov: 230, corpus: 1
+[2023-06-01 22:19:50.19] [Worker 0] Test limit reached. Stopping.
+[2023-06-01 22:19:50.19] [status] tests: 1/6, fuzzing: 100045/100000, values: [], cov: 230, corpus: 1
+vc0x0x0(): passing
+vc4x0x0(): passing
+vc1x0x0(): passing
+vc2x0x0(): failed!💥  
   Call sequence:
-    vc2x0x0()
-    vc3x0x0() Time delay: 127251 seconds Block delay: 16089
-    vc4x0x0() Time delay: 463588 seconds Block delay: 8447
-    vc2x0x0() Value: 0x7
-    vc0x0x0() Value: 0x4 Time delay: 463588 seconds Block delay: 53011
+    vc3x0x0() from: 0x0000000000000000000000000000000000020000 Value: 0x7 Time delay: 284749 seconds Block delay: 3661
+    vc2x0x0() from: 0x0000000000000000000000000000000000010000 Time delay: 136394 seconds Block delay: 500
 
 
-vc4x0x0():  passed! 🎉
-vc1x0x0():  passed! 🎉
-vc2x0x0():  passed! 🎉
-vc3x0x0():  passed! 🎉
-AssertionFailed(..):  passed! 🎉
-Unique instructions: 429
+vc3x0x0(): passing
+AssertionFailed(..): passing
+
+
+Unique instructions: 230
 Unique codehashes: 1
 Corpus size: 1
-Seed: 8132152953528398857
+Seed: 642822742311959335
+
