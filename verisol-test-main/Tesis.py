@@ -78,7 +78,7 @@ class EchidnaRunner:
 
     def create_echidna_command(self, fileNameTemp, contractName, directory):
         config_file = self.create_config_file(directory, EchidnaConfigFileData()) # acá podríamos ir cambiándole los params.
-        commandResult =  f"echidna {fileNameTemp} --contract {contractName} --config {config_file}"
+        commandResult =  f"echidna {fileNameTemp} --contract {contractName} --config {config_file} --workers 4"
         return commandResult
 
     @staticmethod
