@@ -515,9 +515,8 @@ def prepare_variables(mode, funcionesNumeros):
     extraConditionsThreads = extraConditions
 
 
+# TODO: le tengo que dar esta lógica al ContractCreator.
 def reduce_combinations():
-    # LE TENGO QUE DAR ESTA LÓGICA AL ContractCreator
-    # Cambié arg por 99 para reconocer dónde se crea. Saqué lógica de threads.
     global fileName, preconditionsThreads, statesThreads, extraConditionsThreads, contractName
     final_directory = create_directory(99)
     fileNameTemp = create_file(99, final_directory, fileName, contractName)
@@ -526,6 +525,7 @@ def reduce_combinations():
     return fileNameTemp, functionCombinations, final_directory
 
 
+# TODO: refactorizar
 def logica_echidna_epa():
     global preconditions, states, extraConditions
     contract_created, function_combinations, directory = reduce_combinations()  # se crea un archivo con 8 "tests"
@@ -564,6 +564,7 @@ def update_global_variables_based_on(failed_tests):
     extraConditions = extraConditionsTemp
 
 
+# TODO: refactorizar
 def logica_echidna_states():
     start = time.time()
     dir = create_directory('_echidna')
@@ -581,7 +582,6 @@ def logica_echidna_states():
     GraphManager("echidna").build_graph(tr_failed, init_failed)
     end = time.time()
     print(f"El tiempo total transcurrido fue de: {round(end - start, 2)} segundos.")
-
 
 
 def main():
