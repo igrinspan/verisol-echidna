@@ -18,51 +18,24 @@ class EchidnaRunner:
     def __init__(self, dir):
         self.directory = dir
 
-    def run_init_contract(self, contract, constructor_index=0):
-        result = self.set_up_and_run(contract, contractName, True, constructor_index)
+    def run_init_contract(self, contract):
+        ContractCreator(self.directory).transform_contract_for_init(contract)
+        result = self.set_up_and_run(contract, contractName, True)
         return self.process_output(result)
 
-    def run_transitions_contract(self, contract, constructor_index=0):
-        result = self.set_up_and_run(contract, contractName, False, constructor_index)
+    def run_transitions_contract(self, contract):
+        result = self.set_up_and_run(contract, contractName, False)
         return self.process_output(result)
 
-
-    def set_up_and_run(self, filename_temp, contractName, init=False, constructor_index=0):
-        if init:
-            self.transform_contract_for_init(filename_temp)
-        self.hardcode_constructor_parameters(filename_temp, constructor_index)
+    def set_up_and_run(self, filename_temp, contractName):
         tool_command = self.create_echidna_command(filename_temp, contractName, self.directory)
         print(f"El comando a correr es {tool_command} en el directorio {self.directory}")
         result = self.run_echidna_command(tool_command)
-        write_file_from_string(f"resultados_echidna_{init}.txt", result)
         return result
-
-    def transform_contract_for_init(self, file_name_temp):
-        new_contract_body = self.remove_everything_after_constructor(file_name_temp)
-        write_file_from_string(file_name_temp, new_contract_body)
-
-    def remove_everything_after_constructor(self, filename_temp):
-        lines = open(filename_temp, 'r').readlines()
-        _, end_line = self.get_constructor_start_and_end_lines(self, lines)
-        lines = lines[:end_line + 1].append("}")
-        return lines
 
     def run_echidna_command(self, command_to_run):
         result = subprocess.run([command_to_run, ""], shell = True, cwd=self.directory, stdout=subprocess.PIPE)
         return result.stdout.decode('utf-8')
-
-    def hardcode_constructor_parameters(self, fileNameTemp, constructor_index):
-        input_file = open(fileNameTemp, 'r').readlines()
-        new_constructor_lines = self.build_constructor_from_config(constructor_index)
-        constructor_start_line, constructor_end_line = self.get_constructor_start_and_end_lines(input_file)
-        input_file[constructor_start_line:constructor_end_line] = list(map(lambda x: x + "\n", new_constructor_lines))
-        write_file_from_string(fileNameTemp, input_file)
-        return
-
-    def get_constructor_start_and_end_lines(self, input_file):
-        start_line = next((index for index, line in enumerate(input_file) if line.strip().startswith('constructor(')), None)
-        end_line = next((index for index, line in enumerate(input_file[start_line:]) if line.strip() == '}'), None) + start_line + 1
-        return start_line, end_line
 
     def process_output(self, tool_result):
         tests_that_failed = []
@@ -72,9 +45,6 @@ class EchidnaRunner:
                 i, j, k = get_params_from_function_name(failed_test)
                 tests_that_failed.append([i, j, k])
         return tests_that_failed
-
-    def build_constructor_from_config(self, index):
-        return ["constructor() public {"] + config.constructors[index] + ["}"]
 
     def create_echidna_command(self, fileNameTemp, contractName, directory):
         config_file = self.create_config_file(directory, EchidnaConfigFileData()) # acá podríamos ir cambiándole los params.
@@ -105,20 +75,50 @@ class ContractCreator:
         return file_name_temp
 
     def create_init_contract(self):
-        file_name_temp = create_file("init", self.directory, fileName, contractName)
+        file_name_temp = create_file("_init", self.directory, fileName, contractName)
         body, _ = get_init_output(preconditions, extraConditions)
         write_file(file_name_temp, body, contractName)
         return file_name_temp
 
+    def transform_contract_for_init(self, filename_temp):
+        new_contract_body = self.remove_everything_after_constructor(filename_temp)
+        write_file_from_string(filename_temp, new_contract_body)
+
+    def remove_everything_after_constructor(self, filename_temp):
+        lines = open(filename_temp, 'r').readlines()
+        _, end_line = self.get_constructor_start_and_end_lines(self, lines)
+        lines = lines[:end_line + 1].append("}")
+        return lines
+
+    def get_constructor_start_and_end_lines(self, input_file):
+        start_line = next((index for index, line in enumerate(input_file) if line.strip().startswith('constructor(')), None)
+        end_line = next((index for index, line in enumerate(input_file[start_line:]) if line.strip() == '}'), None) + start_line + 1
+        return start_line, end_line
+
+    # WIP. Testear, sobre todo la segunda parte.
+    def add_has_initialized(self, contract_filename):
+        has_initialized_modifier = "\tmodifier hasInitialized {\n\t\trequire(has_initialized); \n\t\t_; \n\t}\n\n"
+        has_not_initialized_modifier = "\tmodifier hasNotInitialized {\n\t\trequire(!has_initialized); \n\t\t_; \n\t}\n\n"
+        has_initialized_declaration = "\tbool has_initialized = false;\n\n"
+        cosas = has_initialized_modifier + has_not_initialized_modifier + has_initialized_declaration
+        write_file(contract_filename, cosas, contractName) # uso esta porque las puedo meter en cualquier lado del contrato
+        
+        lines = open(contract_filename, 'r').readlines() # tengo que meterlas justo en cada parte del constructor
+        require = "\t\trequire(!has_initialized);\n"
+        change_status = "\t\thas_initialized = true;\n"
+        start, end = self.get_constructor_start_and_end_lines(lines)
+        new_lines = lines[:start+1] + [require] + lines[start+1:end-1] + [change_status] + lines[end-1:]
+        write_file_from_string(contract_filename, new_lines)
+
 
 @dataclass
-class EchidnaConfigFileData: # Tiene cosas hardcodeadas para crowdfunding
-    maxValue: int = 7
+class EchidnaConfigFileData: # Tiene cosas hardcodeadas para crowdfunding (maxValue y balanceContract)
+    testMode: str = 'assertion'
+    format: str = 'text'
     testLimit: int = 100000
     shrinkLimit: int = 0
     balanceContract: int = 0
-    testMode: str = 'assertion'
-    format: str = 'text'
+    maxValue: int = 7
 
 
 class Printer:
@@ -525,7 +525,7 @@ def reduce_combinations():
     return fileNameTemp, functionCombinations, final_directory
 
 
-# TODO: refactorizar
+# TODO: cambiar a modo 1 solo contrato para correr, sin hardcodear constructores.
 def logica_echidna_epa():
     global preconditions, states, extraConditions
     contract_created, function_combinations, directory = reduce_combinations()  # se crea un archivo con 8 "tests"
@@ -564,24 +564,26 @@ def update_global_variables_based_on(failed_tests):
     extraConditions = extraConditionsTemp
 
 
-# TODO: refactorizar
+# WIP
 def logica_echidna_states():
-    start = time.time()
+    #start = time.time()
     dir = create_directory('_echidna')
     init_contract_to_run = ContractCreator(dir).create_init_contract()
-    transitions_contract_to_run = ContractCreator(dir).create_transitions_contract(preconditions, states, preconditions, extraConditions, 0)
-    init_failed = EchidnaRunner(dir).run_init_contract(init_contract_to_run, 0)
-    init_failed += EchidnaRunner(dir).run_init_contract(init_contract_to_run, 1)
-    init_failed += EchidnaRunner(dir).run_init_contract(init_contract_to_run, 2)
-    init_failed += EchidnaRunner(dir).run_init_contract(init_contract_to_run, 3)
-    tr_failed = EchidnaRunner(dir).run_transitions_contract(transitions_contract_to_run, 0)
-    tr_failed += EchidnaRunner(dir).run_transitions_contract(transitions_contract_to_run, 1)
-    tr_failed += EchidnaRunner(dir).run_transitions_contract(transitions_contract_to_run, 5)
+    transitions_contract_to_run = ContractCreator(dir).create_transitions_contract(preconditions, states, preconditions, extraConditions)
+    ContractCreator(dir).add_has_initialized(init_contract_to_run)
+    ContractCreator(dir).add_has_initialized(transitions_contract_to_run)
+    print(f"Se creó el contrato {init_contract_to_run} \n Y el contrato {transitions_contract_to_run}")
+    return
+    # Acá corremos ambos contratos.
+    init_failed = EchidnaRunner(dir).run_init_contract(init_contract_to_run)
+    tr_failed = EchidnaRunner(dir).run_transitions_contract(transitions_contract_to_run)
     tr_failed, init_failed = remove_duplicates_from_results(tr_failed, init_failed)
     Printer().print_results(tr_failed, init_failed)
     GraphManager("echidna").build_graph(tr_failed, init_failed)
     end = time.time()
     print(f"El tiempo total transcurrido fue de: {round(end - start, 2)} segundos.")
+
+
 
 
 def main():
