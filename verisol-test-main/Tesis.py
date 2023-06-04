@@ -41,7 +41,7 @@ class EchidnaRunner:
         new_contract_body = self.remove_everything_after_constructor(file_name_temp)
         write_file_from_string(file_name_temp, new_contract_body)
 
-    def remove_everything_after_constructor(self, filename_temp): # TESTEAR ESTA FUNCIÓN
+    def remove_everything_after_constructor(self, filename_temp):
         lines = open(filename_temp, 'r').readlines()
         _, end_line = self.get_constructor_start_and_end_lines(self, lines)
         lines = lines[:end_line + 1].append("}")
