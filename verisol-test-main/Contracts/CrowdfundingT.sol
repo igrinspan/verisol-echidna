@@ -18,11 +18,11 @@ contract Crowdfunding {
     //     assert(!(!(max_block > blockNumber) && !(max_block < blockNumber && goal <= balance) && !(blockNumber > max_block && !funded && goal > balance && backersArray.length != 0) && balance > 0 )) ;
     // }
 
-    constructor(address payable _owner, uint _max_block, uint _goal, uint _blockNumber) public {
-        owner = _owner;
+    constructor(uint _max_block, uint _goal, uint _blockNumber) public payable {
+        owner = msg.sender;
         max_block = _max_block;
         goal = _goal;
-        balance = 0;
+        balance = msg.value;
         blockNumber = _blockNumber;
     }
 
