@@ -14,7 +14,6 @@ def delete_directory(final_directory):
 def create_file(index, final_directory, fileName, contractName):
     fileNameTemp = "OutputTemp"+str(index)+".sol"
     fileNameTemp = final_directory +"/"+ fileNameTemp
-    tool = "Verisol " + fileNameTemp + " " + contractName
     if os.path.isfile(fileNameTemp):
         os.remove(fileNameTemp)
     shutil.copyfile(fileName, fileNameTemp)
@@ -24,7 +23,6 @@ def write_file(fileNameTemp, body, contractName):
     new_body = clean_true_requires(body)
     inputfile = open(fileNameTemp, 'r').readlines()
     write_file = open(fileNameTemp,'w')
-    fuctionCombinations = []
     for line in inputfile:
         write_file.write(line)
         if 'contract ' + contractName in line:
