@@ -6,7 +6,7 @@ import shutil
 import numpy  as np
 import graphviz
 from threading import Thread
-from time import sleep
+from time import time, sleep
 from enum import Enum
 import sys
 from dataclasses import dataclass, fields, asdict
@@ -19,12 +19,11 @@ class EchidnaRunner:
         self.directory = dir
 
     def run_init_contract(self, contract):
-        ContractCreator(self.directory).transform_contract_for_init(contract)
-        result = self.set_up_and_run(contract, contractName, True)
+        result = self.set_up_and_run(contract, contractName)
         return self.process_output(result)
 
     def run_transitions_contract(self, contract):
-        result = self.set_up_and_run(contract, contractName, False)
+        result = self.set_up_and_run(contract, contractName)
         return self.process_output(result)
 
     def set_up_and_run(self, filename_temp, contractName):
@@ -48,7 +47,7 @@ class EchidnaRunner:
 
     def create_echidna_command(self, fileNameTemp, contractName, directory):
         config_file = self.create_config_file(directory, EchidnaConfigFileData()) # acá podríamos ir cambiándole los params.
-        commandResult =  f"echidna {fileNameTemp} --contract {contractName} --config {config_file} --workers 4"
+        commandResult =  f"echidna {fileNameTemp} --contract {contractName} --config {config_file}"
         return commandResult
 
     @staticmethod
@@ -75,19 +74,21 @@ class ContractCreator:
         return file_name_temp
 
     def create_init_contract(self):
-        file_name_temp = create_file("_init", self.directory, fileName, contractName)
+        filename_temp = create_file("_init", self.directory, fileName, contractName)
         body, _ = get_init_output(preconditions, extraConditions)
-        write_file(file_name_temp, body, contractName)
-        return file_name_temp
+        write_file(filename_temp, body, contractName)
+        self.transform_contract_for_init(filename_temp)
+        return filename_temp
 
     def transform_contract_for_init(self, filename_temp):
+        print(filename_temp)
         new_contract_body = self.remove_everything_after_constructor(filename_temp)
         write_file_from_string(filename_temp, new_contract_body)
 
     def remove_everything_after_constructor(self, filename_temp):
         lines = open(filename_temp, 'r').readlines()
-        _, end_line = self.get_constructor_start_and_end_lines(self, lines)
-        lines = lines[:end_line + 1].append("}")
+        _, end_line = self.get_constructor_start_and_end_lines(lines)
+        lines = lines[:end_line + 1] + ["}"]
         return lines
 
     def get_constructor_start_and_end_lines(self, input_file):
@@ -95,19 +96,32 @@ class ContractCreator:
         end_line = next((index for index, line in enumerate(input_file[start_line:]) if line.strip() == '}'), None) + start_line + 1
         return start_line, end_line
 
-    # WIP. Testear, sobre todo la segunda parte.
-    def add_has_initialized(self, contract_filename):
+    # WIP
+    def change_for_constructor_fuzzing(self, contract_filename):
+        # 1. Agregamos los modifiers y la variable de estado que dice si el contrato ya fue inicializado.
         has_initialized_modifier = "\tmodifier hasInitialized {\n\t\trequire(has_initialized); \n\t\t_; \n\t}\n\n"
         has_not_initialized_modifier = "\tmodifier hasNotInitialized {\n\t\trequire(!has_initialized); \n\t\t_; \n\t}\n\n"
         has_initialized_declaration = "\tbool has_initialized = false;\n\n"
         cosas = has_initialized_modifier + has_not_initialized_modifier + has_initialized_declaration
         write_file(contract_filename, cosas, contractName) # uso esta porque las puedo meter en cualquier lado del contrato
-        
-        lines = open(contract_filename, 'r').readlines() # tengo que meterlas justo en cada parte del constructor
+        # 2. Le agregamos el modifier hasInitialized a todas las funciones, incluidos los tests.
+        lines = open(contract_filename, 'r').readlines()
+        new_lines = []
+        for line in lines:
+            if "function" in line:
+                new_lines += [line.replace(")", ") hasInitialized", 1)] # el 1 indica la cantidad de reemplazos.
+            else:
+                new_lines += [line]
+        # 3. Agregamos el require y el cambio de estado en el constructor.
         require = "\t\trequire(!has_initialized);\n"
         change_status = "\t\thas_initialized = true;\n"
-        start, end = self.get_constructor_start_and_end_lines(lines)
-        new_lines = lines[:start+1] + [require] + lines[start+1:end-1] + [change_status] + lines[end-1:]
+        start, end = self.get_constructor_start_and_end_lines(new_lines)
+        new_lines = new_lines[:start+1] + [require] + new_lines[start+1:end-1] + [change_status] + new_lines[end-1:]
+        # 4. Hacemos que el constructor sea una función común.
+        linea_a_cambiar = new_lines[start] # constructor(uint _max_block, uint _goal, uint _blockNumber) public payable {
+        linea_a_cambiar = linea_a_cambiar.replace("constructor", "function my_constructor")
+        new_lines[start] = linea_a_cambiar
+
         write_file_from_string(contract_filename, new_lines)
 
 
@@ -115,10 +129,12 @@ class ContractCreator:
 class EchidnaConfigFileData: # Tiene cosas hardcodeadas para crowdfunding (maxValue y balanceContract)
     testMode: str = 'assertion'
     format: str = 'text'
-    testLimit: int = 100000
+    testLimit: int = 500000
     shrinkLimit: int = 0
     balanceContract: int = 0
-    maxValue: int = 7
+    workers: int = 4
+    seqLen: int = 20
+    #maxValue: int = 9
 
 
 class Printer:
@@ -305,7 +321,7 @@ def output_combination(indexCombination, tempCombinations):
 
 def print_combination(indexCombination, tempCombinations):
     output = output_combination(indexCombination, tempCombinations)
-    if time == False:
+    if time_opt == False:
         print(output + "---------")
 
 
@@ -369,7 +385,7 @@ def try_preconditions(tool, tempFunctionNames, final_directory, statesTemp, prec
     extraConditionsTemp2 = []
     
     for functionName in tempFunctionNames:
-        if time == False:
+        if time_opt == False:
             print(functionName + "---" + str(arg))
         indexPreconditionRequire, _ , _ = get_params_from_function_name(functionName)
         if try_command(tool, functionName, tempFunctionNames, final_directory, txBound):
@@ -383,7 +399,7 @@ def try_preconditions(tool, tempFunctionNames, final_directory, statesTemp, prec
 def try_transaction(tool, tempFunctionNames, final_directory, statesTemp, states, arg):
     global txBound 
     for functionName in tempFunctionNames:
-        if time == False:
+        if time_opt == False:
             print(functionName + "---" + str(arg))
         indexPreconditionRequire, indexPreconditionAssert, indexFunction = get_params_from_function_name(functionName)
         if try_command(tool, functionName, tempFunctionNames, final_directory, txBound):
@@ -416,7 +432,6 @@ def get_temp_function_name(indexPrecondtion, indexAssert, indexFunction):
 
 
 def print_output(indexPreconditionRequire, indexFunction, indexPreconditionAssert, combinations, fullCombination):
-    print(indexFunction)
     output ="Desde el estado: "+ output_combination(indexPreconditionRequire, combinations) + "\nHaciendo: " + functions[indexFunction] + "\nLlegas al estado: " + output_combination(indexPreconditionAssert, fullCombination) + "\n---------"
     #if time == False:
     print(output)
@@ -566,21 +581,21 @@ def update_global_variables_based_on(failed_tests):
 
 # WIP
 def logica_echidna_states():
-    #start = time.time()
+    start = time()
     dir = create_directory('_echidna')
     init_contract_to_run = ContractCreator(dir).create_init_contract()
     transitions_contract_to_run = ContractCreator(dir).create_transitions_contract(preconditions, states, preconditions, extraConditions)
-    ContractCreator(dir).add_has_initialized(init_contract_to_run)
-    ContractCreator(dir).add_has_initialized(transitions_contract_to_run)
-    print(f"Se creó el contrato {init_contract_to_run} \n Y el contrato {transitions_contract_to_run}")
-    return
+    ContractCreator(dir).change_for_constructor_fuzzing(init_contract_to_run)
+    ContractCreator(dir).change_for_constructor_fuzzing(transitions_contract_to_run)
     # Acá corremos ambos contratos.
     init_failed = EchidnaRunner(dir).run_init_contract(init_contract_to_run)
     tr_failed = EchidnaRunner(dir).run_transitions_contract(transitions_contract_to_run)
     tr_failed, init_failed = remove_duplicates_from_results(tr_failed, init_failed)
     Printer().print_results(tr_failed, init_failed)
+    # imprimir la cantidad de tests fallados para cada modo
+    print(f"Count init: {len(init_failed)}\nCount transitions: {len(tr_failed)}")
     GraphManager("echidna").build_graph(tr_failed, init_failed)
-    end = time.time()
+    end = time()
     print(f"El tiempo total transcurrido fue de: {round(end - start, 2)} segundos.")
 
 
@@ -612,7 +627,7 @@ def main():
     if len(extraConditionsThreads) != 0:
         extraConditionsThreads = np.array_split(extraConditions, threadCount)
 
-    if time == False:
+    if time_opt == False:
         print("Length")
         print(len(preconditions))
 
@@ -642,11 +657,11 @@ def main():
     divideThreads = 1
     moduleThreadsConut = 0
     divideCount = realThreadCount
-    if time == False:
+    if time_opt == False:
         print("Length")
         print(len(preconditionsThreads))
     if len(preconditionsThreads) > 30:
-        if time == False:
+        if time_opt == False:
             print("MAYOR A 200")
         divideCount = len(preconditionsThreads)
         divideThreads = int(divideCount/threadCount)
@@ -691,7 +706,7 @@ echidna_output = "failed!"
 sys.path.append("/Users/iangrinspan/Documents/1C2023/Beca/verisol-echidna/verisol-test-main/Configs")
 
 if __name__ == "__main__":
-    global mode, config, verbose, time
+    global mode, config, verbose, time_opt
     epaMode = False
     statesMode = False
     echidna = False
@@ -699,7 +714,7 @@ if __name__ == "__main__":
     print(f"Config file: {configFile}")
     print(f"Flag: {sys.argv[2]}")
     verbose = False
-    time = False
+    time_opt = False
     
     if (len(sys.argv) > 2) and sys.argv[2] == "-echidna":
         echidna = True 
@@ -711,7 +726,7 @@ if __name__ == "__main__":
         if len(sys.argv) > 2 and sys.argv[2] == "-v":
             verbose = True
         if len(sys.argv) > 2 and sys.argv[2] == "-t":
-            time = True
+            time_opt = True
         if len(sys.argv) > 3 and sys.argv[3] == "-e":
             epaMode = True
         if len(sys.argv) > 3 and sys.argv[3] == "-s":
