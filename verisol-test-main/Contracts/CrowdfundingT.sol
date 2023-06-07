@@ -19,7 +19,7 @@ contract Crowdfunding {
     // }
 
     constructor(uint _max_block, uint _goal, uint _blockNumber) public payable {
-        owner = msg.sender;
+        owner = msg.sender; 
         max_block = _max_block;
         goal = _goal;
         balance = msg.value;
@@ -79,7 +79,7 @@ contract Crowdfunding {
         }
     }
     
-    function remove(address _valueToFindAndRemove, address[] memory _array) public  returns(address[] memory) {
+    function remove(address _valueToFindAndRemove, address[] memory _array) public returns(address[] memory) {
 
         auxArray = new address[](0); 
 
