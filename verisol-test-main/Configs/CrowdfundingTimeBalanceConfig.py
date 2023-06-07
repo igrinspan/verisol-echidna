@@ -31,20 +31,6 @@ statePreconditionsModeState = [
     "!(max_block > blockNumber) && !(max_block < blockNumber && goal <= balance) && (blockNumber > max_block && !funded && goal > balance && backersArray.length != 0)",
 ]
 
-# 0. Que empiece normal (max_block > block_number) y sin balance. (DONATE)
-# 1. Que empiece terminado y con balance. (VACÍO CON BALANCE)
-# 2. Que empiece terminado y sin balance. (VACÍO SIN BALANCE)
-# 3. Que empiece terminado y con balance superior a goal. (GET FUNDS)
-# 4. Para que pueda llegar al estado...
-# 5. Para que pueda llegar al estado...
-constructors = [
-    ["owner = msg.sender;", f"max_block = 4;", f"goal = 9;", "balance = 0;", f"blockNumber = 0;"],
-    ["owner = msg.sender;", f"max_block = 2;", f"goal = 5;", "balance = 4;", f"blockNumber = 3;"],
-    ["owner = msg.sender;", f"max_block = 2;", f"goal = 5;", "balance = 0;", f"blockNumber = 3;"],
-    ["owner = msg.sender;", f"max_block = 2;", f"goal = 5;", "balance = 10;", f"blockNumber = 3;"],
-    ["owner = msg.sender;", f"max_block = 4;", f"goal = 0;", "balance = 0;", f"blockNumber = 0;"],
-    ["owner = msg.sender;", f"max_block = 2;", f"goal = 500;", "balance = 10;", f"blockNumber = 0;"]
-]
 
 # epaExtraConditions = "address(this).balance == 0"
 txBound = 6
