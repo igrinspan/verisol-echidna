@@ -53,10 +53,6 @@ Call sequence:
 - En el main cargamos todo.
 - Ignoramos todo lo de los threads (antes de que se haga eso, llamamos validCombinations(0, "echidna"))
 - A validCombinations le agregué el segundo parámetro (por default dejo verisol), para ver qué tool tiene que ejecutar.
-- En validComb metí un if que diferencia la tool a usar y listo.
-- En `try_transaction` y `try_command` no cambié nada. El llamado a echidna se está haciendo directamente desde `valid_combinations`.
 
 - El tema es que con verisol, se hace una corrida de la tool por cada función a testear, pero yo no necesito eso. 
-Preguntar si eso lo hace por un tema de la tool en sí o porque es más fácil procesar el output para saber qué test falló y eso.
-
-- Falta hacer una función que recorra el output de echidna y se fije qué tests fueron los que fallaron, que es parecido a lo que hace try_command y try_transaction.
+¿Lo hace por un tema de la tool en sí o porque es más fácil procesar el output para saber qué test falló y eso?
