@@ -36,7 +36,7 @@ class EchidnaRunner:
         tests_that_failed = []
         for line in tool_result.splitlines():
             if "failed!" in line:
-                failed_test = line.split()[0][2:-3] # vcIxJxK(): -> IxJxK.
+                failed_test = line.split()[0][2:7] # vcIxJxK(¡): -> IxJxK.
                 i, j, k = get_params_from_function_name(failed_test)
                 tests_that_failed.append([i, j, k])
         return tests_that_failed
@@ -125,10 +125,10 @@ class ContractCreator:
 class EchidnaConfigFileData: # Tiene cosas hardcodeadas para crowdfunding (maxValue y balanceContract)
     testMode: str = 'assertion'
     format: str = 'text'
-    testLimit: int = 200000
+    testLimit: int = 500000
     shrinkLimit: int = 0
     balanceContract: int = 0
-    workers: int = 4
+    workers: int = 8
     #seqLen: int = 20
     #maxValue: int = 9
 
@@ -526,6 +526,11 @@ def prepare_variables(mode, funcionesNumeros):
     extraConditionsThreads = extraConditions
 
 
+def discard_unreachable_states():
+    pre_contract = ContractCreator(dir).create_valid_preconditions_contract(preconditionsThreads, extraConditionsThreads)
+    return pre_contract
+
+
 # TODO: le tengo que dar esta lógica al ContractCreator.
 def reduce_combinations():
     global fileName, preconditionsThreads, statesThreads, extraConditionsThreads, contractName
@@ -593,7 +598,6 @@ def logica_echidna_states():
     # Acá corremos ambos contratos.
     init_failed = EchidnaRunner(dir).run_contract(init_contract_to_run)
     tr_failed = EchidnaRunner(dir).run_contract(transitions_contract_to_run)
-    tr_failed, init_failed = remove_duplicates_from_results(tr_failed, init_failed)
 
     OutputPrinter().print_results(tr_failed, init_failed)
     print(f"Count init: {len(init_failed)}\nCount transitions: {len(tr_failed)}")
