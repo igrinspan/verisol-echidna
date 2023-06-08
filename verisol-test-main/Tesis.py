@@ -18,11 +18,7 @@ class EchidnaRunner:
     def __init__(self, dir):
         self.directory = dir
 
-    def run_init_contract(self, contract):
-        result = self.set_up_and_run(contract, contractName)
-        return self.process_output(result)
-
-    def run_transitions_contract(self, contract):
+    def run_contract(self, contract): 
         result = self.set_up_and_run(contract, contractName)
         return self.process_output(result)
 
@@ -129,15 +125,15 @@ class ContractCreator:
 class EchidnaConfigFileData: # Tiene cosas hardcodeadas para crowdfunding (maxValue y balanceContract)
     testMode: str = 'assertion'
     format: str = 'text'
-    testLimit: int = 500000
+    testLimit: int = 200000
     shrinkLimit: int = 0
     balanceContract: int = 0
     workers: int = 4
-    seqLen: int = 20
+    #seqLen: int = 20
     #maxValue: int = 9
 
 
-class Printer:
+class OutputPrinter:
     def print_results(self, transition_tests_that_failed, init_tests_that_failed):
         self.print_failed_tests(transition_tests_that_failed)
         self.print_failed_tests(init_tests_that_failed, True)
@@ -152,7 +148,7 @@ class Printer:
                 print_output(test[0], test[2], test[1], states, states) #print_output recibe como segundo param la función y tercero el assert.
 
 
-class GraphManager:
+class Graph:
     def __init__(self, nombre):
         self.graph = graphviz.Digraph(comment=nombre)
         self.nombre = nombre
@@ -540,30 +536,34 @@ def reduce_combinations():
     return fileNameTemp, functionCombinations, final_directory
 
 
-# TODO: cambiar a modo 1 solo contrato para correr, sin hardcodear constructores.
+# TODO: darle la lógica de creación del primer contrato al ContractCreator.
 def logica_echidna_epa():
     global preconditions, states, extraConditions
     contract_created, function_combinations, directory = reduce_combinations()  # se crea un archivo con 8 "tests"
     print(f"Se creó el contrato {contract_created} \n "
           f"Y cuenta con las siguientes funciones: {function_combinations}")
+    # lo de arriba hay que cambiarlo para que lo haga el ContractCreator, como:
     # contract_created = ContractCreator(directory).create_combinations_contract()
-    failed_tests = EchidnaRunner(directory).run_transitions_contract(contract_created, 0)
+    ContractCreator(dir).change_for_constructor_fuzzing(contract_created)
+    failed_tests = EchidnaRunner(directory).run_contract(contract_created)
     update_global_variables_based_on(failed_tests)
-    tr_contract = ContractCreator(directory).create_transitions_contract(preconditions, states, preconditions, extraConditions)
-    tr_failed = EchidnaRunner(directory).run_transitions_contract(tr_contract, 0)
-    tr_failed += EchidnaRunner(directory).run_transitions_contract(tr_contract, 5)
+    print(f"Se encontraron {len(failed_tests)} tests fallidos")
     init_contract = ContractCreator(directory).create_init_contract()
-    init_failed1 = EchidnaRunner(directory).run_init_contract(init_contract, 0)
-    init_failed2 = EchidnaRunner(directory).run_init_contract(init_contract, 1)
-    init_failed3 = EchidnaRunner(directory).run_init_contract(init_contract, 2)
-    init_failed4 = EchidnaRunner(directory).run_init_contract(init_contract, 3)
-    init_failed = init_failed1 + init_failed2 + init_failed3 + init_failed4
-    init_failed_without_duplicates, tr_failed_without_duplicates = remove_duplicates_from_results(init_failed, tr_failed)
-    GraphManager('_epa').build_graph(tr_failed_without_duplicates, init_failed_without_duplicates)
+    tr_contract = ContractCreator(directory).create_transitions_contract(preconditions, states, preconditions, extraConditions)
+
+    ContractCreator(dir).change_for_constructor_fuzzing(init_contract)
+    ContractCreator(dir).change_for_constructor_fuzzing(tr_contract)
+
+    init_failed = EchidnaRunner(directory).run_contract(init_contract)
+    tr_failed = EchidnaRunner(directory).run_contract(tr_contract)
+    
+    OutputPrinter().print_results(tr_failed, init_failed)
+    print(f"Count init: {len(init_failed)}\nCount transitions: {len(tr_failed)}")
+    Graph('_epa').build_graph(tr_failed, init_failed)
     return
 
 
-def update_global_variables_based_on(failed_tests):
+def update_global_variables_based_on(failed_tests): # es lo que se hace luego del reduce combinations.
     global preconditions, states, extraConditions
     preconditionsTemp = []
     statesTemp = []
@@ -579,22 +579,25 @@ def update_global_variables_based_on(failed_tests):
     extraConditions = extraConditionsTemp
 
 
-# WIP
+# Hay que testear algunos resultados. Tal vez el change_for_constructor_fuzzing tiene algún problema.
 def logica_echidna_states():
     start = time()
     dir = create_directory('_echidna')
+    
     init_contract_to_run = ContractCreator(dir).create_init_contract()
     transitions_contract_to_run = ContractCreator(dir).create_transitions_contract(preconditions, states, preconditions, extraConditions)
+    
     ContractCreator(dir).change_for_constructor_fuzzing(init_contract_to_run)
     ContractCreator(dir).change_for_constructor_fuzzing(transitions_contract_to_run)
+    
     # Acá corremos ambos contratos.
-    init_failed = EchidnaRunner(dir).run_init_contract(init_contract_to_run)
-    tr_failed = EchidnaRunner(dir).run_transitions_contract(transitions_contract_to_run)
+    init_failed = EchidnaRunner(dir).run_contract(init_contract_to_run)
+    tr_failed = EchidnaRunner(dir).run_contract(transitions_contract_to_run)
     tr_failed, init_failed = remove_duplicates_from_results(tr_failed, init_failed)
-    Printer().print_results(tr_failed, init_failed)
-    # imprimir la cantidad de tests fallados para cada modo
+
+    OutputPrinter().print_results(tr_failed, init_failed)
     print(f"Count init: {len(init_failed)}\nCount transitions: {len(tr_failed)}")
-    GraphManager("echidna").build_graph(tr_failed, init_failed)
+    Graph("echidna").build_graph(tr_failed, init_failed)
     end = time()
     print(f"El tiempo total transcurrido fue de: {round(end - start, 2)} segundos.")
 
@@ -734,6 +737,8 @@ if __name__ == "__main__":
         if len(sys.argv) > 3 and sys.argv[3] == "-a":
             statesMode = True
             epaMode = True
+        if len(sys.argv) > 4 and sys.argv[4] == "-echidna":
+            echidna = True
     
     if epaMode:
         mode = Mode.epa
