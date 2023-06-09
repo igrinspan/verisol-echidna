@@ -21,6 +21,14 @@ class EchidnaRunner:
     def run_contract(self, contract): 
         result = self.set_up_and_run(contract, contractName)
         return self.process_output(result)
+    
+    def run_contract_saving_output(self, contract):
+        result = self.set_up_and_run(contract, contractName)
+        write_file = open(f'{self.directory}/pruebas.txt','w')
+        for line in result.splitlines():
+            write_file.write(line)
+        write_file.close()
+        return self.process_output(result)
 
     def set_up_and_run(self, filename_temp, contractName):
         tool_command = self.create_echidna_command(filename_temp, contractName, self.directory)
@@ -66,12 +74,14 @@ class ContractCreator:
     def create_transitions_contract(self, pre_require, states, pre_assert, extra_cond):
         file_name_temp = create_file("_transitions", self.directory, fileName, contractName)
         body, _ = get_valid_transitions_output(pre_require, pre_assert, extra_cond, extra_cond, functions, states)
+        body = self.clean_true_requires(body)
         write_file(file_name_temp, body, contractName)
         return file_name_temp
 
     def create_init_contract(self):
         filename_temp = create_file("_init", self.directory, fileName, contractName)
         body, _ = get_init_output(preconditions, extraConditions)
+        body = self.clean_true_requires(body)
         write_file(filename_temp, body, contractName)
         self.transform_contract_for_init(filename_temp)
         return filename_temp
@@ -86,6 +96,13 @@ class ContractCreator:
         _, end_line = self.get_constructor_start_and_end_lines(lines)
         lines = lines[:end_line + 1] + ["}"]
         return lines
+
+    def clean_true_requires(self, body):
+        lines = body.replace("require(true);", "").split('\n')
+        cleaned_lines = [line for line in lines if line.strip()]
+        new_body = '\n'.join(cleaned_lines)
+        return new_body
+
 
     def get_constructor_start_and_end_lines(self, input_file):
         start_line = next((index for index, line in enumerate(input_file) if line.strip().startswith('constructor(')), None)
@@ -176,6 +193,14 @@ class Graph:
         self.graph.edge("init",combinationToString(states[indexPreconditionAssert]), "constructor")
 
 
+def tabs(count):
+  return "\t" * count
+
+
+def newline(count):
+  return "\n" * count
+
+
 def remove_duplicates_from_results(init_failed, res):
     res_without_duplicates = remove_duplicates(res)
     init_failed_without_duplicates = remove_duplicates(init_failed)
@@ -258,7 +283,7 @@ def combinationToString(combination):
 
 
 def functionOutput(number):
-    return "function vc" + number + "(" + functionVariables + ") payable public {"
+    return "\tfunction vc" + number + "(" + functionVariables + ") payable public {"
 
 
 def getToolCommand(includeNumber, toolCommand, combinations, txBound):
@@ -285,13 +310,13 @@ def output_transitions_function(preconditionRequire, function, preconditionAsser
         precondictionFunction = "true"
     extraConditionOutputPre = get_extra_condition_output(extraConditionPre)
     extraConditionOutputPost = get_extra_condition_output(extraConditionPost)
-    verisolFucntionOutput = "require("+preconditionRequire+");\nrequire("+precondictionFunction+");\n" + extraConditionOutputPre + function + "\n"  + "assert(!(" + preconditionAssert + "&& " + extraConditionPost + "));"
+    verisolFucntionOutput = "\t\trequire("+preconditionRequire+");\n\t\trequire("+precondictionFunction+");\n\t\t" + extraConditionOutputPre + "\t\t" + function + "\n"  + "\t\tassert(!(" + preconditionAssert + "&& " + extraConditionPost + "));"
     return verisolFucntionOutput
 
 
 def output_init_function(preconditionAssert, extraCondition):
     extraConditionOutput = get_extra_condition_output(extraCondition)
-    verisolFucntionOutput =  extraConditionOutput + "assert(!(" + preconditionAssert + "));"
+    verisolFucntionOutput =  extraConditionOutput + "\t\tassert(!(" + preconditionAssert + "));"
     return verisolFucntionOutput
 
 
@@ -334,7 +359,7 @@ def get_valid_preconditions_output(preconditions, extraConditions):
         tempFunctionNames.append(functionName)
         temp_function = functionOutput(functionName) + "\n"
         temp_function += output_valid_state(preconditionRequire, extraConditions[indexPreconditionRequire])
-        temp_output += temp_function + "}\n"
+        temp_output += temp_function + "\n\t}\n"
     return temp_output, tempFunctionNames
 
 
@@ -352,13 +377,13 @@ def get_valid_transitions_output(preconditionsThread, preconditions, extraCondit
                     tempFunctionNames.append(functionName)
                     temp_function = functionOutput(functionName) + "\n"
                     temp_function += output_transitions_function(preconditionRequire, function, preconditionAssert, indexFunction, extraConditionPre, extraConditionPost)
-                    temp_output += temp_function + "}\n"
+                    temp_output += temp_function + "\n\t}\n"
                 elif mode == Mode.states:
                     functionName = get_temp_function_name(indexPreconditionRequire, indexPreconditionAssert, indexFunction)
                     tempFunctionNames.append(functionName)
                     temp_function = functionOutput(functionName) + "\n"
                     temp_function += output_transitions_function(preconditionRequire, function, preconditionAssert, indexFunction, extraConditionPre, extraConditionPost)
-                    temp_output += temp_function + "}\n"
+                    temp_output += temp_function + "\n\t}\n"
     return temp_output, tempFunctionNames
 
 
@@ -370,7 +395,7 @@ def get_init_output(preconditions, extraConditions):
         tempFunctionNames.append(functionName)
         temp_function = functionOutput(functionName) + "\n"
         temp_function += output_init_function(preconditionAssert, extraConditions[indexPreconditionAssert])
-        temp_output += temp_function + "}\n"
+        temp_output += temp_function + "\n\t}\n"
     return temp_output, tempFunctionNames
 
 
@@ -596,15 +621,15 @@ def logica_echidna_states():
     ContractCreator(dir).change_for_constructor_fuzzing(transitions_contract_to_run)
     
     # Acá corremos ambos contratos.
+    #init_failed = []
     init_failed = EchidnaRunner(dir).run_contract(init_contract_to_run)
-    tr_failed = EchidnaRunner(dir).run_contract(transitions_contract_to_run)
+    tr_failed = EchidnaRunner(dir).run_contract_saving_output(transitions_contract_to_run)
 
     OutputPrinter().print_results(tr_failed, init_failed)
     print(f"Count init: {len(init_failed)}\nCount transitions: {len(tr_failed)}")
     Graph("echidna").build_graph(tr_failed, init_failed)
     end = time()
     print(f"El tiempo total transcurrido fue de: {round(end - start, 2)} segundos.")
-
 
 
 
