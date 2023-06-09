@@ -1,7 +1,7 @@
 testMode: assertion 
-# format: text 
-testLimit: 500000 
-shrinkLimit: 100
-balanceContract: 0 
-workers: 4
-seqLen: 100
+#format: text 
+testLimit: 750000 
+shrinkLimit: 5000 
+balanceContract: 3 
+workers: 8 
+maxValue: 50

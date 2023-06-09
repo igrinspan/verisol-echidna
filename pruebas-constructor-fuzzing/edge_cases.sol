@@ -1,4 +1,4 @@
-pragma solidity ^0.5.0;
+pragma solidity ^0.8.0;
 
 contract Crowdfunding {
 	modifier hasInitialized {
@@ -13,20 +13,29 @@ contract Crowdfunding {
 
 	bool has_initialized = false;
 
-function vc0x3x0() hasInitialized payable public {
-require((!(max_block > blockNumber) && !(max_block < blockNumber && goal <= balance) && !(blockNumber > max_block && !funded && goal > balance && backersArray.length != 0) && balance == 0));
-Donate();
-assert(!(!(max_block > blockNumber) && (max_block < blockNumber && goal <= balance) && !(blockNumber > max_block && !funded && goal > balance && backersArray.length != 0)&& true));}
+    function vc0x2x3() hasInitialized payable public {
+        require((!(max_block > blockNumber) && !(max_block < blockNumber && goal <= balance) && !(blockNumber > max_block && !funded && goal > balance && backersArray.length != 0) && balance == 0));
+        t();
+        assert(!((max_block > blockNumber) && !(max_block < blockNumber && goal <= balance) && !(blockNumber > max_block && !funded && goal > balance && backersArray.length != 0)&& true));
+    }
+    
+    function vc1x2x3() hasInitialized payable public {
+        require((!(max_block > blockNumber) && !(max_block < blockNumber && goal <= balance) && !(blockNumber > max_block && !funded && goal > balance && backersArray.length != 0) && balance > 0));
+        t();
+        assert(!((max_block > blockNumber) && !(max_block < blockNumber && goal <= balance) && !(blockNumber > max_block && !funded && goal > balance && backersArray.length != 0)&& true));
+    }
+    
+    function vc3x2x3() hasInitialized payable public {
+        require(!(max_block > blockNumber) && (max_block < blockNumber && goal <= balance) && !(blockNumber > max_block && !funded && goal > balance && backersArray.length != 0));
+        t();
+        assert(!((max_block > blockNumber) && !(max_block < blockNumber && goal <= balance) && !(blockNumber > max_block && !funded && goal > balance && backersArray.length != 0)&& true));
+    }
 
-function vc1x3x0() hasInitialized payable public {
-require((!(max_block > blockNumber) && !(max_block < blockNumber && goal <= balance) && !(blockNumber > max_block && !funded && goal > balance && backersArray.length != 0) && balance > 0));
-Donate();
-assert(!(!(max_block > blockNumber) && (max_block < blockNumber && goal <= balance) && !(blockNumber > max_block && !funded && goal > balance && backersArray.length != 0)&& true));}
-
-function vc3x3x0() hasInitialized payable public {
-require(!(max_block > blockNumber) && (max_block < blockNumber && goal <= balance) && !(blockNumber > max_block && !funded && goal > balance && backersArray.length != 0));
-Donate();
-assert(!(!(max_block > blockNumber) && (max_block < blockNumber && goal <= balance) && !(blockNumber > max_block && !funded && goal > balance && backersArray.length != 0)&& true));}
+    function vc4x2x3() hasInitialized payable public {
+        require(!(max_block > blockNumber) && !(max_block < blockNumber && goal <= balance) && (blockNumber > max_block && !funded && goal > balance && backersArray.length != 0));
+        t();
+        assert(!((max_block > blockNumber) && !(max_block < blockNumber && goal <= balance) && !(blockNumber > max_block && !funded && goal > balance && backersArray.length != 0)&& true));
+    }
 
 
     address payable owner;
@@ -48,7 +57,7 @@ assert(!(!(max_block > blockNumber) && (max_block < blockNumber && goal <= balan
 
     function my_constructor(uint _max_block, uint _goal, uint _blockNumber) public payable {
 		require(!has_initialized);
-        owner = msg.sender; 
+        owner = payable(msg.sender); 
         max_block = _max_block;
         goal = _goal;
         balance = msg.value;
