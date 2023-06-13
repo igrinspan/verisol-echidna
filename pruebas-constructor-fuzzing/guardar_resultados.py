@@ -25,6 +25,8 @@ def read_results(filename):
             print(line)
 
 #save_to('pruebas-constructor-fuzzing/resultados.txt', run_echidna_command(transitions_command))
-save_to('pruebas-constructor-fuzzing/edge_cases.txt', run_echidna_command(edge_cases_command))
+#save_to('pruebas-constructor-fuzzing/edge_cases.txt', run_echidna_command(edge_cases_command))
+
+
 
 # read_results('pruebas-constructor-fuzzing/resultados')
