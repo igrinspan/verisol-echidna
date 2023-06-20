@@ -334,30 +334,28 @@ def make_global_variables(config):
 
 
 class EchidnaRunner:
-    def __init__(self, dir):
+    def __init__(self, dir, contract, config_file_params):
         self.directory = dir
+        self.contract = contract
+        self.config_file_params = config_file_params
 
-    def run_contract(self, contract): 
+    def run_contract(self): 
         start = time()
-        result = self.set_up_and_run(contract, contractName)
+        result = self.set_up_and_run()
         end = time()
         print(f'El contrato demoró {round(end - start, 2)} segundos en correr...')
         return self.process_output(result)
     
-    def run_contract_saving_output(self, contract):
-        result = self.set_up_and_run(contract, contractName)
+    def run_contract_saving_output(self):
+        result = self.set_up_and_run(self.contract, contractName)
         write_file = open(f'{self.directory}/pruebas.txt','w')
         for line in result.splitlines():
             write_file.write(line)
         write_file.close()
         return self.process_output(result)
-
-    def run_contract_with_max_value_3(self, contract):
-        result = self.set_up_and_run(contract, contractName, True)
-        return self.process_output(result)
     
-    def set_up_and_run(self, filename_temp, contractName, max_value_3 = False):
-        tool_command = self.create_echidna_command(filename_temp, contractName, self.directory, max_value_3)
+    def set_up_and_run(self):
+        tool_command = self.create_echidna_command()
         print(f"El comando a correr es {tool_command} en el directorio {self.directory}")
         result = self.run_echidna_command(tool_command)
         return result
@@ -375,19 +373,15 @@ class EchidnaRunner:
                 tests_that_failed.append([i, j, k])
         return tests_that_failed
 
-    def create_echidna_command(self, fileNameTemp, contractName, directory, max_value_3 = False):
-        if max_value_3:
-            config_file = self.create_config_file(directory, EchidnaConfigFileData(maxValue=3))
-        else:
-            config_file = self.create_config_file(directory, EchidnaConfigFileData()) # acá podríamos ir cambiándole los params.
-        commandResult =  f"echidna {fileNameTemp} --contract {contractName} --config {config_file}"
+    def create_echidna_command(self):
+        config_file = self.create_config_file()
+        commandResult =  f"echidna {self.contract} --contract {contractName} --config {config_file}"
         return commandResult
 
-    @staticmethod
-    def create_config_file(directory, config_file_data):
-        new_file_name = f"{directory}/config.yaml"
+    def create_config_file(self):
+        new_file_name = f"{self.directory}/config.yaml"
         newfile = open(new_file_name, "w")
-        for key, value in asdict(config_file_data).items():
+        for key, value in asdict(self.config_file_params).items():
             newfile.write(f"{key}: {value} \n")
         newfile.close()
         return new_file_name
@@ -426,7 +420,7 @@ class ContractCreator:
         lines = lines[:end_line + 1] + ["}"]
         return lines
 
-    # WIP
+    # Para modo epa
     def create_combinations_contract(self, preconditions, extraconditions):
         fileNameTemp = create_file('_combinations', self.directory, fileName, contractName)
         body, _ = get_valid_preconditions_output(preconditions, extraconditions)
@@ -444,7 +438,7 @@ class ContractCreator:
         end_line = next((index for index, line in enumerate(input_file[start_line:]) if line.strip() == '}'), None) + start_line + 1
         return start_line, end_line
 
-    # WIP
+    # Refactorizar
     def change_for_constructor_fuzzing(self, contract_filename):
         # 1. Agregamos los modifiers y la variable de estado que dice si el contrato ya fue inicializado.
         has_initialized_modifier = "\tmodifier hasInitialized {\n\t\trequire(has_initialized); \n\t\t_; \n\t}\n\n"
@@ -506,15 +500,15 @@ class ContractCreator:
 
 
 @dataclass
-class EchidnaConfigFileData: # Tiene cosas hardcodeadas para crowdfunding (maxValue y balanceContract)
+class EchidnaConfigFileData:
+    testLimit: int = 50000
+    balanceContract: int = 0
+    workers: int = 1
+    maxValue: int = 100000000000000000000
     testMode: str = 'assertion'
     format: str = 'text'
-    testLimit: int = 300000
     shrinkLimit: int = 0
-    # balanceContract: int = 0
-    workers: int = 32
-    maxValue: int = 1
-    # seqLen: int = 20
+    seqLen: int = 100
 
 
 class OutputPrinter:
@@ -630,22 +624,35 @@ def create_run_and_print_on(dir, dir_name):
     ContractCreator(dir).change_for_constructor_fuzzing(init_contract_to_run)
     ContractCreator(dir).change_for_constructor_fuzzing(transitions_contract_to_run)
 
-    init_failed = EchidnaRunner(dir).run_contract(init_contract_to_run)
-    tr_failed = EchidnaRunner(dir).run_contract(transitions_contract_to_run)
-    # Deberíamos correrlo también con balance = 0 y un max_value bajo para que se pueda donar 0. 
+    init_config_params = EchidnaConfigFileData(testLimit=100000, workers=32)
+    transitions_config_params = EchidnaConfigFileData(testLimit=250000, workers=32)
 
+    init_failed = EchidnaRunner(dir, init_contract_to_run, init_config_params).run_contract()
+    print(f'Se encontraron {len(init_failed)} resultados para el constructor')
+    write_file = open('output_echidna_states/resultados.txt','a')
+    write_file.write(f"\n --------------\n")
+    write_file.write(f"Resultados de init:\n {init_failed}\n\n")
+    tr_failed = EchidnaRunner(dir, transitions_contract_to_run, transitions_config_params).run_contract()
+    write_file.write(f"Resultados de transitions (todo en el mismo):\n {tr_failed}\n\n")
+
+    # Deberíamos correrlo también con balance = 0 y un max_value bajo para que se pueda donar 0. 
     ContractCreator(dir).change_for_balance_equal_to_zero(transitions_contract_to_run)
-    tr_failed += EchidnaRunner(dir).run_contract(transitions_contract_to_run)
+    config_balance0 = EchidnaConfigFileData(testLimit=400000, workers=32, maxValue=1)
+    tr_failed2 = EchidnaRunner(dir, transitions_contract_to_run, config_balance0).run_contract()
+    write_file.write(f"Resultados de transitions con maxValue=1 (la idea es que eso haga que comience con balance = 0):\n {tr_failed2}\n\n")
+    tr_failed += tr_failed2
 
     ContractCreator(dir).change_for_goal_equal_to_zero(transitions_contract_to_run)
-    tr_failed += EchidnaRunner(dir).run_contract(transitions_contract_to_run)
+    config_goal0 = EchidnaConfigFileData(testLimit=150000, workers=32)
+    tr_failed3 = EchidnaRunner(dir, transitions_contract_to_run, config_goal0).run_contract()
+    write_file.write(f"Resultados de transitions con el contrato inicializado con goal=0:\n {tr_failed3}\n\n")
+    tr_failed += tr_failed3
 
     tr_failed = remove_duplicates(tr_failed)
     
     OutputPrinter().print_results(tr_failed, init_failed)
     Graph(dir_name, dir_name).build_graph(tr_failed, init_failed)
 
-# TODO: testear
 def logica_echidna_epa():
     dir_name = '_echidna_epa'
     dir = create_directory(dir_name)
