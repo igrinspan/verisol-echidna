@@ -14,229 +14,6 @@ sys.path.append('../')
 from file_manager import create_directory, delete_directory, create_file, write_file, write_file_from_string, read_from_file
 
 
-class EchidnaRunner:
-    def __init__(self, dir):
-        self.directory = dir
-
-    def run_contract(self, contract): 
-        result = self.set_up_and_run(contract, contractName)
-        return self.process_output(result)
-    
-    def run_contract_saving_output(self, contract):
-        result = self.set_up_and_run(contract, contractName)
-        write_file = open(f'{self.directory}/pruebas.txt','w')
-        for line in result.splitlines():
-            write_file.write(line)
-        write_file.close()
-        return self.process_output(result)
-
-    def run_contract_with_max_value_3(self, contract):
-        result = self.set_up_and_run(contract, contractName, True)
-        return self.process_output(result)
-    
-    def set_up_and_run(self, filename_temp, contractName, max_value_3 = False):
-        tool_command = self.create_echidna_command(filename_temp, contractName, self.directory, max_value_3)
-        print(f"El comando a correr es {tool_command} en el directorio {self.directory}")
-        result = self.run_echidna_command(tool_command)
-        return result
-
-    def run_echidna_command(self, command_to_run):
-        result = subprocess.run([command_to_run, ""], shell = True, cwd=self.directory, stdout=subprocess.PIPE)
-        return result.stdout.decode('utf-8')
-
-    def process_output(self, tool_result):
-        tests_that_failed = []
-        for line in tool_result.splitlines():
-            if "failed!" in line:
-                failed_test = line.split()[0][2:7] # vcIxJxK(¡): -> IxJxK.
-                i, j, k = get_params_from_function_name(failed_test)
-                tests_that_failed.append([i, j, k])
-        return tests_that_failed
-
-    def create_echidna_command(self, fileNameTemp, contractName, directory, max_value_3 = False):
-        if max_value_3:
-            config_file = self.create_config_file(directory, EchidnaConfigFileData(maxValue=3))
-        else:
-            config_file = self.create_config_file(directory, EchidnaConfigFileData()) # acá podríamos ir cambiándole los params.
-        commandResult =  f"echidna {fileNameTemp} --contract {contractName} --config {config_file}"
-        return commandResult
-
-    @staticmethod
-    def create_config_file(directory, config_file_data):
-        new_file_name = f"{directory}/config.yaml"
-        newfile = open(new_file_name, "w")
-        for key, value in asdict(config_file_data).items():
-            newfile.write(f"{key}: {value} \n")
-        newfile.close()
-        return new_file_name
-
-
-class ContractCreator:
-    def __init__(self, directory):
-        self.directory = directory
-
-    def create_all_contracts(self):
-        return self.create_transitions_contract(), self.create_init_contract()
-
-    def create_transitions_contract(self, pre_require, states, pre_assert, extra_cond):
-        file_name_temp = create_file("_transitions", self.directory, fileName, contractName)
-        body, _ = get_valid_transitions_output(pre_require, pre_assert, extra_cond, extra_cond, functions, states)
-        body = self.clean_true_requires(body)
-        write_file(file_name_temp, body, contractName)
-        return file_name_temp
-
-    def create_init_contract(self):
-        filename_temp = create_file("_init", self.directory, fileName, contractName)
-        body, _ = get_init_output(preconditions, extraConditions)
-        body = self.clean_true_requires(body)
-        write_file(filename_temp, body, contractName)
-        self.transform_contract_for_init(filename_temp)
-        return filename_temp
-
-    def transform_contract_for_init(self, filename_temp):
-        print(filename_temp)
-        new_contract_body = self.remove_everything_after_constructor(filename_temp)
-        write_file_from_string(filename_temp, new_contract_body)
-
-    def remove_everything_after_constructor(self, filename_temp):
-        lines = open(filename_temp, 'r').readlines()
-        _, end_line = self.get_constructor_start_and_end_lines(lines)
-        lines = lines[:end_line + 1] + ["}"]
-        return lines
-
-    # WIP
-    def create_combinations_contract(self, preconditions, extraconditions):
-        fileNameTemp = create_file('_combinations', self.directory, fileName, contractName)
-        body, _ = get_valid_preconditions_output(preconditions, extraconditions)
-        write_file(fileNameTemp, body, contractName)
-        return fileNameTemp
-
-    def clean_true_requires(self, body):
-        lines = body.replace("require(true);", "").split('\n')
-        cleaned_lines = [line for line in lines if line.strip()]
-        new_body = '\n'.join(cleaned_lines)
-        return new_body
-
-    def get_constructor_start_and_end_lines(self, input_file):
-        start_line = next((index for index, line in enumerate(input_file) if line.strip().startswith('constructor(')), None)
-        end_line = next((index for index, line in enumerate(input_file[start_line:]) if line.strip() == '}'), None) + start_line + 1
-        return start_line, end_line
-
-    # WIP
-    def change_for_constructor_fuzzing(self, contract_filename):
-        # 1. Agregamos los modifiers y la variable de estado que dice si el contrato ya fue inicializado.
-        has_initialized_modifier = "\tmodifier hasInitialized {\n\t\trequire(has_initialized); \n\t\t_; \n\t}\n\n"
-        has_not_initialized_modifier = "\tmodifier hasNotInitialized {\n\t\trequire(!has_initialized); \n\t\t_; \n\t}\n\n"
-        has_initialized_declaration = "\tbool has_initialized = false;\n\n"
-        cosas = has_initialized_modifier + has_not_initialized_modifier + has_initialized_declaration
-        write_file(contract_filename, cosas, contractName) # uso esta porque las puedo meter en cualquier lado del contrato
-        # 2. Le agregamos el modifier hasInitialized a todas las funciones, incluidos los tests.
-        lines = open(contract_filename, 'r').readlines()
-        new_lines = []
-        for line in lines:
-            if "function" in line:
-                new_lines += [line.replace(")", ") hasInitialized", 1)] # el 1 indica la cantidad de reemplazos.
-            else:
-                new_lines += [line]
-        # 3. Agregamos el require y el cambio de estado en el constructor.
-        require = "\t\trequire(!has_initialized);\n"
-        change_status = "\t\thas_initialized = true;\n"
-        start, end = self.get_constructor_start_and_end_lines(new_lines)
-        new_lines = new_lines[:start+1] + [require] + new_lines[start+1:end-1] + [change_status] + new_lines[end-1:]
-        # 4. Hacemos que el constructor sea una función común.
-        linea_a_cambiar = new_lines[start] # constructor(uint _max_block, uint _goal, uint _blockNumber) public payable {
-        linea_a_cambiar = linea_a_cambiar.replace("constructor", "function my_constructor")
-        new_lines[start] = linea_a_cambiar
-
-        write_file_from_string(contract_filename, new_lines)
-
-    def set_initial_balance_to_0(self, contract_filename):
-        lines = open(contract_filename, 'r').readlines()
-        new_lines = []
-        for line in lines:
-            if "balance = _balance;" in line:
-                new_lines += [line.replace("_balance", "0")]
-            elif "goal = _goal;" in line:
-                new_lines += [line.replace("_goal", "0")]
-            else:
-                new_lines += [line]
-        write_file_from_string(contract_filename, new_lines)
-
-
-@dataclass
-class EchidnaConfigFileData: # Tiene cosas hardcodeadas para crowdfunding (maxValue y balanceContract)
-    testMode: str = 'assertion'
-    format: str = 'text'
-    testLimit: int = 300000
-    shrinkLimit: int = 0
-    balanceContract: int = 0
-    workers: int = 8
-    maxValue: int = 0
-    # seqLen: int = 20
-
-
-class OutputPrinter:
-    def print_results(self, transition_tests_that_failed, init_tests_that_failed):
-        self.print_failed_tests(transition_tests_that_failed)
-        self.print_failed_tests(init_tests_that_failed, True)
-        print(f"Count init: {len(init_tests_that_failed)}\nCount transitions: {len(transition_tests_that_failed)}")
-
-    def print_failed_tests(self, tests_that_failed, init=False):
-        if init:
-            output = "Desde el constructor, se puede llegar a: "
-            for test in tests_that_failed:
-                print(f"{output}  {output_combination(test[0], states)}")
-        else:
-            for test in tests_that_failed:
-                print_output(test[0], test[2], test[1], states, states) #print_output recibe como segundo param la función y tercero el assert.
-
-
-class Graph:
-    def __init__(self, nombre, dir):
-        self.graph = graphviz.Digraph(comment=nombre)
-        self.nombre = nombre
-        self.dir = dir
-
-    def build_graph(self, transition_tests_that_failed, init_tests_that_failed):
-        self.add_failed_tests_init(init_tests_that_failed)
-        self.add_failed_tests_transition(transition_tests_that_failed)
-        self.graph.render(f"output{self.dir}/graph/" + self.nombre)
-
-    def add_failed_tests_init(self, tests_that_failed):
-        for test in tests_that_failed:
-            self.add_init_node_to_graph(test)
-
-    def add_failed_tests_transition(self, tests_that_failed):
-        for test in tests_that_failed:
-            add_node_to_graph(test[0], test[1], test[2], states, states, self.graph)
-
-    def add_init_node_to_graph(self, init_test): 
-        global states
-        indexPreconditionAssert = init_test[0]
-        self.graph.node("init", "init")
-        self.graph.node(combinationToString(states[indexPreconditionAssert]), output_combination(indexPreconditionAssert, states))
-        self.graph.edge("init",combinationToString(states[indexPreconditionAssert]), "constructor")
-
-
-def tabs(count):
-  return "\t" * count
-
-
-def newline(count):
-  return "\n" * count
-
-
-def remove_duplicates_from_results(init_failed, transitions_failed):
-    transitions_failed_without_duplicates = remove_duplicates(transitions_failed)
-    init_failed_without_duplicates = remove_duplicates(init_failed)
-    return init_failed_without_duplicates, transitions_failed_without_duplicates
-
-
-def remove_duplicates(list_of_lists):
-    list_of_lists.sort()
-    return list(res for res, _ in itertools.groupby(list_of_lists))
-
-
 def getCombinations(funcionesNumeros):
     global statePreconditions
     truePreconditions = []
@@ -555,6 +332,253 @@ def make_global_variables(config):
     print(config)
 
 
+
+class EchidnaRunner:
+    def __init__(self, dir):
+        self.directory = dir
+
+    def run_contract(self, contract): 
+        start = time()
+        result = self.set_up_and_run(contract, contractName)
+        end = time()
+        print(f'El contrato demoró {round(end - start, 2)} segundos en correr...')
+        return self.process_output(result)
+    
+    def run_contract_saving_output(self, contract):
+        result = self.set_up_and_run(contract, contractName)
+        write_file = open(f'{self.directory}/pruebas.txt','w')
+        for line in result.splitlines():
+            write_file.write(line)
+        write_file.close()
+        return self.process_output(result)
+
+    def run_contract_with_max_value_3(self, contract):
+        result = self.set_up_and_run(contract, contractName, True)
+        return self.process_output(result)
+    
+    def set_up_and_run(self, filename_temp, contractName, max_value_3 = False):
+        tool_command = self.create_echidna_command(filename_temp, contractName, self.directory, max_value_3)
+        print(f"El comando a correr es {tool_command} en el directorio {self.directory}")
+        result = self.run_echidna_command(tool_command)
+        return result
+
+    def run_echidna_command(self, command_to_run):
+        result = subprocess.run([command_to_run, ""], shell = True, cwd=self.directory, stdout=subprocess.PIPE)
+        return result.stdout.decode('utf-8')
+
+    def process_output(self, tool_result):
+        tests_that_failed = []
+        for line in tool_result.splitlines():
+            if "failed!" in line:
+                failed_test = line.split()[0][2:7] # vcIxJxK(¡): -> IxJxK.
+                i, j, k = get_params_from_function_name(failed_test)
+                tests_that_failed.append([i, j, k])
+        return tests_that_failed
+
+    def create_echidna_command(self, fileNameTemp, contractName, directory, max_value_3 = False):
+        if max_value_3:
+            config_file = self.create_config_file(directory, EchidnaConfigFileData(maxValue=3))
+        else:
+            config_file = self.create_config_file(directory, EchidnaConfigFileData()) # acá podríamos ir cambiándole los params.
+        commandResult =  f"echidna {fileNameTemp} --contract {contractName} --config {config_file}"
+        return commandResult
+
+    @staticmethod
+    def create_config_file(directory, config_file_data):
+        new_file_name = f"{directory}/config.yaml"
+        newfile = open(new_file_name, "w")
+        for key, value in asdict(config_file_data).items():
+            newfile.write(f"{key}: {value} \n")
+        newfile.close()
+        return new_file_name
+
+
+class ContractCreator:
+    def __init__(self, directory):
+        self.directory = directory
+
+    def create_all_contracts(self):
+        return self.create_transitions_contract(), self.create_init_contract()
+
+    def create_transitions_contract(self, pre_require, states, pre_assert, extra_cond):
+        file_name_temp = create_file("_transitions", self.directory, fileName, contractName)
+        body, _ = get_valid_transitions_output(pre_require, pre_assert, extra_cond, extra_cond, functions, states)
+        body = self.clean_true_requires(body)
+        write_file(file_name_temp, body, contractName)
+        return file_name_temp
+
+    def create_init_contract(self):
+        filename_temp = create_file("_init", self.directory, fileName, contractName)
+        body, _ = get_init_output(preconditions, extraConditions)
+        body = self.clean_true_requires(body)
+        write_file(filename_temp, body, contractName)
+        self.transform_contract_for_init(filename_temp)
+        return filename_temp
+
+    def transform_contract_for_init(self, filename_temp):
+        print(filename_temp)
+        new_contract_body = self.remove_everything_after_constructor(filename_temp)
+        write_file_from_string(filename_temp, new_contract_body)
+
+    def remove_everything_after_constructor(self, filename_temp):
+        lines = open(filename_temp, 'r').readlines()
+        _, end_line = self.get_constructor_start_and_end_lines(lines)
+        lines = lines[:end_line + 1] + ["}"]
+        return lines
+
+    # WIP
+    def create_combinations_contract(self, preconditions, extraconditions):
+        fileNameTemp = create_file('_combinations', self.directory, fileName, contractName)
+        body, _ = get_valid_preconditions_output(preconditions, extraconditions)
+        write_file(fileNameTemp, body, contractName)
+        return fileNameTemp
+
+    def clean_true_requires(self, body):
+        lines = body.replace("require(true);", "").split('\n')
+        cleaned_lines = [line for line in lines if line.strip()]
+        new_body = '\n'.join(cleaned_lines)
+        return new_body
+
+    def get_constructor_start_and_end_lines(self, input_file):
+        start_line = next((index for index, line in enumerate(input_file) if line.strip().startswith('constructor(')), None)
+        end_line = next((index for index, line in enumerate(input_file[start_line:]) if line.strip() == '}'), None) + start_line + 1
+        return start_line, end_line
+
+    # WIP
+    def change_for_constructor_fuzzing(self, contract_filename):
+        # 1. Agregamos los modifiers y la variable de estado que dice si el contrato ya fue inicializado.
+        has_initialized_modifier = "\tmodifier hasInitialized {\n\t\trequire(has_initialized); \n\t\t_; \n\t}\n\n"
+        has_not_initialized_modifier = "\tmodifier hasNotInitialized {\n\t\trequire(!has_initialized); \n\t\t_; \n\t}\n\n"
+        has_initialized_declaration = "\tbool has_initialized = false;\n\n"
+        cosas = has_initialized_modifier + has_not_initialized_modifier + has_initialized_declaration
+        write_file(contract_filename, cosas, contractName) # uso esta porque las puedo meter en cualquier lado del contrato
+        # 2. Le agregamos el modifier hasInitialized a todas las funciones, incluidos los tests.
+        lines = open(contract_filename, 'r').readlines()
+        new_lines = []
+        for line in lines:
+            if "function" in line:
+                new_lines += [line.replace(")", ") hasInitialized", 1)] # el 1 indica la cantidad de reemplazos.
+            else:
+                new_lines += [line]
+        # 3. Agregamos el require y el cambio de estado en el constructor.
+        require = "\t\trequire(!has_initialized);\n"
+        change_status = "\t\thas_initialized = true;\n"
+        start, end = self.get_constructor_start_and_end_lines(new_lines)
+        new_lines = new_lines[:start+1] + [require] + new_lines[start+1:end-1] + [change_status] + new_lines[end-1:]
+        # 4. Hacemos que el constructor sea una función común.
+        linea_a_cambiar = new_lines[start] # constructor(uint _max_block, uint _goal, uint _blockNumber) public payable {
+        linea_a_cambiar = linea_a_cambiar.replace("constructor", "function my_constructor")
+        new_lines[start] = linea_a_cambiar
+
+        write_file_from_string(contract_filename, new_lines)
+
+    def change_for_balance_equal_to_zero(self, contract_filename):
+        newlines = []
+        lines = open(contract_filename, 'r').readlines()
+        for line in lines:
+            if 'balance = msg.value;' in line:
+                line = line.replace('balance = msg.value;', 'balance = 0;')
+            newlines.append(line)
+
+        write_file_from_string(contract_filename, newlines)
+
+    def change_for_goal_equal_to_zero(self, contract_filename):
+        newlines = []
+        lines = open(contract_filename, 'r').readlines()
+        for line in lines:
+            if 'goal = _goal;' in line:
+                line = line.replace('goal = _goal;', 'goal = 0;')
+            newlines.append(line)
+
+        write_file_from_string(contract_filename, newlines)
+
+    def set_initial_balance_to_0(self, contract_filename):
+        lines = open(contract_filename, 'r').readlines()
+        new_lines = []
+        for line in lines:
+            if "balance = _balance;" in line:
+                new_lines += [line.replace("_balance", "0")]
+            elif "goal = _goal;" in line:
+                new_lines += [line.replace("_goal", "0")]
+            else:
+                new_lines += [line]
+        write_file_from_string(contract_filename, new_lines)
+
+
+@dataclass
+class EchidnaConfigFileData: # Tiene cosas hardcodeadas para crowdfunding (maxValue y balanceContract)
+    testMode: str = 'assertion'
+    format: str = 'text'
+    testLimit: int = 300000
+    shrinkLimit: int = 0
+    # balanceContract: int = 0
+    workers: int = 32
+    maxValue: int = 1
+    # seqLen: int = 20
+
+
+class OutputPrinter:
+    def print_results(self, transition_tests_that_failed, init_tests_that_failed):
+        self.print_failed_tests(transition_tests_that_failed)
+        self.print_failed_tests(init_tests_that_failed, True)
+        print(f"Count init: {len(init_tests_that_failed)}\nCount transitions: {len(transition_tests_that_failed)}")
+
+    def print_failed_tests(self, tests_that_failed, init=False):
+        if init:
+            output = "Desde el constructor, se puede llegar a: "
+            for test in tests_that_failed:
+                print(f"{output}  {output_combination(test[0], states)}")
+        else:
+            for test in tests_that_failed:
+                print_output(test[0], test[2], test[1], states, states) #print_output recibe como segundo param la función y tercero el assert.
+
+
+class Graph:
+    def __init__(self, nombre, dir):
+        self.graph = graphviz.Digraph(comment=nombre)
+        self.nombre = nombre
+        self.dir = dir
+
+    def build_graph(self, transition_tests_that_failed, init_tests_that_failed):
+        self.add_failed_tests_init(init_tests_that_failed)
+        self.add_failed_tests_transition(transition_tests_that_failed)
+        self.graph.render(f"output{self.dir}/graph/" + self.nombre)
+
+    def add_failed_tests_init(self, tests_that_failed):
+        for test in tests_that_failed:
+            self.add_init_node_to_graph(test)
+
+    def add_failed_tests_transition(self, tests_that_failed):
+        for test in tests_that_failed:
+            add_node_to_graph(test[0], test[1], test[2], states, states, self.graph)
+
+    def add_init_node_to_graph(self, init_test): 
+        global states
+        indexPreconditionAssert = init_test[0]
+        self.graph.node("init", "init")
+        self.graph.node(combinationToString(states[indexPreconditionAssert]), output_combination(indexPreconditionAssert, states))
+        self.graph.edge("init",combinationToString(states[indexPreconditionAssert]), "constructor")
+
+
+def tabs(count):
+  return "\t" * count
+
+
+def newline(count):
+  return "\n" * count
+
+
+def remove_duplicates_from_results(init_failed, transitions_failed):
+    transitions_failed_without_duplicates = remove_duplicates(transitions_failed)
+    init_failed_without_duplicates = remove_duplicates(init_failed)
+    return init_failed_without_duplicates, transitions_failed_without_duplicates
+
+
+def remove_duplicates(list_of_lists):
+    list_of_lists.sort()
+    return list(res for res, _ in itertools.groupby(list_of_lists))
+
+
 def prepare_variables(mode, funcionesNumeros):
     global states, preconditions, extraConditions, statesThreads, preconditionsThreads, extraConditionsThreads
     if mode == Mode.epa :
@@ -609,6 +633,14 @@ def create_run_and_print_on(dir, dir_name):
     init_failed = EchidnaRunner(dir).run_contract(init_contract_to_run)
     tr_failed = EchidnaRunner(dir).run_contract(transitions_contract_to_run)
     # Deberíamos correrlo también con balance = 0 y un max_value bajo para que se pueda donar 0. 
+
+    ContractCreator(dir).change_for_balance_equal_to_zero(transitions_contract_to_run)
+    tr_failed += EchidnaRunner(dir).run_contract(transitions_contract_to_run)
+
+    ContractCreator(dir).change_for_goal_equal_to_zero(transitions_contract_to_run)
+    tr_failed += EchidnaRunner(dir).run_contract(transitions_contract_to_run)
+
+    tr_failed = remove_duplicates(tr_failed)
     
     OutputPrinter().print_results(tr_failed, init_failed)
     Graph(dir_name, dir_name).build_graph(tr_failed, init_failed)
