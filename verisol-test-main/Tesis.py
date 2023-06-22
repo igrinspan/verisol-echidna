@@ -11,7 +11,7 @@ from enum import Enum
 import sys
 from dataclasses import dataclass, fields, asdict
 sys.path.append('../')
-from file_manager import create_directory, delete_directory, create_file, write_file, write_file_from_string, read_from_file
+from file_manager import create_directory, delete_directory, create_file, write_file, write_file_from_string, read_from_file, create_config_file
 
 
 def getCombinations(funcionesNumeros):
@@ -625,7 +625,7 @@ def create_run_and_print_on(dir, dir_name):
     ContractCreator(dir).change_for_constructor_fuzzing(transitions_contract_to_run)
 
     init_config_params = EchidnaConfigFileData(testLimit=100000, workers=32)
-    transitions_config_params = EchidnaConfigFileData(testLimit=250000, workers=32)
+    transitions_config_params = EchidnaConfigFileData(testLimit=1500000, workers=32)
 
     init_failed = EchidnaRunner(dir, init_contract_to_run, init_config_params).run_contract()
     print(f'Se encontraron {len(init_failed)} resultados para el constructor')
@@ -633,20 +633,20 @@ def create_run_and_print_on(dir, dir_name):
     write_file.write(f"\n --------------\n")
     write_file.write(f"Resultados de init:\n {init_failed}\n\n")
     tr_failed = EchidnaRunner(dir, transitions_contract_to_run, transitions_config_params).run_contract()
-    write_file.write(f"Resultados de transitions (todo en el mismo):\n {tr_failed}\n\n")
+    write_file.write(f"Resultados de transitions:\n {tr_failed}\n\n")
 
     # Deberíamos correrlo también con balance = 0 y un max_value bajo para que se pueda donar 0. 
-    ContractCreator(dir).change_for_balance_equal_to_zero(transitions_contract_to_run)
-    config_balance0 = EchidnaConfigFileData(testLimit=400000, workers=32, maxValue=1)
-    tr_failed2 = EchidnaRunner(dir, transitions_contract_to_run, config_balance0).run_contract()
-    write_file.write(f"Resultados de transitions con maxValue=1 (la idea es que eso haga que comience con balance = 0):\n {tr_failed2}\n\n")
-    tr_failed += tr_failed2
+    # ContractCreator(dir).change_for_balance_equal_to_zero(transitions_contract_to_run)
+    # config_balance0 = EchidnaConfigFileData(testLimit=400000, workers=32, maxValue=1)
+    # tr_failed2 = EchidnaRunner(dir, transitions_contract_to_run, config_balance0).run_contract()
+    # write_file.write(f"Resultados de transitions con maxValue=1 y balance=0:\n {tr_failed2}\n\n")
+    # tr_failed += tr_failed2
 
-    ContractCreator(dir).change_for_goal_equal_to_zero(transitions_contract_to_run)
-    config_goal0 = EchidnaConfigFileData(testLimit=150000, workers=32)
-    tr_failed3 = EchidnaRunner(dir, transitions_contract_to_run, config_goal0).run_contract()
-    write_file.write(f"Resultados de transitions con el contrato inicializado con goal=0:\n {tr_failed3}\n\n")
-    tr_failed += tr_failed3
+    # ContractCreator(dir).change_for_goal_equal_to_zero(transitions_contract_to_run)
+    # config_goal0 = EchidnaConfigFileData(testLimit=150000, workers=32)
+    # tr_failed3 = EchidnaRunner(dir, transitions_contract_to_run, config_goal0).run_contract()
+    # write_file.write(f"Resultados de transitions con el contrato inicializado con goal=0:\n {tr_failed3}\n\n")
+    # tr_failed += tr_failed3
 
     tr_failed = remove_duplicates(tr_failed)
     

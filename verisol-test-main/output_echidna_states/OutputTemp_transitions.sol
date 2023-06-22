@@ -535,8 +535,8 @@ contract Crowdfunding {
 		require(!has_initialized);
         owner = payable(msg.sender); 
         max_block = _max_block;
-        goal = 0;
-        balance = 0;
+        goal = _goal;
+        balance = msg.value;
         blockNumber = _blockNumber;
 		has_initialized = true;
     }

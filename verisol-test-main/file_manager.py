@@ -1,5 +1,6 @@
 import os
 import shutil
+from dataclasses import dataclass, fields, asdict
 
 def create_directory(index):
     current_directory = os.getcwd()
@@ -18,6 +19,14 @@ def create_file(index, final_directory, fileName, contractName):
         os.remove(fileNameTemp)
     shutil.copyfile(fileName, fileNameTemp)
     return fileNameTemp
+
+def create_config_file(final_directory, config_file_params):
+    new_file_name = f"{final_directory}/config.yaml"
+    newfile = open(new_file_name, "w")
+    for key, value in asdict(config_file_params).items():
+        newfile.write(f"{key}: {value} \n")
+    newfile.close()
+    return new_file_name
 
 def write_file(fileNameTemp, body, contractName):
     new_body = clean_true_requires(body)
