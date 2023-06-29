@@ -37,11 +37,11 @@ contract Crowdfunding {
     //     assert(!(!(max_block > blockNumber) && !(max_block < blockNumber && goal <= balance) && !(blockNumber > max_block && !funded && goal > balance && backersArray.length != 0) && balance > 0 )) ;
     // }
 
-    function my_constructor(uint _max_block, uint _goal, uint _balance, uint _blockNumber) public payable {
+    function my_constructor(uint _max_block, uint _goal, uint _blockNumber) public  {
 		require(!has_initialized);
         max_block = _max_block;
-        goal = 0;
-        balance = _balance;
+        goal = _goal;
+        balance = 0;
         blockNumber = _blockNumber;
 		has_initialized = true;
     }
