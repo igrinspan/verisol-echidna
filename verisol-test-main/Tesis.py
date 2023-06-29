@@ -368,6 +368,7 @@ class EchidnaRunner:
         tests_that_failed = []
         for line in tool_result.splitlines():
             if "failed!" in line:
+                if line[:2] != "vc": continue # Por si falla un assert que no tiene que ver con los tests
                 failed_test = line.split()[0][2:7] # vcIxJxK(¡): -> IxJxK.
                 i, j, k = get_params_from_function_name(failed_test)
                 tests_that_failed.append([i, j, k])
@@ -515,7 +516,16 @@ class OutputPrinter:
     def print_results(self, transition_tests_that_failed, init_tests_that_failed):
         self.print_failed_tests(transition_tests_that_failed)
         self.print_failed_tests(init_tests_that_failed, True)
-        print(f"Count init: {len(init_tests_that_failed)}\nCount transitions: {len(transition_tests_that_failed)}")
+        write_file = open(f'output_echidna_{contractName}_states/resultados.txt','a')
+        write_file.write(f"\n --------------\n")
+        write_file.write(f"Resultados de init:\n {init_tests_that_failed}\n\n")
+        write_file.write(f"Resultados de transitions:\n {transition_tests_that_failed}\n\n")
+
+    def print_transitions_results(self, failed_tests):
+         print(f"Count transitions: {len(failed_tests)}\n")
+
+    def print_init_results(self, failed_tests):
+        print(f"Count init: {len(failed_tests)}\n")
 
     def print_failed_tests(self, tests_that_failed, init=False):
         if init:
@@ -525,12 +535,12 @@ class OutputPrinter:
         else:
             for test in tests_that_failed:
                 print_output(test[0], test[2], test[1], states, states) #print_output recibe como segundo param la función y tercero el assert.
-
+        
 
 class Graph:
     def __init__(self, nombre, dir):
         self.graph = graphviz.Digraph(comment=nombre)
-        self.nombre = nombre
+        self.nombre = f"{contractName}_{mode}"
         self.dir = dir
 
     def build_graph(self, transition_tests_that_failed, init_tests_that_failed):
@@ -593,14 +603,14 @@ def prepare_variables(mode, funcionesNumeros):
     statesThreads = states
     extraConditionsThreads = extraConditions
 
-
+# Modo Epa
 def discard_unreachable_states(dir):
     contract_created = ContractCreator(dir).create_combinations_contract() 
     ContractCreator(dir).change_for_constructor_fuzzing(contract_created)
     failed_tests = EchidnaRunner(dir).run_contract(contract_created)
     update_global_variables_based_on(failed_tests)
 
-
+# Modo Epa
 def update_global_variables_based_on(failed_tests):
     global preconditions, states, extraConditions
     preconditionsTemp = []
@@ -616,7 +626,7 @@ def update_global_variables_based_on(failed_tests):
     states = statesTemp
     extraConditions = extraConditionsTemp
 
-
+# Funcion que se encarga de crear el contrato y correrlo
 def create_run_and_print_on(dir, dir_name):
     init_contract_to_run = ContractCreator(dir).create_init_contract()
     transitions_contract_to_run = ContractCreator(dir).create_transitions_contract(preconditions, states, preconditions, extraConditions)
@@ -624,44 +634,27 @@ def create_run_and_print_on(dir, dir_name):
     ContractCreator(dir).change_for_constructor_fuzzing(init_contract_to_run)
     ContractCreator(dir).change_for_constructor_fuzzing(transitions_contract_to_run)
 
-    init_config_params = EchidnaConfigFileData(testLimit=100000, workers=32)
-    transitions_config_params = EchidnaConfigFileData(testLimit=1500000, workers=32)
+    init_config_params = EchidnaConfigFileData(testLimit=10_000, workers=16)
+    transitions_config_params = EchidnaConfigFileData(testLimit=10_000, workers=16)
 
     init_failed = EchidnaRunner(dir, init_contract_to_run, init_config_params).run_contract()
-    print(f'Se encontraron {len(init_failed)} resultados para el constructor')
-    write_file = open('output_echidna_states/resultados.txt','a')
-    write_file.write(f"\n --------------\n")
-    write_file.write(f"Resultados de init:\n {init_failed}\n\n")
     tr_failed = EchidnaRunner(dir, transitions_contract_to_run, transitions_config_params).run_contract()
-    write_file.write(f"Resultados de transitions:\n {tr_failed}\n\n")
-
-    # Deberíamos correrlo también con balance = 0 y un max_value bajo para que se pueda donar 0. 
-    # ContractCreator(dir).change_for_balance_equal_to_zero(transitions_contract_to_run)
-    # config_balance0 = EchidnaConfigFileData(testLimit=400000, workers=32, maxValue=1)
-    # tr_failed2 = EchidnaRunner(dir, transitions_contract_to_run, config_balance0).run_contract()
-    # write_file.write(f"Resultados de transitions con maxValue=1 y balance=0:\n {tr_failed2}\n\n")
-    # tr_failed += tr_failed2
-
-    # ContractCreator(dir).change_for_goal_equal_to_zero(transitions_contract_to_run)
-    # config_goal0 = EchidnaConfigFileData(testLimit=150000, workers=32)
-    # tr_failed3 = EchidnaRunner(dir, transitions_contract_to_run, config_goal0).run_contract()
-    # write_file.write(f"Resultados de transitions con el contrato inicializado con goal=0:\n {tr_failed3}\n\n")
-    # tr_failed += tr_failed3
-
-    tr_failed = remove_duplicates(tr_failed)
+    OutputPrinter().print_init_results(init_failed)
+    OutputPrinter().print_transitions_results(tr_failed)
     
     OutputPrinter().print_results(tr_failed, init_failed)
     Graph(dir_name, dir_name).build_graph(tr_failed, init_failed)
 
+
 def logica_echidna_epa():
-    dir_name = '_echidna_epa'
+    dir_name = f'_echidna_{contractName}_epa'
     dir = create_directory(dir_name)
     discard_unreachable_states(dir)
     create_run_and_print_on(dir, dir_name)
 
 
 def logica_echidna_states():
-    dir_name = '_echidna_states'
+    dir_name = f'_echidna_{contractName}_states'
     dir = create_directory(dir_name)
     create_run_and_print_on(dir, dir_name)
 
