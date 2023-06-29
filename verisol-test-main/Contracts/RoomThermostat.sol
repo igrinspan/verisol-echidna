@@ -12,16 +12,14 @@ contract RoomThermostat {
     enum ModeEnum {Off, Cool, Heat, Auto}
     ModeEnum public  Mode;
     
-    constructor(address thermostatInstaller, address thermostatUser) public
-    {
+    constructor(address thermostatInstaller, address thermostatUser) public{
         Installer = thermostatInstaller;
         User = thermostatUser;
         TargetTemperature = 70;
         State = StateType.Created;
     }
 
-    function StartThermostat() public
-    {
+    function StartThermostat() public{
         if (Installer != msg.sender || State != StateType.Created)
         {
             revert();
@@ -30,8 +28,7 @@ contract RoomThermostat {
         State = StateType.InUse;
     }
 
-    function SetTargetTemperature(int targetTemperature) public
-    {
+    function SetTargetTemperature(int targetTemperature) public{
         if (User != msg.sender || State != StateType.InUse)
         {
             revert();
@@ -39,8 +36,7 @@ contract RoomThermostat {
         TargetTemperature = targetTemperature;
     }
 
-    function SetMode(ModeEnum mode) public
-    {
+    function SetMode(ModeEnum mode) public{
         if (User != msg.sender || State != StateType.InUse)
         {
             revert();
