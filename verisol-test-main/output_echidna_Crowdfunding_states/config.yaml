@@ -1,0 +1,8 @@
+testLimit: 5000 
+balanceContract: 0 
+workers: 16 
+maxValue: 100000000000000000000 
+testMode: assertion 
+format: text 
+shrinkLimit: 0 
+seqLen: 100 
