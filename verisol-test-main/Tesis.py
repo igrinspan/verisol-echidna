@@ -513,10 +513,13 @@ class EchidnaConfigFileData:
 
 
 class OutputPrinter:
+    def __init__(self, dir):
+        self.directory = dir
+
     def print_results(self, transition_tests_that_failed, init_tests_that_failed):
         self.print_failed_tests(transition_tests_that_failed)
         self.print_failed_tests(init_tests_that_failed, True)
-        write_file = open(f'output_echidna_{contractName}_states/resultados.txt','a')
+        write_file = open(f'{self.directory}/resultados.txt','a')
         write_file.write(f"\n --------------\n")
         write_file.write(f"Resultados de init:\n {init_tests_that_failed}\n\n")
         write_file.write(f"Resultados de transitions:\n {transition_tests_that_failed}\n\n")
@@ -538,15 +541,14 @@ class OutputPrinter:
         
 
 class Graph:
-    def __init__(self, nombre, dir):
-        self.graph = graphviz.Digraph(comment=nombre)
-        self.nombre = f"{contractName}_{mode}"
+    def __init__(self, dir):
+        self.graph = graphviz.Digraph(comment=contractName)
         self.dir = dir
 
     def build_graph(self, transition_tests_that_failed, init_tests_that_failed):
         self.add_failed_tests_init(init_tests_that_failed)
         self.add_failed_tests_transition(transition_tests_that_failed)
-        self.graph.render(f"output{self.dir}/graph/" + self.nombre)
+        self.graph.render(f"{self.dir}/graph/{contractName}{mode}")
 
     def add_failed_tests_init(self, tests_that_failed):
         for test in tests_that_failed:
@@ -564,25 +566,8 @@ class Graph:
         self.graph.edge("init",combinationToString(states[indexPreconditionAssert]), "constructor")
 
 
-def tabs(count):
-  return "\t" * count
 
-
-def newline(count):
-  return "\n" * count
-
-
-def remove_duplicates_from_results(init_failed, transitions_failed):
-    transitions_failed_without_duplicates = remove_duplicates(transitions_failed)
-    init_failed_without_duplicates = remove_duplicates(init_failed)
-    return init_failed_without_duplicates, transitions_failed_without_duplicates
-
-
-def remove_duplicates(list_of_lists):
-    list_of_lists.sort()
-    return list(res for res, _ in itertools.groupby(list_of_lists))
-
-
+# Se ejecuta en el main para cargar las variables preconditions, states y extraConditions, dependiendo del modo.
 def prepare_variables(mode, funcionesNumeros):
     global states, preconditions, extraConditions, statesThreads, preconditionsThreads, extraConditionsThreads
     if mode == Mode.epa :
@@ -603,14 +588,17 @@ def prepare_variables(mode, funcionesNumeros):
     statesThreads = states
     extraConditionsThreads = extraConditions
 
-# Modo Epa
+# Modo Epa.
 def discard_unreachable_states(dir):
-    contract_created = ContractCreator(dir).create_combinations_contract() 
+    contract_created = ContractCreator(dir).create_combinations_contract(preconditions, extraConditions) 
     ContractCreator(dir).change_for_constructor_fuzzing(contract_created)
-    failed_tests = EchidnaRunner(dir).run_contract(contract_created)
+    
+    config_file_params = EchidnaConfigFileData(testLimit=10_000, workers=16)
+    
+    failed_tests = EchidnaRunner(dir, contract_created, config_file_params).run_contract()
     update_global_variables_based_on(failed_tests)
 
-# Modo Epa
+# Modo Epa.
 def update_global_variables_based_on(failed_tests):
     global preconditions, states, extraConditions
     preconditionsTemp = []
@@ -626,7 +614,7 @@ def update_global_variables_based_on(failed_tests):
     states = statesTemp
     extraConditions = extraConditionsTemp
 
-# Funcion que se encarga de crear el contrato y correrlo
+# Funcion que se encarga de crear el contrato y correrlo.
 def create_run_and_print_on(dir, dir_name):
     init_contract_to_run = ContractCreator(dir).create_init_contract()
     transitions_contract_to_run = ContractCreator(dir).create_transitions_contract(preconditions, states, preconditions, extraConditions)
@@ -639,22 +627,22 @@ def create_run_and_print_on(dir, dir_name):
 
     init_failed = EchidnaRunner(dir, init_contract_to_run, init_config_params).run_contract()
     tr_failed = EchidnaRunner(dir, transitions_contract_to_run, transitions_config_params).run_contract()
-    OutputPrinter().print_init_results(init_failed)
-    OutputPrinter().print_transitions_results(tr_failed)
+    OutputPrinter(dir).print_init_results(init_failed)
+    OutputPrinter(dir).print_transitions_results(tr_failed)
     
-    OutputPrinter().print_results(tr_failed, init_failed)
-    Graph(dir_name, dir_name).build_graph(tr_failed, init_failed)
+    OutputPrinter(dir).print_results(tr_failed, init_failed)
+    Graph(dir).build_graph(tr_failed, init_failed)
 
 
 def logica_echidna_epa():
-    dir_name = f'_echidna_{contractName}_epa'
+    dir_name = f'echidna_output/{contractName}/epa'
     dir = create_directory(dir_name)
     discard_unreachable_states(dir)
     create_run_and_print_on(dir, dir_name)
 
 
 def logica_echidna_states():
-    dir_name = f'_echidna_{contractName}_states'
+    dir_name = f'echidna_output/{contractName}/states'
     dir = create_directory(dir_name)
     create_run_and_print_on(dir, dir_name)
 

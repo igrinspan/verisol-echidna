@@ -4,7 +4,7 @@ from dataclasses import dataclass, fields, asdict
 
 def create_directory(index):
     current_directory = os.getcwd()
-    final_directory = os.path.join(current_directory, r'output'+str(index))
+    final_directory = os.path.join(current_directory, str(index))
     if not os.path.exists(final_directory):
         os.makedirs(final_directory)
     return final_directory

@@ -5,3 +5,4 @@ __pycache__/
 graph/
 .idea/
 crytic-export/
+extra.py
