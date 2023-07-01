@@ -14,67 +14,10 @@ sys.path.append('../')
 from file_manager import create_directory, delete_directory, create_file, write_file, write_file_from_string, read_from_file, create_config_file
 
 
-def getCombinations(funcionesNumeros):
-    global statePreconditions
-    truePreconditions = []
-    results = []
-    statesTemp = []
-    count = len(funcionesNumeros)
-    for index, statePrecondition in enumerate(statePreconditions):
-        if statePrecondition == "true":
-            truePreconditions.append(index + 1)
+class Mode(Enum):
+    epa = "epa"
+    states = "states"
 
-    # Combinations
-    for L in range(len(funcionesNumeros) + 1):
-        for subset in itertools.combinations(funcionesNumeros, L):
-            isTrue = True
-            for truePre in truePreconditions:
-                if truePre not in subset:
-                    isTrue = False
-            if isTrue == True:
-                results.append(subset)
-
-    for partialResult in results:
-        paddingResult = []
-        paddingResult = [0 for i in range(count)] 
-        for i in range(count):
-            if len(partialResult) > i and partialResult[i] >=0:
-                indice = partialResult[i]
-                paddingResult[indice-1] = indice
-        statesTemp.append(paddingResult)
-    statesTemp2 = []
-    
-    for combination in statesTemp:
-        isCorrect = True
-        for iNumber, number in enumerate(combination):
-            for idx, x in enumerate(statePreconditions):
-                if iNumber != idx:
-                    if number == 0:
-                        if statePreconditions[iNumber] == x and combination[idx] != 0:
-                            isCorrect = False
-                    elif statePreconditions[iNumber] == x and not((idx+1) in combination):
-                        isCorrect = False
-        
-        if isCorrect:
-            statesTemp2.append(combination)
-            
-    return statesTemp2
-
-
-def getPreconditions(funcionesNumeros):
-    global states, statePreconditions
-    preconditions = []
-    for result in states:
-        precondition = ""
-        for number in funcionesNumeros:
-            if precondition != "":
-                precondition += " && "
-            if number in result:
-                precondition += statePreconditions[number-1]
-            else:
-                precondition += "!(" + statePreconditions[number-1] + ")"
-        preconditions.append(precondition)
-    return preconditions
 
 
 def combinationToString(combination):
@@ -86,16 +29,6 @@ def combinationToString(combination):
 
 def functionOutput(number):
     return "\tfunction vc" + number + "(" + functionVariables + ") payable public {"
-
-
-def getToolCommand(includeNumber, toolCommand, combinations, txBound):
-    global contractName
-    command = toolCommand + " " 
-    command = command + "/txBound:" + str(txBound) + " "
-    for indexCombination, combi in enumerate(combinations):
-        if combi != includeNumber: 
-            command += "/ignoreMethod:vc"+ combi +"@" + contractName + " "
-    return command
 
 
 def get_extra_condition_output(condition):
@@ -148,11 +81,6 @@ def print_combination(indexCombination, tempCombinations):
         print(output + "---------")
 
 
-def get_params_from_function_name(temp_function_name):
-    array = temp_function_name.split('x')
-    return int(array[0]), int(array[1]), int(array[2])
-
-
 def get_valid_preconditions_output(preconditions, extraConditions):
     temp_output = ""
     tempFunctionNames = []
@@ -200,137 +128,20 @@ def get_init_output(preconditions, extraConditions):
         temp_output += temp_function + "\n\t}\n"
     return temp_output, tempFunctionNames
 
-
-def try_preconditions(tool, tempFunctionNames, final_directory, statesTemp, preconditionsTemp, extraConditionsTemp, arg): 
-    global txBound
-    preconditionsTemp2 = []
-    statesTemp2 = []
-    extraConditionsTemp2 = []
-    
-    for functionName in tempFunctionNames:
-        if time_opt == False:
-            print(functionName + "---" + str(arg))
-        indexPreconditionRequire, _ , _ = get_params_from_function_name(functionName)
-        if try_command(tool, functionName, tempFunctionNames, final_directory, txBound):
-            print_combination(indexPreconditionRequire, statesTemp)
-            preconditionsTemp2.append(preconditionsTemp[indexPreconditionRequire])
-            statesTemp2.append(statesTemp[indexPreconditionRequire])
-            extraConditionsTemp2.append(extraConditionsTemp[indexPreconditionRequire])
-    return preconditionsTemp2, statesTemp2, extraConditionsTemp2
-
-
-def try_transaction(tool, tempFunctionNames, final_directory, statesTemp, states, arg):
-    global txBound 
-    for functionName in tempFunctionNames:
-        if time_opt == False:
-            print(functionName + "---" + str(arg))
-        indexPreconditionRequire, indexPreconditionAssert, indexFunction = get_params_from_function_name(functionName)
-        if try_command(tool, functionName, tempFunctionNames, final_directory, txBound):
-            add_node_to_graph(indexPreconditionRequire, indexPreconditionAssert, indexFunction, statesTemp, states)
-            print_output(indexPreconditionRequire, indexFunction, indexPreconditionAssert, statesTemp, states)
-
-
-def try_init(tool, tempFunctionNames, final_directory, states):
-    global dot
-    for functionName in tempFunctionNames:
-        indexPreconditionAssert, _, _ = get_params_from_function_name(functionName)
-        if try_command(tool, functionName, tempFunctionNames, final_directory, 1):
-            dot.node("init", "init")
-            dot.node(combinationToString(states[indexPreconditionAssert]), output_combination(indexPreconditionAssert, states))
-            dot.edge("init",combinationToString(states[indexPreconditionAssert]) , "constructor")
-
-
-def try_command(tool, temp_function_name, tempFunctionNames, final_directory, txBound):
-    global tool_output, verbose
-    command = getToolCommand(temp_function_name, tool, tempFunctionNames, txBound)
-    # print(command)
-    result = subprocess.run([command, ""], shell = True, cwd=final_directory, stdout=subprocess.PIPE)
-    #if verbose:
-    #    print(result.stdout.decode('utf-8'))
-    return tool_output in str(result.stdout.decode('utf-8'))
-
-
+# Pure
 def get_temp_function_name(indexPrecondtion, indexAssert, indexFunction):
     return str(indexPrecondtion) + "x" + str(indexAssert) + "x" + str(indexFunction)
+
+# Pure
+def get_params_from_function_name(temp_function_name):
+    array = temp_function_name.split('x')
+    return int(array[0]), int(array[1]), int(array[2])
 
 
 def print_output(indexPreconditionRequire, indexFunction, indexPreconditionAssert, combinations, fullCombination):
     output ="Desde el estado: "+ output_combination(indexPreconditionRequire, combinations) + "\nHaciendo: " + functions[indexFunction] + "\nLlegas al estado: " + output_combination(indexPreconditionAssert, fullCombination) + "\n---------"
     #if time == False:
     print(output)
-
-
-def add_node_to_graph(indexPreconditionRequire, indexPreconditionAssert, indexFunction, statesTemp, states, dot):
-    global functions
-    dot.node(combinationToString(statesTemp[indexPreconditionRequire]), output_combination(indexPreconditionRequire, statesTemp))
-    dot.node(combinationToString(states[indexPreconditionAssert]), output_combination(indexPreconditionAssert, states))
-    dot.edge(combinationToString(statesTemp[indexPreconditionRequire]),combinationToString(states[indexPreconditionAssert]) , label=functions[indexFunction])
-
-
-def reduceCombinations(arg):
-    global fileName, preconditionsThreads, statesThreads, extraConditionsThreads, contractName
-    preconditionsTemp = preconditionsThreads[arg]
-    statesTemp = statesThreads[arg]
-    extraConditionsTemp = extraConditionsThreads[arg]
-    final_directory = create_directory(arg)
-    fileNameTemp = create_file(arg, final_directory, fileName, contractName)
-    body,fuctionCombinations = get_valid_preconditions_output(preconditionsTemp, extraConditionsTemp)
-    write_file(fileNameTemp, body, contractName)
-    tool = "Verisol " + fileNameTemp + " " + contractName
-    preconditionsTemp2, statesTemp2, extraConditionsTemp2 = try_preconditions(tool, fuctionCombinations, final_directory, statesTemp, preconditionsTemp, extraConditionsTemp , arg)
-    preconditionsThreads[arg] = preconditionsTemp2
-    statesThreads[arg] = statesTemp2
-    extraConditionsThreads[arg] = extraConditionsTemp
-    if not verbose:
-        delete_directory(final_directory)
-
-
-def validCombinations(arg):
-    global preconditionsThreads, statesThreads, extraConditionsThreads, extraConditions, preconditions, states, contractName, fileName, dot
-    final_directory = create_directory(arg)
-    fileNameTemp = create_file(arg, final_directory, fileName, contractName)
-    body, fuctionCombinations = get_valid_transitions_output(preconditionsThreads[arg], preconditions,
-                                                             extraConditionsThreads[arg], extraConditions, functions,
-                                                             statesThreads[arg])
-    write_file(fileNameTemp, body, contractName)
-    tool = "Verisol " + fileNameTemp + " " + contractName
-    try_transaction(tool, fuctionCombinations, final_directory, statesThreads[arg], states, arg)
-    if not verbose:
-        delete_directory(final_directory)
-
-
-def validInit(arg):
-    global preconditionsThreads, extraConditions, preconditions, states, contractName, fileName, dot
-    final_directory = create_directory(arg)
-    fileNameTemp = create_file(arg, final_directory, fileName, contractName)
-    body, fuctionCombinations = get_init_output(preconditions, extraConditions)
-    write_file(fileNameTemp, body, contractName)
-    tool = "Verisol " + fileNameTemp + " " + contractName
-    try_init(tool, fuctionCombinations, final_directory, states)
-    delete_directory(final_directory)
-
-
-class Mode(Enum):
-    epa = "epa"
-    states = "states"
-
-
-def make_global_variables(config):
-    global fileName, preconditions, dot, statesNames, functions, statePreconditions, contractName, functionVariables, functionPreconditions, txBound, statePreconditionsModeState, statesModeState
-    fileName = "Contracts/" + config.fileName
-    print(config.fileName)
-    functions = config.functions
-    statePreconditions = config.statePreconditions
-    statesNames = config.statesNamesModeState
-    statePreconditions = config.statePreconditions
-    contractName = config.contractName
-    functionVariables = config.functionVariables
-    functionPreconditions = config.functionPreconditions
-    txBound = config.txBound
-    statePreconditionsModeState = config.statePreconditionsModeState
-    statesModeState = config.statesModeState
-    print(config)
-
 
 
 class EchidnaRunner:
@@ -344,14 +155,6 @@ class EchidnaRunner:
         result = self.set_up_and_run()
         end = time()
         print(f'El contrato demoró {round(end - start, 2)} segundos en correr...')
-        return self.process_output(result)
-    
-    def run_contract_saving_output(self):
-        result = self.set_up_and_run(self.contract, contractName)
-        write_file = open(f'{self.directory}/pruebas.txt','w')
-        for line in result.splitlines():
-            write_file.write(line)
-        write_file.close()
         return self.process_output(result)
     
     def set_up_and_run(self):
@@ -392,18 +195,15 @@ class ContractCreator:
     def __init__(self, directory):
         self.directory = directory
 
-    def create_all_contracts(self):
-        return self.create_transitions_contract(), self.create_init_contract()
-
     def create_transitions_contract(self, pre_require, states, pre_assert, extra_cond):
-        file_name_temp = create_file("_transitions", self.directory, fileName, contractName)
+        file_name_temp = create_file("transitions", self.directory, fileName, contractName)
         body, _ = get_valid_transitions_output(pre_require, pre_assert, extra_cond, extra_cond, functions, states)
         body = self.clean_true_requires(body)
         write_file(file_name_temp, body, contractName)
         return file_name_temp
 
     def create_init_contract(self):
-        filename_temp = create_file("_init", self.directory, fileName, contractName)
+        filename_temp = create_file("init", self.directory, fileName, contractName)
         body, _ = get_init_output(preconditions, extraConditions)
         body = self.clean_true_requires(body)
         write_file(filename_temp, body, contractName)
@@ -423,7 +223,7 @@ class ContractCreator:
 
     # Para modo epa
     def create_combinations_contract(self, preconditions, extraconditions):
-        fileNameTemp = create_file('_combinations', self.directory, fileName, contractName)
+        fileNameTemp = create_file('combinations', self.directory, fileName, contractName)
         body, _ = get_valid_preconditions_output(preconditions, extraconditions)
         write_file(fileNameTemp, body, contractName)
         return fileNameTemp
@@ -456,8 +256,8 @@ class ContractCreator:
             else:
                 new_lines += [line]
         # 3. Agregamos el require y el cambio de estado en el constructor.
-        require = "\t\trequire(!has_initialized);\n"
-        change_status = "\t\thas_initialized = true;\n"
+        require = "\t\t\trequire(!has_initialized);\n"
+        change_status = "\t\t\thas_initialized = true;\n"
         start, end = self.get_constructor_start_and_end_lines(new_lines)
         new_lines = new_lines[:start+1] + [require] + new_lines[start+1:end-1] + [change_status] + new_lines[end-1:]
         # 4. Hacemos que el constructor sea una función común.
@@ -465,38 +265,6 @@ class ContractCreator:
         linea_a_cambiar = linea_a_cambiar.replace("constructor", "function my_constructor")
         new_lines[start] = linea_a_cambiar
 
-        write_file_from_string(contract_filename, new_lines)
-
-    def change_for_balance_equal_to_zero(self, contract_filename):
-        newlines = []
-        lines = open(contract_filename, 'r').readlines()
-        for line in lines:
-            if 'balance = msg.value;' in line:
-                line = line.replace('balance = msg.value;', 'balance = 0;')
-            newlines.append(line)
-
-        write_file_from_string(contract_filename, newlines)
-
-    def change_for_goal_equal_to_zero(self, contract_filename):
-        newlines = []
-        lines = open(contract_filename, 'r').readlines()
-        for line in lines:
-            if 'goal = _goal;' in line:
-                line = line.replace('goal = _goal;', 'goal = 0;')
-            newlines.append(line)
-
-        write_file_from_string(contract_filename, newlines)
-
-    def set_initial_balance_to_0(self, contract_filename):
-        lines = open(contract_filename, 'r').readlines()
-        new_lines = []
-        for line in lines:
-            if "balance = _balance;" in line:
-                new_lines += [line.replace("_balance", "0")]
-            elif "goal = _goal;" in line:
-                new_lines += [line.replace("_goal", "0")]
-            else:
-                new_lines += [line]
         write_file_from_string(contract_filename, new_lines)
 
 
@@ -556,7 +324,12 @@ class Graph:
 
     def add_failed_tests_transition(self, tests_that_failed):
         for test in tests_that_failed:
-            add_node_to_graph(test[0], test[1], test[2], states, states, self.graph)
+            self.add_node_to_graph(test[0], test[1], test[2], states)
+
+    def add_node_to_graph(self, indexPreconditionRequire, indexPreconditionAssert, indexFunction, states):
+        self.graph.node(combinationToString(states[indexPreconditionRequire]), output_combination(indexPreconditionRequire, states))
+        self.graph.node(combinationToString(states[indexPreconditionAssert]), output_combination(indexPreconditionAssert, states))
+        self.graph.edge(combinationToString(states[indexPreconditionRequire]),combinationToString(states[indexPreconditionAssert]) , label=functions[indexFunction])
 
     def add_init_node_to_graph(self, init_test): 
         global states
@@ -566,27 +339,6 @@ class Graph:
         self.graph.edge("init",combinationToString(states[indexPreconditionAssert]), "constructor")
 
 
-
-# Se ejecuta en el main para cargar las variables preconditions, states y extraConditions, dependiendo del modo.
-def prepare_variables(mode, funcionesNumeros):
-    global states, preconditions, extraConditions, statesThreads, preconditionsThreads, extraConditionsThreads
-    if mode == Mode.epa :
-        states = getCombinations(funcionesNumeros)
-        preconditions = getPreconditions(funcionesNumeros)
-        try:
-            extraConditions = [config.epaExtraConditions for i in range(len(states))]
-        except:
-            extraConditions = ["true" for i in range(len(states))]
-    else :
-        preconditions = statePreconditionsModeState
-        states = statesModeState
-        try:
-            extraConditions = config.statesExtraConditions
-        except:
-            extraConditions = ["true" for i in range(len(states))]
-    preconditionsThreads = preconditions
-    statesThreads = states
-    extraConditionsThreads = extraConditions
 
 # Modo Epa.
 def discard_unreachable_states(dir):
@@ -622,8 +374,8 @@ def create_run_and_print_on(dir, dir_name):
     ContractCreator(dir).change_for_constructor_fuzzing(init_contract_to_run)
     ContractCreator(dir).change_for_constructor_fuzzing(transitions_contract_to_run)
 
-    init_config_params = EchidnaConfigFileData(testLimit=10_000, workers=16)
-    transitions_config_params = EchidnaConfigFileData(testLimit=10_000, workers=16)
+    init_config_params = EchidnaConfigFileData(testLimit=50_000, workers=16)
+    transitions_config_params = EchidnaConfigFileData(testLimit=50_000, workers=16)
 
     init_failed = EchidnaRunner(dir, init_contract_to_run, init_config_params).run_contract()
     tr_failed = EchidnaRunner(dir, transitions_contract_to_run, transitions_config_params).run_contract()
@@ -637,7 +389,7 @@ def create_run_and_print_on(dir, dir_name):
 def logica_echidna_epa():
     dir_name = f'echidna_output/{contractName}/epa'
     dir = create_directory(dir_name)
-    discard_unreachable_states(dir)
+    #discard_unreachable_states(dir)
     create_run_and_print_on(dir, dir_name)
 
 
@@ -647,14 +399,119 @@ def logica_echidna_states():
     create_run_and_print_on(dir, dir_name)
 
 
-def main():
-    global config, dot, preconditionsThreads, statesThreads, states, preconditions, extraConditionsThreads, extraConditions, echidna_runner
-    make_global_variables(config)
+class ConfigImporter:
+    def __init__(self, config):
+        self.contract_config_file = config
 
+    def make_global_variables(self):
+        global fileName, preconditions, statesNames, functions, statePreconditions, contractName, functionVariables, functionPreconditions, statePreconditionsModeState, statesModeState
+        c = self.contract_config_file
+        fileName = "Contracts/" + c.fileName
+        print(c.fileName)
+        functions = c.functions
+        statePreconditions = c.statePreconditions
+        statesNames = c.statesNamesModeState
+        statePreconditions = c.statePreconditions
+        contractName = c.contractName
+        functionVariables = c.functionVariables
+        functionPreconditions = c.functionPreconditions
+        statePreconditionsModeState = c.statePreconditionsModeState
+        statesModeState = c.statesModeState
+        print(c)
+
+    # Se ejecuta en el main para cargar las variables preconditions, states y extraConditions, dependiendo del modo.
+    def prepare_variables(self, mode, funcionesNumeros):
+        global states, preconditions, extraConditions, statesThreads, preconditionsThreads, extraConditionsThreads
+        if mode == Mode.epa :
+            states = self.getCombinations(funcionesNumeros)
+            preconditions = self.getPreconditions(funcionesNumeros)
+            try:
+                extraConditions = [self.contract_config_file.epaExtraConditions for i in range(len(states))]
+            except:
+                extraConditions = ["true" for i in range(len(states))]
+        else :
+            preconditions = statePreconditionsModeState
+            states = statesModeState
+            try:
+                extraConditions = self.contract_config_file.statesExtraConditions
+            except:
+                extraConditions = ["true" for i in range(len(states))]
+        preconditionsThreads = preconditions
+        statesThreads = states
+        extraConditionsThreads = extraConditions
+
+    def getCombinations(self, funcionesNumeros):
+        global statePreconditions
+        truePreconditions = []
+        results = []
+        statesTemp = []
+        count = len(funcionesNumeros)
+        for index, statePrecondition in enumerate(statePreconditions):
+            if statePrecondition == "true":
+                truePreconditions.append(index + 1)
+
+        # Combinations
+        for L in range(len(funcionesNumeros) + 1):
+            for subset in itertools.combinations(funcionesNumeros, L):
+                isTrue = True
+                for truePre in truePreconditions:
+                    if truePre not in subset:
+                        isTrue = False
+                if isTrue == True:
+                    results.append(subset)
+
+        for partialResult in results:
+            paddingResult = []
+            paddingResult = [0 for i in range(count)] 
+            for i in range(count):
+                if len(partialResult) > i and partialResult[i] >=0:
+                    indice = partialResult[i]
+                    paddingResult[indice-1] = indice
+            statesTemp.append(paddingResult)
+        statesTemp2 = []
+        
+        for combination in statesTemp:
+            isCorrect = True
+            for iNumber, number in enumerate(combination):
+                for idx, x in enumerate(statePreconditions):
+                    if iNumber != idx:
+                        if number == 0:
+                            if statePreconditions[iNumber] == x and combination[idx] != 0:
+                                isCorrect = False
+                        elif statePreconditions[iNumber] == x and not((idx+1) in combination):
+                            isCorrect = False
+            
+            if isCorrect:
+                statesTemp2.append(combination)
+                
+        return statesTemp2
+
+    def getPreconditions(self, funcionesNumeros):
+        global states, statePreconditions
+        preconditions = []
+        for result in states:
+            precondition = ""
+            for number in funcionesNumeros:
+                if precondition != "":
+                    precondition += " && "
+                if number in result:
+                    precondition += statePreconditions[number-1]
+                else:
+                    precondition += "!(" + statePreconditions[number-1] + ")"
+            preconditions.append(precondition)
+        return preconditions
+
+
+def main():
+    global config, preconditionsThreads, statesThreads, states, preconditions, extraConditionsThreads, extraConditions
+
+    importer = ConfigImporter(config)
+    importer.make_global_variables()
+
+    extraConditions = []
     funcionesNumeros = list(range(1, len(functions) + 1))
     
-    extraConditions = []
-    prepare_variables(mode, funcionesNumeros)
+    importer.prepare_variables(mode, funcionesNumeros)
 
     if (echidna):
         start = time()
@@ -662,89 +519,6 @@ def main():
         end = time()
         print(f"El tiempo total transcurrido fue de: {round(end - start, 2)} segundos.")
         return 
-
-
-    threadCount = 10
-    threads = []
-
-    dot = graphviz.Digraph(comment='Prueba')
-
-    preconditionsThreads = preconditions
-    preconditionsThreads = np.array_split(preconditionsThreads, threadCount)
-    statesThreads = states
-    statesThreads = np.array_split(statesThreads, threadCount)
-    extraConditionsThreads = extraConditions
-    if len(extraConditionsThreads) != 0:
-        extraConditionsThreads = np.array_split(extraConditions, threadCount)
-
-    if time_opt == False:
-        print("Length")
-        print(len(preconditions))
-
-    if mode == Mode.epa :
-        for i in range(threadCount):
-            thread = Thread(target = reduceCombinations, args = [i])
-            thread.start()
-            threads.append(thread)
-
-        for thread in threads:
-            thread.join()
-
-    preconditionsThreads = [x for x in preconditionsThreads if x != []]
-    statesThreads = [x for x in statesThreads if x != []]
-    extraConditionsThreads = [x for x in extraConditionsThreads if x != []]
-
-    preconditionsThreads = np.concatenate(preconditionsThreads)
-    statesThreads = np.concatenate(statesThreads)
-    if len(extraConditionsThreads) != 0:
-        extraConditionsThreads = np.concatenate(extraConditionsThreads)
-    states = statesThreads
-    preconditions = preconditionsThreads
-    extraConditions = extraConditionsThreads
-    realThreadCount = threadCount if len(preconditionsThreads) > threadCount else len(preconditionsThreads)
-
-    threads = []
-    divideThreads = 1
-    moduleThreadsConut = 0
-    divideCount = realThreadCount
-    if time_opt == False:
-        print("Length")
-        print(len(preconditionsThreads))
-    if len(preconditionsThreads) > 30:
-        if time_opt == False:
-            print("MAYOR A 200")
-        divideCount = len(preconditionsThreads)
-        divideThreads = int(divideCount/threadCount)
-        moduleThreadsConut = divideCount % threadCount
-
-    preconditionsThreads = np.array_split(preconditionsThreads, divideCount)
-    statesThreads = np.array_split(statesThreads, divideCount)
-    extraConditionsThreads = np.array_split(extraConditionsThreads, divideCount)
-
-    for y in range(divideThreads):
-        threads = []
-        for i in range(realThreadCount):
-            thread = Thread(target = validCombinations, args = [i + y * threadCount])
-            thread.start()
-            threads.append(thread)
-
-        for thread in threads:
-            thread.join()
-    threads = []
-    
-    for index in range(moduleThreadsConut):
-        thread = Thread(target = validCombinations, args = [threadCount * divideThreads + index])
-        thread.start()
-        threads.append(thread)
-    
-    thread = Thread(target = validInit, args = [len(preconditionsThreads)])
-    thread.start()
-    threads.append(thread)
-    for thread in threads:
-        thread.join()
-    print("ENDED")
-    tempFileName = configFile.replace('Config','')
-    dot.render("graph/" + tempFileName + "_" + str(mode))
 
 
 states = []
@@ -766,26 +540,19 @@ if __name__ == "__main__":
     verbose = False
     time_opt = False
     
-    if (len(sys.argv) > 2) and sys.argv[2] == "-echidna":
-        echidna = True 
-        mode = Mode.states
-        config = __import__(configFile, level=0)
-        main()
-
-    else:
-        if len(sys.argv) > 2 and sys.argv[2] == "-v":
-            verbose = True
-        if len(sys.argv) > 2 and sys.argv[2] == "-t":
-            time_opt = True
-        if len(sys.argv) > 3 and sys.argv[3] == "-e":
-            epaMode = True
-        if len(sys.argv) > 3 and sys.argv[3] == "-s":
-            statesMode = True
-        if len(sys.argv) > 3 and sys.argv[3] == "-a":
-            statesMode = True
-            epaMode = True
-        if len(sys.argv) > 4 and sys.argv[4] == "-echidna":
-            echidna = True
+    if len(sys.argv) > 2 and sys.argv[2] == "-v":
+        verbose = True
+    if len(sys.argv) > 2 and sys.argv[2] == "-t":
+        time_opt = True
+    if len(sys.argv) > 3 and sys.argv[3] == "-e":
+        epaMode = True
+    if len(sys.argv) > 3 and sys.argv[3] == "-s":
+        statesMode = True
+    if len(sys.argv) > 3 and sys.argv[3] == "-a":
+        statesMode = True
+        epaMode = True
+    if len(sys.argv) > 4 and sys.argv[4] == "-echidna":
+        echidna = True
     
     if epaMode:
         mode = Mode.epa
