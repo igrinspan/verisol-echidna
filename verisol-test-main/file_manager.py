@@ -13,7 +13,7 @@ def delete_directory(final_directory):
     shutil.rmtree(final_directory)
 
 def create_file(index, final_directory, fileName, contractName):
-    fileNameTemp = "OutputTemp"+str(index)+".sol"
+    fileNameTemp = str(index)+".sol"
     fileNameTemp = final_directory +"/"+ fileNameTemp
     if os.path.isfile(fileNameTemp):
         os.remove(fileNameTemp)
