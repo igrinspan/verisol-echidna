@@ -12,7 +12,8 @@ contract RoomThermostat {
     enum ModeEnum {Off, Cool, Heat, Auto}
     ModeEnum public  Mode;
     
-    constructor(address thermostatInstaller, address thermostatUser) public{
+    constructor(address thermostatInstaller, address thermostatUser) public
+    {
         Installer = thermostatInstaller;
         User = thermostatUser;
         TargetTemperature = 70;

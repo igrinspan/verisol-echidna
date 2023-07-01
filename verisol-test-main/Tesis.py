@@ -256,13 +256,13 @@ class ContractCreator:
             else:
                 new_lines += [line]
         # 3. Agregamos el require y el cambio de estado en el constructor.
-        require = "\t\t\trequire(!has_initialized);\n"
-        change_status = "\t\t\thas_initialized = true;\n"
+        change_status = "\t\t\t\thas_initialized = true;\n"
         start, end = self.get_constructor_start_and_end_lines(new_lines)
-        new_lines = new_lines[:start+1] + [require] + new_lines[start+1:end-1] + [change_status] + new_lines[end-1:]
+        new_lines = new_lines[:end-1] + [change_status] + new_lines[end-1:]
         # 4. Hacemos que el constructor sea una función común.
         linea_a_cambiar = new_lines[start] # constructor(uint _max_block, uint _goal, uint _blockNumber) public payable {
         linea_a_cambiar = linea_a_cambiar.replace("constructor", "function my_constructor")
+        linea_a_cambiar = linea_a_cambiar.replace(")", ") hasNotInitialized", 1)
         new_lines[start] = linea_a_cambiar
 
         write_file_from_string(contract_filename, new_lines)

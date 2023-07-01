@@ -30,7 +30,12 @@ def run_tesis(contract, mode):
     return result.stdout.decode('utf-8')
 
 def main():
-  run_tesis("RoomThermostat", "s")
+  for contract in benchmark_contracts:
+    print(f"Running {contract} in epa mode...")
+    run_tesis(contract, "e")
+    print(f"Running {contract} in states mode...")
+    run_tesis(contract, "s")
+    print("--------------\n")
 
 if __name__ == "__main__":
   main()
