@@ -6,3 +6,4 @@ graph/
 .idea/
 crytic-export/
 extra.py
+echidna_output/
