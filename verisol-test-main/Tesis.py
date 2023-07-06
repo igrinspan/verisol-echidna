@@ -3,6 +3,7 @@ import subprocess
 import inspect
 import os
 import shutil
+import re
 import numpy  as np
 import graphviz
 from threading import Thread
@@ -29,6 +30,10 @@ def combinationToString(combination):
 
 def functionOutput(number):
     return "\tfunction vc" + number + "(" + functionVariables + ") payable public {"
+
+
+def functionOutputWithoutParameters(number):
+    return "\tfunction vc" + number + "() public {"
 
 
 def get_extra_condition_output(condition):
@@ -87,7 +92,8 @@ def get_valid_preconditions_output(preconditions, extraConditions):
     for indexPreconditionRequire, preconditionRequire in enumerate(preconditions):
         functionName = get_temp_function_name(indexPreconditionRequire, "0", "0")
         tempFunctionNames.append(functionName)
-        temp_function = functionOutput(functionName) + "\n"
+        #temp_function = functionOutput(functionName) + "\n"
+        temp_function = functionOutputWithoutParameters(functionName) + "\n"  # probando el discard en epa mode
         temp_function += output_valid_state(preconditionRequire, extraConditions[indexPreconditionRequire])
         temp_output += temp_function + "\n\t}\n"
     return temp_output, tempFunctionNames
@@ -140,8 +146,6 @@ def get_params_from_function_name(temp_function_name):
 
 def print_output(indexPreconditionRequire, indexFunction, indexPreconditionAssert, combinations, fullCombination):
     output ="Desde el estado: "+ output_combination(indexPreconditionRequire, combinations) + "\nHaciendo: " + functions[indexFunction] + "\nLlegas al estado: " + output_combination(indexPreconditionAssert, fullCombination) + "\n---------"
-    #if time == False:
-    print(output)
 
 
 class EchidnaRunner:
@@ -154,12 +158,12 @@ class EchidnaRunner:
         start = time()
         result = self.set_up_and_run()
         end = time()
-        print(f'El contrato demoró {round(end - start, 2)} segundos en correr...')
+        print(f'The contract took {round(end - start, 2)} seconds to run...')
         return self.process_output(result)
     
     def set_up_and_run(self):
         tool_command = self.create_echidna_command()
-        print(f"El comando a correr es {tool_command} en el directorio {self.directory}")
+        #print(f"El comando a correr es {tool_command} en el directorio {self.directory}")
         result = self.run_echidna_command(tool_command)
         return result
 
@@ -171,8 +175,12 @@ class EchidnaRunner:
         tests_that_failed = []
         for line in tool_result.splitlines():
             if "failed!" in line:
-                if line[:2] != "vc": continue # Por si falla un assert que no tiene que ver con los tests
-                failed_test = line.split()[0][2:7] # vcIxJxK(¡): -> IxJxK.
+                match = re.search(r'vc(\w+)\(', line)
+                if match:
+                    failed_test = match.group(1)  # vcIxJxK(¡): -> IxJxK.
+                    print(failed_test)
+                else:
+                    continue  # Por si falla un assert que no tiene que ver con los tests
                 i, j, k = get_params_from_function_name(failed_test)
                 tests_that_failed.append([i, j, k])
         return tests_that_failed
@@ -211,7 +219,6 @@ class ContractCreator:
         return filename_temp
 
     def transform_contract_for_init(self, filename_temp):
-        print(filename_temp)
         new_contract_body = self.remove_everything_after_constructor(filename_temp)
         write_file_from_string(filename_temp, new_contract_body)
 
@@ -227,6 +234,14 @@ class ContractCreator:
         body, _ = get_valid_preconditions_output(preconditions, extraconditions)
         write_file(fileNameTemp, body, contractName)
         return fileNameTemp
+
+    # def reduceCombinations(arg): eden
+    #     global fileName, contractName
+    #     final_directory = create_directory(arg)
+    #     fileNameTemp = create_file(arg, final_directory)
+    #     body, _ = get_valid_preconditions_output(preconditions, extraConditions)
+    #     write_file(fileNameTemp, body, contractName)
+ 
 
     def clean_true_requires(self, body):
         lines = body.replace("require(true);", "").split('\n')
@@ -353,6 +368,7 @@ def discard_unreachable_states(dir):
 # Modo Epa.
 def update_global_variables_based_on(failed_tests):
     global preconditions, states, extraConditions
+    print(f"A update_global_variables_based_on le llegaron: {failed_tests}")
     preconditionsTemp = []
     statesTemp = []
     extraConditionsTemp = []
@@ -374,27 +390,27 @@ def create_run_and_print_on(dir, dir_name):
     ContractCreator(dir).change_for_constructor_fuzzing(init_contract_to_run)
     ContractCreator(dir).change_for_constructor_fuzzing(transitions_contract_to_run)
 
-    init_config_params = EchidnaConfigFileData(testLimit=50_000, workers=16)
-    transitions_config_params = EchidnaConfigFileData(testLimit=50_000, workers=16)
+    init_config_params = EchidnaConfigFileData(testLimit=test_limit, workers=16)
+    transitions_config_params = EchidnaConfigFileData(testLimit=test_limit, workers=16)
 
     init_failed = EchidnaRunner(dir, init_contract_to_run, init_config_params).run_contract()
     tr_failed = EchidnaRunner(dir, transitions_contract_to_run, transitions_config_params).run_contract()
-    OutputPrinter(dir).print_init_results(init_failed)
-    OutputPrinter(dir).print_transitions_results(tr_failed)
+    #OutputPrinter(dir).print_init_results(init_failed)
+    #OutputPrinter(dir).print_transitions_results(tr_failed)
     
-    OutputPrinter(dir).print_results(tr_failed, init_failed)
+    #OutputPrinter(dir).print_results(tr_failed, init_failed)
     Graph(dir).build_graph(tr_failed, init_failed)
 
 
 def logica_echidna_epa():
-    dir_name = f'echidna_output/{contractName}/epa'
+    dir_name = f'echidna_output/{contractFileName[:-4]}/{test_limit}/epa' # -4 para sacarle el .sol
     dir = create_directory(dir_name)
-    #discard_unreachable_states(dir)
+    discard_unreachable_states(dir)
     create_run_and_print_on(dir, dir_name)
 
 
 def logica_echidna_states():
-    dir_name = f'echidna_output/{contractName}/states'
+    dir_name = f'echidna_output/{contractFileName[:-4]}/{test_limit}/states' # -4 para sacarle el .sol
     dir = create_directory(dir_name)
     create_run_and_print_on(dir, dir_name)
 
@@ -404,10 +420,11 @@ class ConfigImporter:
         self.contract_config_file = config
 
     def make_global_variables(self):
-        global fileName, preconditions, statesNames, functions, statePreconditions, contractName, functionVariables, functionPreconditions, statePreconditionsModeState, statesModeState
+        global fileName, contractFileName, preconditions, statesNames, functions, statePreconditions, contractName, functionVariables, functionPreconditions, statePreconditionsModeState, statesModeState
         c = self.contract_config_file
         fileName = "Contracts/" + c.fileName
-        print(c.fileName)
+        contractFileName = c.fileName
+        #print(c.fileName)
         functions = c.functions
         statePreconditions = c.statePreconditions
         statesNames = c.statesNamesModeState
@@ -417,7 +434,7 @@ class ConfigImporter:
         functionPreconditions = c.functionPreconditions
         statePreconditionsModeState = c.statePreconditionsModeState
         statesModeState = c.statesModeState
-        print(c)
+        #print(c)
 
     # Se ejecuta en el main para cargar las variables preconditions, states y extraConditions, dependiendo del modo.
     def prepare_variables(self, mode, funcionesNumeros):
@@ -517,7 +534,7 @@ def main():
         start = time()
         logica_echidna_epa() if mode == Mode.epa else logica_echidna_states()
         end = time()
-        print(f"El tiempo total transcurrido fue de: {round(end - start, 2)} segundos.")
+        print(f"The total time was: {round(end - start, 2)} seconds. \n")
         return 
 
 
@@ -530,13 +547,11 @@ echidna_output = "failed!"
 sys.path.append("/Users/iangrinspan/Documents/1C2023/Beca/verisol-echidna/verisol-test-main/Configs")
 
 if __name__ == "__main__":
-    global mode, config, verbose, time_opt
+    global mode, config, verbose, time_opt, test_limit
     epaMode = False
     statesMode = False
     echidna = False
     configFile = sys.argv[1]
-    print(f"Config file: {configFile}")
-    print(f"Flag: {sys.argv[2]}")
     verbose = False
     time_opt = False
     
@@ -553,10 +568,11 @@ if __name__ == "__main__":
         epaMode = True
     if len(sys.argv) > 4 and sys.argv[4] == "-echidna":
         echidna = True
+    if len(sys.argv) > 5:
+        test_limit = int(sys.argv[5])
     
     if epaMode:
         mode = Mode.epa
-        print(configFile)
         config = __import__(configFile, level=0)
         main()
 
