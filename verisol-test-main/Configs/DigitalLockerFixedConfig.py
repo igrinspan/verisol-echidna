@@ -1,4 +1,4 @@
-fileName = "DigitalLocker_fixed.sol"
+fileName = "DigitalLockerFixed.sol"
 contractName = "DigitalLocker"
 functions = [
 "BeginReviewProcess();", 

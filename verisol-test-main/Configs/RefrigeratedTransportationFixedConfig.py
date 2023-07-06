@@ -1,4 +1,4 @@
-fileName = "RefrigeratedTransportation_fixed.sol"
+fileName = "RefrigeratedTransportationFixed.sol"
 contractName = "RefrigeratedTransportation"
 functions = ["IngestTelemetry(humidity, temperature, timestamp);", "TransferResponsibility(newCounterparty);", "Complete();"]
 statePreconditions = [

@@ -1,4 +1,4 @@
-pragma solidity ^0.5.10;
+pragma solidity >=0.4.25 <0.9.0;
 
 contract DigitalLocker {
     enum StateType { Requested, DocumentReview, AvailableToShare, SharingRequestPending, SharingWithThirdParty, Terminated }

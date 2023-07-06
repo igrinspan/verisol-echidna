@@ -1,4 +1,4 @@
-fileName = "AssetTransfer_fixed.sol"
+fileName = "AssetTransferFixed.sol"
 contractName = "AssetTransfer"
 functions = [
 "Terminate();",

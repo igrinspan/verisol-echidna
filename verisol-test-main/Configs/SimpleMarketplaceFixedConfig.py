@@ -1,4 +1,4 @@
-fileName = "SimpleMarketplace_fixed.sol"
+fileName = "SimpleMarketplaceFixed.sol"
 contractName = "SimpleMarketplace"
 functions = ["MakeOffer(offerPrice);", "AcceptOffer();", "Reject();"]
 statePreconditions = ["State == StateType.ItemAvailable", "State == StateType.OfferPlaced", "State == StateType.OfferPlaced"]

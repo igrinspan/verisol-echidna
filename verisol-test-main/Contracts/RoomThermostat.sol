@@ -1,5 +1,6 @@
 pragma solidity >=0.4.25 <0.9.0;
 
+
 contract RoomThermostat {
     //Set of States
     enum StateType { Created, InUse}

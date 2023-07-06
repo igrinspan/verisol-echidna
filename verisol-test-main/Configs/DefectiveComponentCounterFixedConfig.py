@@ -1,4 +1,4 @@
-fileName = "DefectiveComponentCounter_fixed.sol"
+fileName = "DefectiveComponentCounterFixed.sol"
 contractName = "DefectiveComponentCounter"
 functions = ["ComputeTotal();", "GetDefectiveComponentsCount();"]
 

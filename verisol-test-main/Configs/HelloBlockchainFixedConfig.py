@@ -1,4 +1,4 @@
-fileName = "HelloBlockchain_fixed.sol"
+fileName = "HelloBlockchainFixed.sol"
 contractName = "HelloBlockchain"
 functions = ["SendRequest(requestMessage);", "SendResponse(responseMessage);"]
 

@@ -1,4 +1,4 @@
-fileName = "BasicProvenance_fixed.sol"
+fileName = "BasicProvenanceFixed.sol"
 contractName = "BasicProvenance"
 functions = ["TransferResponsibility(newCounterparty);", "Complete();"]
 functionPreconditions = ["Counterparty == msg.sender",
