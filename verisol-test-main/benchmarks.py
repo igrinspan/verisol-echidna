@@ -1,7 +1,7 @@
 import os
 import sys
 import subprocess
-dir = os. getcwd()
+dir = os.getcwd()
 
 # python3 Tesis.py RandomContractConfig  -v -s -echidna
 
@@ -47,7 +47,7 @@ def run_tesis(contract, mode, test_limit):
     command_to_run = f'python3 Tesis.py {contract}Config  -t -{mode} -echidna {test_limit}'
     result = subprocess.check_call(command_to_run, shell=True, cwd=dir, stdout=sys.stdout, stderr=subprocess.STDOUT)
 
-
+ignore = [('AssetTransferFixed', 'epa')]
 
 
 def main():

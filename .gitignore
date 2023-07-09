@@ -2,8 +2,6 @@
 __pycache__/
  *.pyc
 .vscode/ 
-graph/
 .idea/
 crytic-export/
 extra.py
-echidna_output/
