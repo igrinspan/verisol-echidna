@@ -51,8 +51,8 @@ def run_tesis(contract, mode, test_limit):
 
 
 def main():
-  #change_contract_versions(">=0.4.25 <0.9.0")
-  #run_all_contracts(100)
+  # change_contract_versions(">=0.4.25 <0.9.0")
+  # run_all_contracts(100)
   run_contract("AssetTransferFixed", "e", 100)
 
 if __name__ == "__main__":

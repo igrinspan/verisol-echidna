@@ -33,7 +33,7 @@ def functionOutput(number):
 
 
 def functionOutputWithoutParameters(number):
-    return "\tfunction vc" + number + "() public {"
+    return "\tfunction vc" + number + "() public returns(bool){"
 
 
 def get_extra_condition_output(condition):
@@ -62,7 +62,9 @@ def output_init_function(preconditionAssert, extraCondition):
 
 def output_valid_state(preconditionRequire, extraCondition):
     extraConditionOutput = get_extra_condition_output(extraCondition)
-    return "require("+preconditionRequire+");\n" + extraConditionOutput + "assert(false);\n"
+    # print(f"extraConditionOutput: {extraConditionOutput}")
+    return f"\t\treturn({preconditionRequire});\n"  # Para property testing
+    # return "require("+preconditionRequire+");\n" + extraConditionOutput + "assert(false);\n"
 
 
 def output_combination(indexCombination, tempCombinations):
@@ -95,7 +97,7 @@ def get_valid_preconditions_output(preconditions, extraConditions):
         #temp_function = functionOutput(functionName) + "\n"
         temp_function = functionOutputWithoutParameters(functionName) + "\n"  # probando el discard en epa mode
         temp_function += output_valid_state(preconditionRequire, extraConditions[indexPreconditionRequire])
-        temp_output += temp_function + "\n\t}\n"
+        temp_output += temp_function + "\t}\n"
     return temp_output, tempFunctionNames
 
 
@@ -232,15 +234,9 @@ class ContractCreator:
     def create_combinations_contract(self, preconditions, extraconditions):
         fileNameTemp = create_file('combinations', self.directory, fileName, contractName)
         body, _ = get_valid_preconditions_output(preconditions, extraconditions)
+        body = self.clean_true_requires(body)
         write_file(fileNameTemp, body, contractName)
         return fileNameTemp
-
-    # def reduceCombinations(arg): eden
-    #     global fileName, contractName
-    #     final_directory = create_directory(arg)
-    #     fileNameTemp = create_file(arg, final_directory)
-    #     body, _ = get_valid_preconditions_output(preconditions, extraConditions)
-    #     write_file(fileNameTemp, body, contractName)
  
 
     def clean_true_requires(self, body):
@@ -290,6 +286,7 @@ class EchidnaConfigFileData:
     workers: int = 1
     maxValue: int = 100000000000000000000
     testMode: str = 'assertion'
+    prefix: str = 'echidna_'
     format: str = 'text'
     shrinkLimit: int = 0
     seqLen: int = 100
@@ -358,9 +355,9 @@ class Graph:
 # Modo Epa.
 def discard_unreachable_states(dir):
     contract_created = ContractCreator(dir).create_combinations_contract(preconditions, extraConditions) 
-    ContractCreator(dir).change_for_constructor_fuzzing(contract_created)
+    # ContractCreator(dir).change_for_constructor_fuzzing(contract_created)
     
-    config_file_params = EchidnaConfigFileData(testLimit=10_000, workers=16)
+    config_file_params = EchidnaConfigFileData(testLimit=10_000, testMode='property', prefix='vc', workers=16)
     
     failed_tests = EchidnaRunner(dir, contract_created, config_file_params).run_contract()
     update_global_variables_based_on(failed_tests)
