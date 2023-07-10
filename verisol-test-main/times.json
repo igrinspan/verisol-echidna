@@ -1,0 +1,434 @@
+[
+  {
+    "contract": "HelloBlockchain",
+    "test_limit": 100,
+    "mode": "e",
+    "time_in_s": 5.37
+  },
+  {
+    "contract": "HelloBlockchain",
+    "test_limit": 100,
+    "mode": "s",
+    "time_in_s": 5.01
+  },
+  {
+    "contract": "BasicProvenance",
+    "test_limit": 100,
+    "mode": "e",
+    "time_in_s": 4.7
+  },
+  {
+    "contract": "BasicProvenance",
+    "test_limit": 100,
+    "mode": "s",
+    "time_in_s": 4.96
+  },
+  {
+    "contract": "DefectiveComponentCounter",
+    "test_limit": 100,
+    "mode": "e",
+    "time_in_s": 4.68
+  },
+  {
+    "contract": "DefectiveComponentCounter",
+    "test_limit": 100,
+    "mode": "s",
+    "time_in_s": 5.22
+  },
+  {
+    "contract": "FrequentFlyerRewardsCalculator",
+    "test_limit": 100,
+    "mode": "e",
+    "time_in_s": 5.2
+  },
+  {
+    "contract": "FrequentFlyerRewardsCalculator",
+    "test_limit": 100,
+    "mode": "s",
+    "time_in_s": 7.1
+  },
+  {
+    "contract": "RefrigeratedTransportation",
+    "test_limit": 100,
+    "mode": "e",
+    "time_in_s": 9.57
+  },
+  {
+    "contract": "RefrigeratedTransportation",
+    "test_limit": 100,
+    "mode": "s",
+    "time_in_s": 7.52
+  },
+  {
+    "contract": "RoomThermostat",
+    "test_limit": 100,
+    "mode": "e",
+    "time_in_s": 5.76
+  },
+  {
+    "contract": "RoomThermostat",
+    "test_limit": 100,
+    "mode": "s",
+    "time_in_s": 4.42
+  },
+  {
+    "contract": "SimpleMarketplace",
+    "test_limit": 100,
+    "mode": "e",
+    "time_in_s": 7.34
+  },
+  {
+    "contract": "SimpleMarketplace",
+    "test_limit": 100,
+    "mode": "s",
+    "time_in_s": 5.59
+  },
+  {
+    "contract": "HelloBlockchainFixed",
+    "test_limit": 100,
+    "mode": "e",
+    "time_in_s": 4.76
+  },
+  {
+    "contract": "HelloBlockchainFixed",
+    "test_limit": 100,
+    "mode": "s",
+    "time_in_s": 4.03
+  },
+  {
+    "contract": "SimpleMarketplaceFixed",
+    "test_limit": 100,
+    "mode": "e",
+    "time_in_s": 5.16
+  },
+  {
+    "contract": "SimpleMarketplaceFixed",
+    "test_limit": 100,
+    "mode": "s",
+    "time_in_s": 4.54
+  },
+  {
+    "contract": "BasicProvenanceFixed",
+    "test_limit": 100,
+    "mode": "e",
+    "time_in_s": 4.76
+  },
+  {
+    "contract": "BasicProvenanceFixed",
+    "test_limit": 100,
+    "mode": "s",
+    "time_in_s": 4.28
+  },
+  {
+    "contract": "DefectiveComponentCounterFixed",
+    "test_limit": 100,
+    "mode": "e",
+    "time_in_s": 4.11
+  },
+  {
+    "contract": "DefectiveComponentCounterFixed",
+    "test_limit": 100,
+    "mode": "s",
+    "time_in_s": 4.21
+  },
+  {
+    "contract": "RefrigeratedTransportationFixed",
+    "test_limit": 100,
+    "mode": "e",
+    "time_in_s": 7.12
+  },
+  {
+    "contract": "RefrigeratedTransportationFixed",
+    "test_limit": 100,
+    "mode": "s",
+    "time_in_s": 5.7
+  },
+  {
+    "contract": "HelloBlockchain",
+    "test_limit": 50000,
+    "mode": "e",
+    "time_in_s": 19.72
+  },
+  {
+    "contract": "HelloBlockchain",
+    "test_limit": 50000,
+    "mode": "s",
+    "time_in_s": 23.46
+  },
+  {
+    "contract": "BasicProvenance",
+    "test_limit": 50000,
+    "mode": "e",
+    "time_in_s": 15.73
+  },
+  {
+    "contract": "BasicProvenance",
+    "test_limit": 50000,
+    "mode": "s",
+    "time_in_s": 19.0
+  },
+  {
+    "contract": "DefectiveComponentCounter",
+    "test_limit": 50000,
+    "mode": "e",
+    "time_in_s": 17.77
+  },
+  {
+    "contract": "DefectiveComponentCounter",
+    "test_limit": 50000,
+    "mode": "s",
+    "time_in_s": 17.54
+  },
+  {
+    "contract": "FrequentFlyerRewardsCalculator",
+    "test_limit": 50000,
+    "mode": "e",
+    "time_in_s": 23.49
+  },
+  {
+    "contract": "FrequentFlyerRewardsCalculator",
+    "test_limit": 50000,
+    "mode": "s",
+    "time_in_s": 29.51
+  },
+  {
+    "contract": "RefrigeratedTransportation",
+    "test_limit": 50000,
+    "mode": "e",
+    "time_in_s": 41.06
+  },
+  {
+    "contract": "RefrigeratedTransportation",
+    "test_limit": 50000,
+    "mode": "s",
+    "time_in_s": 42.64
+  },
+  {
+    "contract": "RoomThermostat",
+    "test_limit": 50000,
+    "mode": "e",
+    "time_in_s": 24.58
+  },
+  {
+    "contract": "RoomThermostat",
+    "test_limit": 50000,
+    "mode": "s",
+    "time_in_s": 18.23
+  },
+  {
+    "contract": "SimpleMarketplace",
+    "test_limit": 50000,
+    "mode": "e",
+    "time_in_s": 30.15
+  },
+  {
+    "contract": "SimpleMarketplace",
+    "test_limit": 50000,
+    "mode": "s",
+    "time_in_s": 25.41
+  },
+  {
+    "contract": "HelloBlockchainFixed",
+    "test_limit": 50000,
+    "mode": "e",
+    "time_in_s": 18.58
+  },
+  {
+    "contract": "HelloBlockchainFixed",
+    "test_limit": 50000,
+    "mode": "s",
+    "time_in_s": 14.83
+  },
+  {
+    "contract": "SimpleMarketplaceFixed",
+    "test_limit": 50000,
+    "mode": "e",
+    "time_in_s": 21.29
+  },
+  {
+    "contract": "SimpleMarketplaceFixed",
+    "test_limit": 50000,
+    "mode": "s",
+    "time_in_s": 19.84
+  },
+  {
+    "contract": "BasicProvenanceFixed",
+    "test_limit": 50000,
+    "mode": "e",
+    "time_in_s": 18.24
+  },
+  {
+    "contract": "BasicProvenanceFixed",
+    "test_limit": 50000,
+    "mode": "s",
+    "time_in_s": 16.41
+  },
+  {
+    "contract": "DefectiveComponentCounterFixed",
+    "test_limit": 50000,
+    "mode": "e",
+    "time_in_s": 15.75
+  },
+  {
+    "contract": "DefectiveComponentCounterFixed",
+    "test_limit": 50000,
+    "mode": "s",
+    "time_in_s": 16.29
+  },
+  {
+    "contract": "RefrigeratedTransportationFixed",
+    "test_limit": 50000,
+    "mode": "e",
+    "time_in_s": 34.75
+  },
+  {
+    "contract": "RefrigeratedTransportationFixed",
+    "test_limit": 50000,
+    "mode": "s",
+    "time_in_s": 32.86
+  },
+  {
+    "contract": "HelloBlockchain",
+    "test_limit": 500000,
+    "mode": "e",
+    "time_in_s": 158.9
+  },
+  {
+    "contract": "HelloBlockchain",
+    "test_limit": 500000,
+    "mode": "s",
+    "time_in_s": 192.58
+  },
+  {
+    "contract": "BasicProvenance",
+    "test_limit": 500000,
+    "mode": "e",
+    "time_in_s": 120.74
+  },
+  {
+    "contract": "BasicProvenance",
+    "test_limit": 500000,
+    "mode": "s",
+    "time_in_s": 153.19
+  },
+  {
+    "contract": "DefectiveComponentCounter",
+    "test_limit": 500000,
+    "mode": "e",
+    "time_in_s": 145.82
+  },
+  {
+    "contract": "DefectiveComponentCounter",
+    "test_limit": 500000,
+    "mode": "s",
+    "time_in_s": 207.13
+  },
+  {
+    "contract": "FrequentFlyerRewardsCalculator",
+    "test_limit": 500000,
+    "mode": "e",
+    "time_in_s": 418.35
+  },
+  {
+    "contract": "FrequentFlyerRewardsCalculator",
+    "test_limit": 500000,
+    "mode": "s",
+    "time_in_s": 440.44
+  },
+  {
+    "contract": "RefrigeratedTransportation",
+    "test_limit": 500000,
+    "mode": "e",
+    "time_in_s": 609.22
+  },
+  {
+    "contract": "RefrigeratedTransportation",
+    "test_limit": 500000,
+    "mode": "s",
+    "time_in_s": 485.35
+  },
+  {
+    "contract": "RoomThermostat",
+    "test_limit": 500000,
+    "mode": "e",
+    "time_in_s": 316.68
+  },
+  {
+    "contract": "RoomThermostat",
+    "test_limit": 500000,
+    "mode": "s",
+    "time_in_s": 193.3
+  },
+  {
+    "contract": "SimpleMarketplace",
+    "test_limit": 500000,
+    "mode": "e",
+    "time_in_s": 243.76
+  },
+  {
+    "contract": "SimpleMarketplace",
+    "test_limit": 500000,
+    "mode": "s",
+    "time_in_s": 207.36
+  },
+  {
+    "contract": "HelloBlockchainFixed",
+    "test_limit": 500000,
+    "mode": "e",
+    "time_in_s": 146.96
+  },
+  {
+    "contract": "HelloBlockchainFixed",
+    "test_limit": 500000,
+    "mode": "s",
+    "time_in_s": 112.44
+  },
+  {
+    "contract": "SimpleMarketplaceFixed",
+    "test_limit": 500000,
+    "mode": "e",
+    "time_in_s": 170.49
+  },
+  {
+    "contract": "SimpleMarketplaceFixed",
+    "test_limit": 500000,
+    "mode": "s",
+    "time_in_s": 161.96
+  },
+  {
+    "contract": "BasicProvenanceFixed",
+    "test_limit": 500000,
+    "mode": "e",
+    "time_in_s": 136.21
+  },
+  {
+    "contract": "BasicProvenanceFixed",
+    "test_limit": 500000,
+    "mode": "s",
+    "time_in_s": 134.5
+  },
+  {
+    "contract": "DefectiveComponentCounterFixed",
+    "test_limit": 500000,
+    "mode": "e",
+    "time_in_s": 186.89
+  },
+  {
+    "contract": "DefectiveComponentCounterFixed",
+    "test_limit": 500000,
+    "mode": "s",
+    "time_in_s": 234.52
+  },
+  {
+    "contract": "RefrigeratedTransportationFixed",
+    "test_limit": 500000,
+    "mode": "e",
+    "time_in_s": 586.8
+  },
+  {
+    "contract": "RefrigeratedTransportationFixed",
+    "test_limit": 500000,
+    "mode": "s",
+    "time_in_s": 320.69
+  }
+]
