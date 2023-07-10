@@ -33,6 +33,15 @@ def main():
   diff_epa_graphs(test_limit, contracts_to_compare)
   diff_states_graphs(test_limit, contracts_to_compare)
 
+# import graphviz
+# import pygraphviz as pgv
+
+# g1 = pgv.AGraph('echidna_output/HelloBlockchain/500000/states/graph/HelloBlockchainMode.states')
+# g2 = pgv.AGraph('graph/HelloBlockchain_Mode.states')
+
+# def son_el_mismo_grafo?(g1, g2)
+# 	return set(g1.nodes()) == set(g2.nodes()) and set(g1.edges()) == set(g2.edges())
+
 # formatos:
 # echidna_output/AssetTransfer/100/epa/graph/AssetTransferMode.epa
 # graph/AssetTransfer_Mode.epa
