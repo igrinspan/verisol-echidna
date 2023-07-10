@@ -20,7 +20,7 @@ class Mode(Enum):
     states = "states"
 
 
-
+# Pure
 def combinationToString(combination):
     output = ""
     for i in combination:
@@ -31,11 +31,11 @@ def combinationToString(combination):
 def functionOutput(number):
     return "\tfunction vc" + number + "(" + functionVariables + ") payable public {"
 
-
+# Pure
 def functionOutputWithoutParameters(number):
     return "\tfunction vc" + number + "() public returns(bool){"
 
-
+# Pure
 def get_extra_condition_output(condition):
     extraConditionOutput = ""
     if condition != "" and condition != None:
@@ -62,8 +62,8 @@ def output_init_function(preconditionAssert, extraCondition):
 
 def output_valid_state(preconditionRequire, extraCondition):
     extraConditionOutput = get_extra_condition_output(extraCondition)
-    # print(f"extraConditionOutput: {extraConditionOutput}")
     return f"\t\treturn({preconditionRequire});\n"  # Para property testing
+    # print(f"extraConditionOutput: {extraConditionOutput}")
     # return "require("+preconditionRequire+");\n" + extraConditionOutput + "assert(false);\n"
 
 
@@ -402,7 +402,7 @@ def create_run_and_print_on(dir, dir_name):
 def logica_echidna_epa():
     dir_name = f'echidna_output/{contractFileName[:-4]}/{test_limit}/epa' # -4 para sacarle el .sol
     dir = create_directory(dir_name)
-    discard_unreachable_states(dir)
+    # discard_unreachable_states(dir)  # Viendo si lo puedo cambiar para que descarte contradicciones.
     create_run_and_print_on(dir, dir_name)
 
 
