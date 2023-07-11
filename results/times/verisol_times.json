@@ -1,0 +1,82 @@
+[
+    {
+        "Contract": "HelloBlockchain",
+        "Verisol Epa Time": 16.00,
+        "Verisol States Time": 24.00
+    },
+    {
+        "Contract": "BasicProvenance",
+        "Verisol Epa Time": 28.00,
+        "Verisol States Time": 40.00
+    },
+    {
+        "Contract": "DefectiveComponentCounter",
+        "Verisol Epa Time": 15.00,
+        "Verisol States Time": 25.00
+    },
+    {
+        "Contract": "DigitalLocker",
+        "Verisol Epa Time": 49.00,
+        "Verisol States Time": 573.00
+    },
+    {
+        "Contract": "FrequentFlyerRewardsCalculator",
+        "Verisol Epa Time": 19.00,
+        "Verisol States Time": 35.00
+    },
+    {
+        "Contract": "RefrigeratedTransportation",
+        "Verisol Epa Time": 39.00,
+        "Verisol States Time": 84.00
+    },
+    {
+        "Contract": "RoomThermostat",
+        "Verisol Epa Time": 29.00,
+        "Verisol States Time": 33.00
+    },
+    {
+        "Contract": "SimpleMarketplace",
+        "Verisol Epa Time": 43.00,
+        "Verisol States Time": 56.00
+    },
+    {
+        "Contract": "AssetTransfer",
+        "Verisol Epa Time": 1131.00,
+        "Verisol States Time": 1919.00
+    },
+    {
+        "Contract": "HelloBlockchainFixed",
+        "Verisol Epa Time": 22.00,
+        "Verisol States Time": 25.00
+    },
+    {
+        "Contract": "SimpleMarketplaceFixed",
+        "Verisol Epa Time": 42.00,
+        "Verisol States Time": 53.00
+    },
+    {
+        "Contract": "BasicProvenanceFixed",
+        "Verisol Epa Time": 42.00,
+        "Verisol States Time": 40.00
+    },
+    {
+        "Contract": "DefectiveComponentCounterFixed",
+        "Verisol Epa Time": 29.00,
+        "Verisol States Time": 25.00
+    },
+    {
+        "Contract": "DigitalLockerFixed",
+        "Verisol Epa Time": 298.00,
+        "Verisol States Time": 577.00
+    },
+    {
+        "Contract": "AssetTransferFixed",
+        "Verisol Epa Time": 1207.00,
+        "Verisol States Time": 1813.00
+    },
+    {
+        "Contract": "RefrigeratedTransportationFixed",
+        "Verisol Epa Time": 62.00,
+        "Verisol States Time": 85.00
+    }
+]

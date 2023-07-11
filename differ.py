@@ -1,51 +1,64 @@
 import filecmp
 import os
+import graphviz
+import pygraphviz as pgv
+import json
 
-def diff(file1Name, file2Name):
-    result = filecmp.cmp(file1Name, file2Name)
-    if result == False:
-        print(file1Name + " is different from " + file2Name)
 
 benchmark_contracts = [
     "HelloBlockchain",
+    "BasicProvenance",
+    "DefectiveComponentCounter",
+    "FrequentFlyerRewardsCalculator",
+    "RefrigeratedTransportation",
+    "RoomThermostat",
     "SimpleMarketplace",
-    "AssetTransfer",
-    "AssetTransferFixed"
+    "HelloBlockchainFixed",
+    "SimpleMarketplaceFixed",
+    "BasicProvenanceFixed",
+    "DefectiveComponentCounterFixed",
+    "RefrigeratedTransportationFixed",
 ]
 
-def diff_epa_graphs(test_limit, contracts_to_compare):
-  for contract in contracts_to_compare:
-      verisol_graph = f'graph/{contract}_Mode.epa'
-      graph_file_name = contract[:-5] if 'Fixed' in contract else contract
-      echidna_graph = f'echidna_output/{contract}/{test_limit}/epa/graph/{graph_file_name}Mode.epa'
-      diff(verisol_graph, echidna_graph)
+class GraphData:
+    def __init__(self, pgv_graph):
+        self.nodes = set(pgv_graph.nodes())
+        self.edges = set(pgv_graph.edges())
+    
+def diff(verisol_graph, echidna_graph, contract, test_limit, mode):
+    g1 = GraphData(pgv.AGraph(verisol_graph))
+    g2 = GraphData(pgv.AGraph(echidna_graph))
+    node_difference = len(g2.nodes) - len(g1.nodes)  # si es positivo, ech encontró más.
+    edge_difference = len(g2.edges) - len(g1.edges) 
+    print(edge_difference, node_difference)
+    diff_results.append({
+        'Contract': contract,
+        'Test Limit': test_limit,
+        'Mode': mode,
+        'Node Difference': node_difference,
+        'Edge Difference': edge_difference
+    })
 
-def diff_states_graphs(test_limit, contracts_to_compare):
-  for contract in contracts_to_compare:
-      verisol_graph = f'graph/{contract}_Mode.states'
-      graph_file_name = contract[:-5] if 'Fixed' in contract else contract
-      echidna_graph = f'echidna_output/{contract}/{test_limit}/states/graph/{graph_file_name}Mode.states'
-      diff(verisol_graph, echidna_graph)
+def diff_all_graphs(contracts_to_compare, test_limits):
+   for contract in contracts_to_compare:
+      for test_limit in test_limits:
+        for mode in ['epa', 'states']:
+          verisol_graph = f'{verisol_dir}/{contract}_Mode.{mode}'
+          graph_file_name = contract[:-5] if 'Fixed' in contract else contract
+          echidna_graph = f'{echidna_dir}/{contract}/{test_limit}/{mode}/graph/{graph_file_name}Mode.{mode}'
+          diff(verisol_graph, echidna_graph, contract, test_limit, mode)
+   
+
+diff_results = []
+echidna_dir = 'verisol-test-main/echidna_output'
+verisol_dir = 'verisol-test-main/graph'
 
 def main():
   contracts_to_compare = benchmark_contracts
-  test_limit = 100
-  diff_epa_graphs(test_limit, contracts_to_compare)
-  diff_states_graphs(test_limit, contracts_to_compare)
+  test_limits = [100, 50_000, 500_000]
+  diff_all_graphs(contracts_to_compare, test_limits)
+  fileout = open("diff_results.json", "a")
+  json.dump(diff_results, fileout)
 
-# import graphviz
-# import pygraphviz as pgv
-
-# g1 = pgv.AGraph('echidna_output/HelloBlockchain/500000/states/graph/HelloBlockchainMode.states')
-# g2 = pgv.AGraph('graph/HelloBlockchain_Mode.states')
-
-# def son_el_mismo_grafo?(g1, g2)
-# 	return set(g1.nodes()) == set(g2.nodes()) and set(g1.edges()) == set(g2.edges())
-
-# formatos:
-# echidna_output/AssetTransfer/100/epa/graph/AssetTransferMode.epa
-# graph/AssetTransfer_Mode.epa
-
-# para los fixed:
-# echidna_output/AssetTransferFixed/100/epa/graph/AssetTransferMode.epa
-# graph/AssetTransferFixed_Mode.epa
+if __name__ == "__main__":
+    main()
