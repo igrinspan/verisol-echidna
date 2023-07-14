@@ -287,7 +287,7 @@ class EchidnaConfigFileData:
     maxValue: int = 100000000000000000000
     testMode: str = 'assertion'
     prefix: str = 'echidna_'
-    format: str = 'text'
+    format: str = 'Null'
     shrinkLimit: int = 0
     seqLen: int = 100
 
@@ -357,7 +357,7 @@ def discard_unreachable_states(dir):
     contract_created = ContractCreator(dir).create_combinations_contract(preconditions, extraConditions) 
     # ContractCreator(dir).change_for_constructor_fuzzing(contract_created)
     
-    config_file_params = EchidnaConfigFileData(testLimit=10_000, testMode='property', prefix='vc', workers=16)
+    config_file_params = EchidnaConfigFileData(testLimit=10_000, testMode='property', prefix='vc', workers=16, format='text')
     
     failed_tests = EchidnaRunner(dir, contract_created, config_file_params).run_contract()
     update_global_variables_based_on(failed_tests)
@@ -387,8 +387,8 @@ def create_run_and_print_on(dir, dir_name):
     ContractCreator(dir).change_for_constructor_fuzzing(init_contract_to_run)
     ContractCreator(dir).change_for_constructor_fuzzing(transitions_contract_to_run)
 
-    init_config_params = EchidnaConfigFileData(testLimit=test_limit, workers=16)
-    transitions_config_params = EchidnaConfigFileData(testLimit=test_limit, workers=16)
+    init_config_params = EchidnaConfigFileData(testLimit=test_limit, workers=16, format='text')
+    transitions_config_params = EchidnaConfigFileData(testLimit=test_limit, workers=16, format='text')
 
     init_failed = EchidnaRunner(dir, init_contract_to_run, init_config_params).run_contract()
     tr_failed = EchidnaRunner(dir, transitions_contract_to_run, transitions_config_params).run_contract()
@@ -398,11 +398,11 @@ def create_run_and_print_on(dir, dir_name):
     #OutputPrinter(dir).print_results(tr_failed, init_failed)
     Graph(dir).build_graph(tr_failed, init_failed)
 
-
+# Lo estoy corriendo sin el discard_unreachable_states.
 def logica_echidna_epa():
     dir_name = f'echidna_output/{contractFileName[:-4]}/{test_limit}/epa' # -4 para sacarle el .sol
     dir = create_directory(dir_name)
-    # discard_unreachable_states(dir)  # Viendo si lo puedo cambiar para que descarte contradicciones.
+    # discard_unreachable_states(dir)  # Ver si se puede cambiar para que descarte contradicciones sin correr echidna.
     create_run_and_print_on(dir, dir_name)
 
 

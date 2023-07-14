@@ -3,6 +3,7 @@ import sys
 import subprocess
 import time
 import json
+import shutil
 
 dir = os.getcwd()
 
@@ -87,6 +88,14 @@ def save_time(contract, mode, test_limit, time_taken_in_seconds):
         }
     )
 
+def borrar_directorios():
+  dir = os.getcwd()
+  echidna_output_dir = f'{dir}/echidna_output'
+  for filename in os.listdir(echidna_output_dir):
+      f = os.path.join(echidna_output_dir, filename)
+      for new_level_filename in os.listdir(f):
+          print(new_level_filename)
+          shutil.rmtree(f'{f}/{new_level_filename}')
 
 times = []
 
@@ -95,10 +104,10 @@ def main():
     # measure time
     start_time = time.time()
     change_contract_versions(">=0.4.25 <0.9.0", benchmark_contracts)
-    run_all_contracts(100, benchmark_contracts)
+    run_all_contracts(500, benchmark_contracts)
     run_all_contracts(50_000, benchmark_contracts)
     run_all_contracts(500_000, benchmark_contracts)
-    fileout = open("times.json", "a")
+    fileout = open("times_0_8_0.json", "a")
     json.dump(times, fileout)
 
 

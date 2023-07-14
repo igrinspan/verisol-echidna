@@ -11,13 +11,6 @@ GetDefectiveComponentsCount();
 	"0-2-" [label="GetDefectiveComponentsCount();
 "]
 	"1-2-" -> "0-2-" [label="ComputeTotal();"]
-	"1-2-" [label="ComputeTotal();
-GetDefectiveComponentsCount();
-"]
-	"1-2-" [label="ComputeTotal();
-GetDefectiveComponentsCount();
-"]
-	"1-2-" -> "1-2-" [label="ComputeTotal();"]
 	"0-2-" [label="GetDefectiveComponentsCount();
 "]
 	"0-2-" [label="GetDefectiveComponentsCount();

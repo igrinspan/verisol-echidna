@@ -24,7 +24,4 @@ digraph {
 	"0-2-0-0-" [label=InTransit]
 	"0-0-3-0-" [label=Completed]
 	"0-2-0-0-" -> "0-0-3-0-" [label="Complete();"]
-	"0-2-0-0-" [label=InTransit]
-	"0-2-0-0-" [label=InTransit]
-	"0-2-0-0-" -> "0-2-0-0-" [label="IngestTelemetry(humidity, temperature, timestamp);"]
 }

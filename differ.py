@@ -28,15 +28,22 @@ class GraphData:
 def diff(verisol_graph, echidna_graph, contract, test_limit, mode):
     g1 = GraphData(pgv.AGraph(verisol_graph))
     g2 = GraphData(pgv.AGraph(echidna_graph))
-    node_difference = len(g2.nodes) - len(g1.nodes)  # si es positivo, ech encontró más.
-    edge_difference = len(g2.edges) - len(g1.edges) 
-    print(edge_difference, node_difference)
+    echidna_node_difference = g2.nodes - g1.nodes  # resta de conjuntos
+    echidna_edge_difference = g2.edges - g1.edges  
+    verisol_node_difference = g1.nodes - g2.nodes
+    verisol_edge_difference = g1.edges - g2.edges
+    node_difference = len(g2.nodes) - len(g1.nodes)
+    edge_difference = len(g2.edges) - len(g1.edges)
     diff_results.append({
         'Contract': contract,
         'Test Limit': test_limit,
         'Mode': mode,
         'Node Difference': node_difference,
-        'Edge Difference': edge_difference
+        'Edge Difference': edge_difference,
+        'Echidna Node': len(echidna_node_difference),
+        'Echidna Edge': len(echidna_edge_difference),
+        'Verisol Node': len(verisol_node_difference),
+        'Verisol Edge': len(verisol_edge_difference),
     })
 
 def diff_all_graphs(contracts_to_compare, test_limits):
@@ -57,7 +64,7 @@ def main():
   contracts_to_compare = benchmark_contracts
   test_limits = [100, 50_000, 500_000]
   diff_all_graphs(contracts_to_compare, test_limits)
-  fileout = open("diff_results.json", "a")
+  fileout = open("diff_results2.json", "a")
   json.dump(diff_results, fileout)
 
 if __name__ == "__main__":

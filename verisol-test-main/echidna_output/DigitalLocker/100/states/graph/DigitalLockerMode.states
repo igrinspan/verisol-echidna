@@ -1,9 +1,0 @@
-// DigitalLocker
-digraph {
-	init [label=init]
-	"0-2-0-0-0-0-" [label=DocumentReview]
-	init -> "0-2-0-0-0-0-" [label=constructor]
-	"0-0-0-0-5-0-" [label=SharingWithThirdParty]
-	"0-0-0-4-0-0-" [label=SharingRequestPending]
-	"0-0-0-0-5-0-" -> "0-0-0-4-0-0-" [label="RequestLockerAccess(intendedPurpose);"]
-}

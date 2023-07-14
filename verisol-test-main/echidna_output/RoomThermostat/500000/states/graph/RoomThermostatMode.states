@@ -12,7 +12,4 @@ digraph {
 	"0-2-" [label=InUse]
 	"0-2-" [label=InUse]
 	"0-2-" -> "0-2-" [label="SetMode(mode);"]
-	"0-2-" [label=InUse]
-	"1-0-" [label=Created]
-	"0-2-" -> "1-0-" [label="SetMode(mode);"]
 }
