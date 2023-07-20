@@ -20,18 +20,23 @@ benchmark_contracts = [
     "RefrigeratedTransportationFixed",
 ]
 
-class GraphData:
-    def __init__(self, pgv_graph):
-        self.nodes = set(pgv_graph.nodes())
-        self.edges = set(pgv_graph.edges())
+class Graph:
+    def __init__(self, graph):
+        self.graph = pgv.AGraph(graph)
+        self.nodes = set(self.graph.nodes())
+        self.edges = self.get_edges_with_labels()
     
+    def get_edges_with_labels(self):
+        return set(map(lambda x: (x, x.attr['label']), self.graph.edges()))
+
+
 def diff(verisol_graph, echidna_graph, contract, test_limit, mode):
-    g1 = GraphData(pgv.AGraph(verisol_graph))
-    g2 = GraphData(pgv.AGraph(echidna_graph))
+    g1 = Graph(verisol_graph)
+    g2 = Graph(echidna_graph)
     echidna_node_difference = g2.nodes - g1.nodes  # resta de conjuntos
     echidna_edge_difference = g2.edges - g1.edges  
     verisol_node_difference = g1.nodes - g2.nodes
-    verisol_edge_difference = g1.edges - g2.edges
+    verisol_edge_difference = g1.edges - g2.edges 
     node_difference = len(g2.nodes) - len(g1.nodes)
     edge_difference = len(g2.edges) - len(g1.edges)
     diff_results.append({
@@ -40,10 +45,6 @@ def diff(verisol_graph, echidna_graph, contract, test_limit, mode):
         'Mode': mode,
         'Node Difference': node_difference,
         'Edge Difference': edge_difference,
-        'Echidna Node': len(echidna_node_difference),
-        'Echidna Edge': len(echidna_edge_difference),
-        'Verisol Node': len(verisol_node_difference),
-        'Verisol Edge': len(verisol_edge_difference),
     })
 
 def diff_all_graphs(contracts_to_compare, test_limits):
@@ -62,9 +63,9 @@ verisol_dir = 'verisol-test-main/graph'
 
 def main():
   contracts_to_compare = benchmark_contracts
-  test_limits = [100, 50_000, 500_000]
+  test_limits = [500, 50_000, 500_000]
   diff_all_graphs(contracts_to_compare, test_limits)
-  fileout = open("diff_results2.json", "a")
+  fileout = open("diff_results_0_8_0.json", "a")
   json.dump(diff_results, fileout)
 
 if __name__ == "__main__":
