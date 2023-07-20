@@ -1,0 +1,276 @@
+/Users/iangrinspan/Documents/1C2023/Beca/verisol-echidna/verisol-test-main/echidna_output/CrowdfundingTReentrancy/1000000/epa/init.sol
+   1 |     | pragma solidity >=0.4.24 <0.9.0;
+   2 |     | 
+   3 | *   | contract CrowdfundingR {
+   4 |     | 	modifier hasInitialized {
+   5 | *r  | 		require(has_initialized); 
+   6 |     | 		_; 
+   7 |     | 	}
+   8 |     | 
+   9 |     | 	modifier hasNotInitialized {
+  10 | *r  | 		require(!has_initialized); 
+  11 |     | 		_; 
+  12 |     | 	}
+  13 |     | 
+  14 |     | 	bool has_initialized = false;
+  15 |     | 
+  16 | *   | 	function vc0x0x0() hasInitialized payable public {
+  17 | *   | 		assert(!(!((max_block > blockNumber)) && !((max_block < blockNumber && goal <= balance)) && !((blockNumber > max_block && !funded && goal > balance && _donadores > 0)) && !(donadores_reentrada.length > 0) && !(donadores_reentrada.length == 0)));
+  18 |     | 	}
+  19 | *   | 	function vc1x0x0() hasInitialized payable public {
+  20 | *   | 		assert(!((max_block > blockNumber) && !((max_block < blockNumber && goal <= balance)) && !((blockNumber > max_block && !funded && goal > balance && _donadores > 0)) && !(donadores_reentrada.length > 0) && !(donadores_reentrada.length == 0)));
+  21 |     | 	}
+  22 | *   | 	function vc2x0x0() hasInitialized payable public {
+  23 | *   | 		assert(!(!((max_block > blockNumber)) && (max_block < blockNumber && goal <= balance) && !((blockNumber > max_block && !funded && goal > balance && _donadores > 0)) && !(donadores_reentrada.length > 0) && !(donadores_reentrada.length == 0)));
+  24 |     | 	}
+  25 | *   | 	function vc3x0x0() hasInitialized payable public {
+  26 | *   | 		assert(!(!((max_block > blockNumber)) && !((max_block < blockNumber && goal <= balance)) && (blockNumber > max_block && !funded && goal > balance && _donadores > 0) && !(donadores_reentrada.length > 0) && !(donadores_reentrada.length == 0)));
+  27 |     | 	}
+  28 | *   | 	function vc4x0x0() hasInitialized payable public {
+  29 | *   | 		assert(!(!((max_block > blockNumber)) && !((max_block < blockNumber && goal <= balance)) && !((blockNumber > max_block && !funded && goal > balance && _donadores > 0)) && donadores_reentrada.length > 0 && !(donadores_reentrada.length == 0)));
+  30 |     | 	}
+  31 | *   | 	function vc5x0x0() hasInitialized payable public {
+  32 | *r  | 		assert(!(!((max_block > blockNumber)) && !((max_block < blockNumber && goal <= balance)) && !((blockNumber > max_block && !funded && goal > balance && _donadores > 0)) && !(donadores_reentrada.length > 0) && donadores_reentrada.length == 0));
+  33 |     | 	}
+  34 | *   | 	function vc6x0x0() hasInitialized payable public {
+  35 | *   | 		assert(!((max_block > blockNumber) && (max_block < blockNumber && goal <= balance) && !((blockNumber > max_block && !funded && goal > balance && _donadores > 0)) && !(donadores_reentrada.length > 0) && !(donadores_reentrada.length == 0)));
+  36 |     | 	}
+  37 | *   | 	function vc7x0x0() hasInitialized payable public {
+  38 | *   | 		assert(!((max_block > blockNumber) && !((max_block < blockNumber && goal <= balance)) && (blockNumber > max_block && !funded && goal > balance && _donadores > 0) && !(donadores_reentrada.length > 0) && !(donadores_reentrada.length == 0)));
+  39 |     | 	}
+  40 | *   | 	function vc8x0x0() hasInitialized payable public {
+  41 | *   | 		assert(!((max_block > blockNumber) && !((max_block < blockNumber && goal <= balance)) && !((blockNumber > max_block && !funded && goal > balance && _donadores > 0)) && donadores_reentrada.length > 0 && !(donadores_reentrada.length == 0)));
+  42 |     | 	}
+  43 | *   | 	function vc9x0x0() hasInitialized payable public {
+  44 | *r  | 		assert(!((max_block > blockNumber) && !((max_block < blockNumber && goal <= balance)) && !((blockNumber > max_block && !funded && goal > balance && _donadores > 0)) && !(donadores_reentrada.length > 0) && donadores_reentrada.length == 0));
+  45 |     | 	}
+  46 | *   | 	function vc10x0x0() hasInitialized payable public {
+  47 | *   | 		assert(!(!((max_block > blockNumber)) && (max_block < blockNumber && goal <= balance) && (blockNumber > max_block && !funded && goal > balance && _donadores > 0) && !(donadores_reentrada.length > 0) && !(donadores_reentrada.length == 0)));
+  48 |     | 	}
+  49 | *   | 	function vc11x0x0() hasInitialized payable public {
+  50 | *   | 		assert(!(!((max_block > blockNumber)) && (max_block < blockNumber && goal <= balance) && !((blockNumber > max_block && !funded && goal > balance && _donadores > 0)) && donadores_reentrada.length > 0 && !(donadores_reentrada.length == 0)));
+  51 |     | 	}
+  52 | *   | 	function vc12x0x0() hasInitialized payable public {
+  53 | *r  | 		assert(!(!((max_block > blockNumber)) && (max_block < blockNumber && goal <= balance) && !((blockNumber > max_block && !funded && goal > balance && _donadores > 0)) && !(donadores_reentrada.length > 0) && donadores_reentrada.length == 0));
+  54 |     | 	}
+  55 | *   | 	function vc13x0x0() hasInitialized payable public {
+  56 | *   | 		assert(!(!((max_block > blockNumber)) && !((max_block < blockNumber && goal <= balance)) && (blockNumber > max_block && !funded && goal > balance && _donadores > 0) && donadores_reentrada.length > 0 && !(donadores_reentrada.length == 0)));
+  57 |     | 	}
+  58 | *   | 	function vc14x0x0() hasInitialized payable public {
+  59 | *   | 		assert(!(!((max_block > blockNumber)) && !((max_block < blockNumber && goal <= balance)) && (blockNumber > max_block && !funded && goal > balance && _donadores > 0) && !(donadores_reentrada.length > 0) && donadores_reentrada.length == 0));
+  60 |     | 	}
+  61 | *   | 	function vc15x0x0() hasInitialized payable public {
+  62 | *   | 		assert(!(!((max_block > blockNumber)) && !((max_block < blockNumber && goal <= balance)) && !((blockNumber > max_block && !funded && goal > balance && _donadores > 0)) && donadores_reentrada.length > 0 && donadores_reentrada.length == 0));
+  63 |     | 	}
+  64 | *   | 	function vc16x0x0() hasInitialized payable public {
+  65 | *   | 		assert(!((max_block > blockNumber) && (max_block < blockNumber && goal <= balance) && (blockNumber > max_block && !funded && goal > balance && _donadores > 0) && !(donadores_reentrada.length > 0) && !(donadores_reentrada.length == 0)));
+  66 |     | 	}
+  67 | *   | 	function vc17x0x0() hasInitialized payable public {
+  68 | *   | 		assert(!((max_block > blockNumber) && (max_block < blockNumber && goal <= balance) && !((blockNumber > max_block && !funded && goal > balance && _donadores > 0)) && donadores_reentrada.length > 0 && !(donadores_reentrada.length == 0)));
+  69 |     | 	}
+  70 | *   | 	function vc18x0x0() hasInitialized payable public {
+  71 | *   | 		assert(!((max_block > blockNumber) && (max_block < blockNumber && goal <= balance) && !((blockNumber > max_block && !funded && goal > balance && _donadores > 0)) && !(donadores_reentrada.length > 0) && donadores_reentrada.length == 0));
+  72 |     | 	}
+  73 | *   | 	function vc19x0x0() hasInitialized payable public {
+  74 | *   | 		assert(!((max_block > blockNumber) && !((max_block < blockNumber && goal <= balance)) && (blockNumber > max_block && !funded && goal > balance && _donadores > 0) && donadores_reentrada.length > 0 && !(donadores_reentrada.length == 0)));
+  75 |     | 	}
+  76 | *   | 	function vc20x0x0() hasInitialized payable public {
+  77 | *   | 		assert(!((max_block > blockNumber) && !((max_block < blockNumber && goal <= balance)) && (blockNumber > max_block && !funded && goal > balance && _donadores > 0) && !(donadores_reentrada.length > 0) && donadores_reentrada.length == 0));
+  78 |     | 	}
+  79 | *   | 	function vc21x0x0() hasInitialized payable public {
+  80 | *   | 		assert(!((max_block > blockNumber) && !((max_block < blockNumber && goal <= balance)) && !((blockNumber > max_block && !funded && goal > balance && _donadores > 0)) && donadores_reentrada.length > 0 && donadores_reentrada.length == 0));
+  81 |     | 	}
+  82 | *   | 	function vc22x0x0() hasInitialized payable public {
+  83 | *   | 		assert(!(!((max_block > blockNumber)) && (max_block < blockNumber && goal <= balance) && (blockNumber > max_block && !funded && goal > balance && _donadores > 0) && donadores_reentrada.length > 0 && !(donadores_reentrada.length == 0)));
+  84 |     | 	}
+  85 | *   | 	function vc23x0x0() hasInitialized payable public {
+  86 | *   | 		assert(!(!((max_block > blockNumber)) && (max_block < blockNumber && goal <= balance) && (blockNumber > max_block && !funded && goal > balance && _donadores > 0) && !(donadores_reentrada.length > 0) && donadores_reentrada.length == 0));
+  87 |     | 	}
+  88 | *   | 	function vc24x0x0() hasInitialized payable public {
+  89 | *   | 		assert(!(!((max_block > blockNumber)) && (max_block < blockNumber && goal <= balance) && !((blockNumber > max_block && !funded && goal > balance && _donadores > 0)) && donadores_reentrada.length > 0 && donadores_reentrada.length == 0));
+  90 |     | 	}
+  91 | *   | 	function vc25x0x0() hasInitialized payable public {
+  92 | *   | 		assert(!(!((max_block > blockNumber)) && !((max_block < blockNumber && goal <= balance)) && (blockNumber > max_block && !funded && goal > balance && _donadores > 0) && donadores_reentrada.length > 0 && donadores_reentrada.length == 0));
+  93 |     | 	}
+  94 | *   | 	function vc26x0x0() hasInitialized payable public {
+  95 | *   | 		assert(!((max_block > blockNumber) && (max_block < blockNumber && goal <= balance) && (blockNumber > max_block && !funded && goal > balance && _donadores > 0) && donadores_reentrada.length > 0 && !(donadores_reentrada.length == 0)));
+  96 |     | 	}
+  97 | *   | 	function vc27x0x0() hasInitialized payable public {
+  98 | *   | 		assert(!((max_block > blockNumber) && (max_block < blockNumber && goal <= balance) && (blockNumber > max_block && !funded && goal > balance && _donadores > 0) && !(donadores_reentrada.length > 0) && donadores_reentrada.length == 0));
+  99 |     | 	}
+ 100 | *   | 	function vc28x0x0() hasInitialized payable public {
+ 101 | *   | 		assert(!((max_block > blockNumber) && (max_block < blockNumber && goal <= balance) && !((blockNumber > max_block && !funded && goal > balance && _donadores > 0)) && donadores_reentrada.length > 0 && donadores_reentrada.length == 0));
+ 102 |     | 	}
+ 103 | *   | 	function vc29x0x0() hasInitialized payable public {
+ 104 | *   | 		assert(!((max_block > blockNumber) && !((max_block < blockNumber && goal <= balance)) && (blockNumber > max_block && !funded && goal > balance && _donadores > 0) && donadores_reentrada.length > 0 && donadores_reentrada.length == 0));
+ 105 |     | 	}
+ 106 | *   | 	function vc30x0x0() hasInitialized payable public {
+ 107 | *   | 		assert(!(!((max_block > blockNumber)) && (max_block < blockNumber && goal <= balance) && (blockNumber > max_block && !funded && goal > balance && _donadores > 0) && donadores_reentrada.length > 0 && donadores_reentrada.length == 0));
+ 108 |     | 	}
+ 109 | *   | 	function vc31x0x0() hasInitialized payable public {
+ 110 | *   | 		assert(!((max_block > blockNumber) && (max_block < blockNumber && goal <= balance) && (blockNumber > max_block && !funded && goal > balance && _donadores > 0) && donadores_reentrada.length > 0 && donadores_reentrada.length == 0));
+ 111 |     | 	}
+ 112 |     |     address payable owner;
+ 113 |     |     uint max_block;
+ 114 |     |     uint goal;
+ 115 |     |     uint blockNumber;
+ 116 |     |     
+ 117 |     |     mapping ( address => uint ) backers;
+ 118 |     |     // address[] backersArray = new address[](0);
+ 119 |     |     // address[] auxArray;
+ 120 |     |     bool funded = false;
+ 121 |     |     uint balance = 0;
+ 122 |     |     // uint _cont = 0;
+ 123 |     |     address _last;
+ 124 |     |     uint _donadores = 0;
+ 125 |     |     address[] donadores_reentrada = new address[](0);
+ 126 |     | 
+ 127 | *r  |     function my_constructor( address payable _owner , uint _max_block , uint _goal, uint _blockNumber ) hasNotInitialized public {
+ 128 | *   |         owner = _owner;
+ 129 | *   |         max_block = _max_block;
+ 130 | *   |         goal = _goal;
+ 131 | *   |         balance = 0;
+ 132 | *   |         blockNumber = _blockNumber;
+ 133 | *   | 				has_initialized = true;
+ 134 |     |     }
+ 135 |     | 
+ 136 |     | }
+
+/Users/iangrinspan/Documents/1C2023/Beca/verisol-echidna/verisol-test-main/echidna_output/CrowdfundingTReentrancy/1000000/epa/init.sol
+   1 |     | pragma solidity >=0.4.24 <0.9.0;
+   2 |     | 
+   3 | *   | contract CrowdfundingR {
+   4 |     | 	modifier hasInitialized {
+   5 | *r  | 		require(has_initialized); 
+   6 |     | 		_; 
+   7 |     | 	}
+   8 |     | 
+   9 |     | 	modifier hasNotInitialized {
+  10 | *r  | 		require(!has_initialized); 
+  11 |     | 		_; 
+  12 |     | 	}
+  13 |     | 
+  14 |     | 	bool has_initialized = false;
+  15 |     | 
+  16 | *   | 	function vc0x0x0() hasInitialized payable public {
+  17 | *   | 		assert(!(!((max_block > blockNumber)) && !((max_block < blockNumber && goal <= balance)) && !((blockNumber > max_block && !funded && goal > balance && _donadores > 0)) && !(donadores_reentrada.length > 0) && !(donadores_reentrada.length == 0)));
+  18 |     | 	}
+  19 | *   | 	function vc1x0x0() hasInitialized payable public {
+  20 | *   | 		assert(!((max_block > blockNumber) && !((max_block < blockNumber && goal <= balance)) && !((blockNumber > max_block && !funded && goal > balance && _donadores > 0)) && !(donadores_reentrada.length > 0) && !(donadores_reentrada.length == 0)));
+  21 |     | 	}
+  22 | *   | 	function vc2x0x0() hasInitialized payable public {
+  23 | *   | 		assert(!(!((max_block > blockNumber)) && (max_block < blockNumber && goal <= balance) && !((blockNumber > max_block && !funded && goal > balance && _donadores > 0)) && !(donadores_reentrada.length > 0) && !(donadores_reentrada.length == 0)));
+  24 |     | 	}
+  25 | *   | 	function vc3x0x0() hasInitialized payable public {
+  26 | *   | 		assert(!(!((max_block > blockNumber)) && !((max_block < blockNumber && goal <= balance)) && (blockNumber > max_block && !funded && goal > balance && _donadores > 0) && !(donadores_reentrada.length > 0) && !(donadores_reentrada.length == 0)));
+  27 |     | 	}
+  28 | *   | 	function vc4x0x0() hasInitialized payable public {
+  29 | *   | 		assert(!(!((max_block > blockNumber)) && !((max_block < blockNumber && goal <= balance)) && !((blockNumber > max_block && !funded && goal > balance && _donadores > 0)) && donadores_reentrada.length > 0 && !(donadores_reentrada.length == 0)));
+  30 |     | 	}
+  31 | *   | 	function vc5x0x0() hasInitialized payable public {
+  32 | *r  | 		assert(!(!((max_block > blockNumber)) && !((max_block < blockNumber && goal <= balance)) && !((blockNumber > max_block && !funded && goal > balance && _donadores > 0)) && !(donadores_reentrada.length > 0) && donadores_reentrada.length == 0));
+  33 |     | 	}
+  34 | *   | 	function vc6x0x0() hasInitialized payable public {
+  35 | *   | 		assert(!((max_block > blockNumber) && (max_block < blockNumber && goal <= balance) && !((blockNumber > max_block && !funded && goal > balance && _donadores > 0)) && !(donadores_reentrada.length > 0) && !(donadores_reentrada.length == 0)));
+  36 |     | 	}
+  37 | *   | 	function vc7x0x0() hasInitialized payable public {
+  38 | *   | 		assert(!((max_block > blockNumber) && !((max_block < blockNumber && goal <= balance)) && (blockNumber > max_block && !funded && goal > balance && _donadores > 0) && !(donadores_reentrada.length > 0) && !(donadores_reentrada.length == 0)));
+  39 |     | 	}
+  40 | *   | 	function vc8x0x0() hasInitialized payable public {
+  41 | *   | 		assert(!((max_block > blockNumber) && !((max_block < blockNumber && goal <= balance)) && !((blockNumber > max_block && !funded && goal > balance && _donadores > 0)) && donadores_reentrada.length > 0 && !(donadores_reentrada.length == 0)));
+  42 |     | 	}
+  43 | *   | 	function vc9x0x0() hasInitialized payable public {
+  44 | *r  | 		assert(!((max_block > blockNumber) && !((max_block < blockNumber && goal <= balance)) && !((blockNumber > max_block && !funded && goal > balance && _donadores > 0)) && !(donadores_reentrada.length > 0) && donadores_reentrada.length == 0));
+  45 |     | 	}
+  46 | *   | 	function vc10x0x0() hasInitialized payable public {
+  47 | *   | 		assert(!(!((max_block > blockNumber)) && (max_block < blockNumber && goal <= balance) && (blockNumber > max_block && !funded && goal > balance && _donadores > 0) && !(donadores_reentrada.length > 0) && !(donadores_reentrada.length == 0)));
+  48 |     | 	}
+  49 | *   | 	function vc11x0x0() hasInitialized payable public {
+  50 | *   | 		assert(!(!((max_block > blockNumber)) && (max_block < blockNumber && goal <= balance) && !((blockNumber > max_block && !funded && goal > balance && _donadores > 0)) && donadores_reentrada.length > 0 && !(donadores_reentrada.length == 0)));
+  51 |     | 	}
+  52 | *   | 	function vc12x0x0() hasInitialized payable public {
+  53 | *r  | 		assert(!(!((max_block > blockNumber)) && (max_block < blockNumber && goal <= balance) && !((blockNumber > max_block && !funded && goal > balance && _donadores > 0)) && !(donadores_reentrada.length > 0) && donadores_reentrada.length == 0));
+  54 |     | 	}
+  55 | *   | 	function vc13x0x0() hasInitialized payable public {
+  56 | *   | 		assert(!(!((max_block > blockNumber)) && !((max_block < blockNumber && goal <= balance)) && (blockNumber > max_block && !funded && goal > balance && _donadores > 0) && donadores_reentrada.length > 0 && !(donadores_reentrada.length == 0)));
+  57 |     | 	}
+  58 | *   | 	function vc14x0x0() hasInitialized payable public {
+  59 | *   | 		assert(!(!((max_block > blockNumber)) && !((max_block < blockNumber && goal <= balance)) && (blockNumber > max_block && !funded && goal > balance && _donadores > 0) && !(donadores_reentrada.length > 0) && donadores_reentrada.length == 0));
+  60 |     | 	}
+  61 | *   | 	function vc15x0x0() hasInitialized payable public {
+  62 | *   | 		assert(!(!((max_block > blockNumber)) && !((max_block < blockNumber && goal <= balance)) && !((blockNumber > max_block && !funded && goal > balance && _donadores > 0)) && donadores_reentrada.length > 0 && donadores_reentrada.length == 0));
+  63 |     | 	}
+  64 | *   | 	function vc16x0x0() hasInitialized payable public {
+  65 | *   | 		assert(!((max_block > blockNumber) && (max_block < blockNumber && goal <= balance) && (blockNumber > max_block && !funded && goal > balance && _donadores > 0) && !(donadores_reentrada.length > 0) && !(donadores_reentrada.length == 0)));
+  66 |     | 	}
+  67 | *   | 	function vc17x0x0() hasInitialized payable public {
+  68 | *   | 		assert(!((max_block > blockNumber) && (max_block < blockNumber && goal <= balance) && !((blockNumber > max_block && !funded && goal > balance && _donadores > 0)) && donadores_reentrada.length > 0 && !(donadores_reentrada.length == 0)));
+  69 |     | 	}
+  70 | *   | 	function vc18x0x0() hasInitialized payable public {
+  71 | *   | 		assert(!((max_block > blockNumber) && (max_block < blockNumber && goal <= balance) && !((blockNumber > max_block && !funded && goal > balance && _donadores > 0)) && !(donadores_reentrada.length > 0) && donadores_reentrada.length == 0));
+  72 |     | 	}
+  73 | *   | 	function vc19x0x0() hasInitialized payable public {
+  74 | *   | 		assert(!((max_block > blockNumber) && !((max_block < blockNumber && goal <= balance)) && (blockNumber > max_block && !funded && goal > balance && _donadores > 0) && donadores_reentrada.length > 0 && !(donadores_reentrada.length == 0)));
+  75 |     | 	}
+  76 | *   | 	function vc20x0x0() hasInitialized payable public {
+  77 | *   | 		assert(!((max_block > blockNumber) && !((max_block < blockNumber && goal <= balance)) && (blockNumber > max_block && !funded && goal > balance && _donadores > 0) && !(donadores_reentrada.length > 0) && donadores_reentrada.length == 0));
+  78 |     | 	}
+  79 | *   | 	function vc21x0x0() hasInitialized payable public {
+  80 | *   | 		assert(!((max_block > blockNumber) && !((max_block < blockNumber && goal <= balance)) && !((blockNumber > max_block && !funded && goal > balance && _donadores > 0)) && donadores_reentrada.length > 0 && donadores_reentrada.length == 0));
+  81 |     | 	}
+  82 | *   | 	function vc22x0x0() hasInitialized payable public {
+  83 | *   | 		assert(!(!((max_block > blockNumber)) && (max_block < blockNumber && goal <= balance) && (blockNumber > max_block && !funded && goal > balance && _donadores > 0) && donadores_reentrada.length > 0 && !(donadores_reentrada.length == 0)));
+  84 |     | 	}
+  85 | *   | 	function vc23x0x0() hasInitialized payable public {
+  86 | *   | 		assert(!(!((max_block > blockNumber)) && (max_block < blockNumber && goal <= balance) && (blockNumber > max_block && !funded && goal > balance && _donadores > 0) && !(donadores_reentrada.length > 0) && donadores_reentrada.length == 0));
+  87 |     | 	}
+  88 | *   | 	function vc24x0x0() hasInitialized payable public {
+  89 | *   | 		assert(!(!((max_block > blockNumber)) && (max_block < blockNumber && goal <= balance) && !((blockNumber > max_block && !funded && goal > balance && _donadores > 0)) && donadores_reentrada.length > 0 && donadores_reentrada.length == 0));
+  90 |     | 	}
+  91 | *   | 	function vc25x0x0() hasInitialized payable public {
+  92 | *   | 		assert(!(!((max_block > blockNumber)) && !((max_block < blockNumber && goal <= balance)) && (blockNumber > max_block && !funded && goal > balance && _donadores > 0) && donadores_reentrada.length > 0 && donadores_reentrada.length == 0));
+  93 |     | 	}
+  94 | *   | 	function vc26x0x0() hasInitialized payable public {
+  95 | *   | 		assert(!((max_block > blockNumber) && (max_block < blockNumber && goal <= balance) && (blockNumber > max_block && !funded && goal > balance && _donadores > 0) && donadores_reentrada.length > 0 && !(donadores_reentrada.length == 0)));
+  96 |     | 	}
+  97 | *   | 	function vc27x0x0() hasInitialized payable public {
+  98 | *   | 		assert(!((max_block > blockNumber) && (max_block < blockNumber && goal <= balance) && (blockNumber > max_block && !funded && goal > balance && _donadores > 0) && !(donadores_reentrada.length > 0) && donadores_reentrada.length == 0));
+  99 |     | 	}
+ 100 | *   | 	function vc28x0x0() hasInitialized payable public {
+ 101 | *   | 		assert(!((max_block > blockNumber) && (max_block < blockNumber && goal <= balance) && !((blockNumber > max_block && !funded && goal > balance && _donadores > 0)) && donadores_reentrada.length > 0 && donadores_reentrada.length == 0));
+ 102 |     | 	}
+ 103 | *   | 	function vc29x0x0() hasInitialized payable public {
+ 104 | *   | 		assert(!((max_block > blockNumber) && !((max_block < blockNumber && goal <= balance)) && (blockNumber > max_block && !funded && goal > balance && _donadores > 0) && donadores_reentrada.length > 0 && donadores_reentrada.length == 0));
+ 105 |     | 	}
+ 106 | *   | 	function vc30x0x0() hasInitialized payable public {
+ 107 | *   | 		assert(!(!((max_block > blockNumber)) && (max_block < blockNumber && goal <= balance) && (blockNumber > max_block && !funded && goal > balance && _donadores > 0) && donadores_reentrada.length > 0 && donadores_reentrada.length == 0));
+ 108 |     | 	}
+ 109 | *   | 	function vc31x0x0() hasInitialized payable public {
+ 110 | *   | 		assert(!((max_block > blockNumber) && (max_block < blockNumber && goal <= balance) && (blockNumber > max_block && !funded && goal > balance && _donadores > 0) && donadores_reentrada.length > 0 && donadores_reentrada.length == 0));
+ 111 |     | 	}
+ 112 |     |     address payable owner;
+ 113 |     |     uint max_block;
+ 114 |     |     uint goal;
+ 115 |     |     uint blockNumber;
+ 116 |     |     
+ 117 |     |     mapping ( address => uint ) backers;
+ 118 |     |     // address[] backersArray = new address[](0);
+ 119 |     |     // address[] auxArray;
+ 120 |     |     bool funded = false;
+ 121 |     |     uint balance = 0;
+ 122 |     |     // uint _cont = 0;
+ 123 |     |     address _last;
+ 124 |     |     uint _donadores = 0;
+ 125 |     |     address[] donadores_reentrada = new address[](0);
+ 126 |     | 
+ 127 | *r  |     function my_constructor( address payable _owner , uint _max_block , uint _goal, uint _blockNumber ) hasNotInitialized public {
+ 128 | *   |         owner = _owner;
+ 129 | *   |         max_block = _max_block;
+ 130 | *   |         goal = _goal;
+ 131 | *   |         balance = 0;
+ 132 | *   |         blockNumber = _blockNumber;
+ 133 | *   | 				has_initialized = true;
+ 134 |     |     }
+ 135 |     | 
+ 136 |     | }
+
