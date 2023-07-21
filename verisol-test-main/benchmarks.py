@@ -9,34 +9,41 @@ dir = os.getcwd()
 
 # python3 Tesis.py RandomContractConfig  -v -s -echidna
 
-benchmark_contracts = [
+benchmark_1 = [
+	"AssetTransfer",
+	"BasicProvenance",
+	"DefectiveComponentCounter",
+	"DigitalLocker",
+	"FrequentFlyerRewardsCalculator",
     "HelloBlockchain",
-    "BasicProvenance",
-    "DefectiveComponentCounter",
-    "DigitalLocker",
-    "FrequentFlyerRewardsCalculator",
     "RefrigeratedTransportation",
     "RoomThermostat",
     "SimpleMarketplace",
-    "AssetTransfer",
-    "HelloBlockchainFixed",
-    "SimpleMarketplaceFixed",
-    "BasicProvenanceFixed",
+	"AssetTransferFixed",
+	"BasicProvenanceFixed",
     "DefectiveComponentCounterFixed",
-    "DigitalLockerFixed",
-    "AssetTransferFixed",
+	"DigitalLockerFixed",
+    "HelloBlockchainFixed",
     "RefrigeratedTransportationFixed",
+    "SimpleMarketplaceFixed",
 ]
 
-ignore = [
-    ("AssetTransfer", "e"),
-    ("AssetTransfer", "s"),
-    ("DigitalLocker", "e"),
-    ("DigitalLocker", "s"),
-    ("DigitalLockerFixed", "e"),
-    ("DigitalLockerFixed", "s"),
-    ("AssetTransferFixed", "e"),
-    ("AssetTransferFixed", "s"),
+ignore_1 = [
+   "AssetTransfer",
+   "DigitalLocker",
+   "AssetTransferFixed",
+   "DigitalLockerFixed",
+]
+
+benchmark_2 = [
+	"Auction",
+	"Crowdfunding",
+	"EPXCrowdsale",
+	"EscrowVault",
+	"RefundEscrow",
+	"RockPaperScissors",
+	"SimpleAuction",
+	"ValidatorAuction",
 ]
 
 
@@ -57,11 +64,6 @@ def run_all_contracts(test_limit, contracts):
 
 
 def run_contract(contract, mode, test_limit):
-    if (contract, mode) in ignore:
-        print(
-            f"Skipping {contract} in {mode} mode with a test limit of: {test_limit}..."
-        )
-        return
     print(f"Running {contract} in {mode} mode with a test limit of: {test_limit}...")
     run_tesis(contract, mode, test_limit)
 
@@ -99,15 +101,16 @@ def borrar_directorios():
 
 times = []
 
-
 def main():
     # measure time
     start_time = time.time()
-    change_contract_versions(">=0.4.25 <0.9.0", benchmark_contracts)
-    run_all_contracts(500, benchmark_contracts)
-    run_all_contracts(50_000, benchmark_contracts)
-    run_all_contracts(500_000, benchmark_contracts)
-    fileout = open("times_0_8_0.json", "a")
+    contracts_to_run = [contract for contract in benchmark_1 if contract not in ignore_1]
+    print(f"Skipping the following contracts: {ignore_1}")
+    change_contract_versions(">=0.4.25 <0.9.0", contracts_to_run)
+    run_all_contracts(500, contracts_to_run)
+    run_all_contracts(50_000, contracts_to_run)
+    run_all_contracts(500_000, contracts_to_run)
+    fileout = open("times.json", "a")
     json.dump(times, fileout)
 
 
