@@ -1,0 +1,11 @@
+testLimit: 10000 
+balanceContract: 0 
+workers: 16 
+maxValue: 100000000000000000000 
+testMode: assertion 
+prefix: echidna_ 
+# format: text 
+shrinkLimit: 0 
+seqLen: 100 
+filterBlacklist: false 
+filterFunctions: ['CrowdfundingR.vc1x1x0()']
