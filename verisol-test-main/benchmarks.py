@@ -46,17 +46,31 @@ benchmark_2 = [
 	"ValidatorAuction",
 ]
 
-ignore_2 = []
+ignore_2 = [	
+    "Auction",
+	"Crowdfunding",
+	#"EPXCrowdsale",
+	"EscrowVault",
+	"RefundEscrow",
+	"RockPaperScissors",
+	"SimpleAuction",
+	"ValidatorAuction",]
 
 
 def change_contract_versions(version, contracts):
     for contract in contracts:
         c = open(f"Contracts/{contract}.sol", "r")
-        lines = c.readlines()
-        lines[0] = f"pragma solidity {version};\n"
+        lines = find_and_replace_versions(c, version)
         c = open(f"Contracts/{contract}.sol", "w")
         c.writelines(lines)
 
+def find_and_replace_versions(contract, version):
+    lines = contract.readlines()
+    for i in range(len(lines)):
+        if "pragma solidity" in lines[i]:
+            lines[i] = f"pragma solidity {version};\n"
+            break
+    return lines
 
 def run_all_contracts(test_limit, contracts):
     for contract in contracts:
