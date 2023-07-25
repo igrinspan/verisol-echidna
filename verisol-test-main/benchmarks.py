@@ -65,10 +65,6 @@ def run_all_contracts(test_limit, contracts):
 
 def run_contract(contract, mode, test_limit):
     print(f"Running {contract} in {mode} mode with a test limit of: {test_limit}...")
-    run_tesis(contract, mode, test_limit)
-
-
-def run_tesis(contract, mode, test_limit):
     start_time = time.time()
     command_to_run = (
         f"python3 Tesis.py {contract}Config  -t -{mode} -echidna {test_limit}"
@@ -90,6 +86,7 @@ def save_time(contract, mode, test_limit, time_taken_in_seconds):
         }
     )
 
+
 def borrar_directorios():
   dir = os.getcwd()
   echidna_output_dir = f'{dir}/echidna_output'
@@ -98,6 +95,7 @@ def borrar_directorios():
       for new_level_filename in os.listdir(f):
           print(new_level_filename)
           shutil.rmtree(f'{f}/{new_level_filename}')
+
 
 times = []
 
@@ -110,7 +108,7 @@ def main():
     run_all_contracts(500, contracts_to_run)
     run_all_contracts(50_000, contracts_to_run)
     run_all_contracts(500_000, contracts_to_run)
-    fileout = open("times.json", "a")
+    fileout = open("times_discard_unreachable_states.json", "a")
     json.dump(times, fileout)
 
 

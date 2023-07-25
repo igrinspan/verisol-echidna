@@ -238,7 +238,6 @@ class ContractCreator:
         write_file(fileNameTemp, body, contractName)
         return fileNameTemp
  
-
     def clean_true_requires(self, body):
         lines = body.replace("require(true);", "").split('\n')
         cleaned_lines = [line for line in lines if line.strip()]
@@ -355,14 +354,16 @@ class Graph:
 # Modo Epa.
 def discard_unreachable_states(dir):
     contract_created = ContractCreator(dir).create_combinations_contract(preconditions, extraConditions) 
-    # ContractCreator(dir).change_for_constructor_fuzzing(contract_created)
+    ContractCreator(dir).change_for_constructor_fuzzing(contract_created)
     
-    config_file_params = EchidnaConfigFileData(testLimit=10_000, testMode='property', prefix='vc', workers=16, format='text')
+    # Si quisiera usar property en vez de assertion, puedo silenciar el change_for_constructor_fuzzing
+    # y cambiar a testMode='property' y prefix='vc' en el config_file_params.
+    config_file_params = EchidnaConfigFileData(testLimit=TEST_LIMIT, workers=16, format='text')
     
     failed_tests = EchidnaRunner(dir, contract_created, config_file_params).run_contract()
     update_global_variables_based_on(failed_tests)
 
-# Modo Epa.
+# Modo Epa (en discard unreachable states).
 def update_global_variables_based_on(failed_tests):
     global preconditions, states, extraConditions
     print(f"A update_global_variables_based_on le llegaron: {failed_tests}")
@@ -387,8 +388,8 @@ def create_run_and_print_on(dir, dir_name):
     ContractCreator(dir).change_for_constructor_fuzzing(init_contract_to_run)
     ContractCreator(dir).change_for_constructor_fuzzing(transitions_contract_to_run)
 
-    init_config_params = EchidnaConfigFileData(testLimit=test_limit, workers=16, format='text')
-    transitions_config_params = EchidnaConfigFileData(testLimit=test_limit, workers=16, format='text')
+    init_config_params = EchidnaConfigFileData(testLimit=TEST_LIMIT, workers=16, format='text')
+    transitions_config_params = EchidnaConfigFileData(testLimit=TEST_LIMIT, workers=16, format='text')
 
     init_failed = EchidnaRunner(dir, init_contract_to_run, init_config_params).run_contract()
     tr_failed = EchidnaRunner(dir, transitions_contract_to_run, transitions_config_params).run_contract()
@@ -398,16 +399,21 @@ def create_run_and_print_on(dir, dir_name):
     #OutputPrinter(dir).print_results(tr_failed, init_failed)
     Graph(dir).build_graph(tr_failed, init_failed)
 
+# Lo mismo pero corriendo una función a la vez
+def create_run_and_print_on_2(dir, dir_name):
+    print("TODO")
+    return
+
 # Lo estoy corriendo sin el discard_unreachable_states.
 def logica_echidna_epa():
-    dir_name = f'echidna_output/{contractFileName[:-4]}/{test_limit}/epa' # -4 para sacarle el .sol
+    dir_name = f'echidna_output/{contractFileName[:-4]}/{TEST_LIMIT}/epa' # -4 para sacarle el .sol
     dir = create_directory(dir_name)
-    # discard_unreachable_states(dir)  # Ver si se puede cambiar para que descarte contradicciones sin correr echidna.
+    discard_unreachable_states(dir)  # Ver si se puede cambiar para que descarte contradicciones sin correr echidna.
     create_run_and_print_on(dir, dir_name)
 
 
 def logica_echidna_states():
-    dir_name = f'echidna_output/{contractFileName[:-4]}/{test_limit}/states' # -4 para sacarle el .sol
+    dir_name = f'echidna_output/{contractFileName[:-4]}/{TEST_LIMIT}/states' # -4 para sacarle el .sol
     dir = create_directory(dir_name)
     create_run_and_print_on(dir, dir_name)
 
@@ -421,7 +427,6 @@ class ConfigImporter:
         c = self.contract_config_file
         fileName = "Contracts/" + c.fileName
         contractFileName = c.fileName
-        #print(c.fileName)
         functions = c.functions
         statePreconditions = c.statePreconditions
         statesNames = c.statesNamesModeState
@@ -431,7 +436,6 @@ class ConfigImporter:
         functionPreconditions = c.functionPreconditions
         statePreconditionsModeState = c.statePreconditionsModeState
         statesModeState = c.statesModeState
-        #print(c)
 
     # Se ejecuta en el main para cargar las variables preconditions, states y extraConditions, dependiendo del modo.
     def prepare_variables(self, mode, funcionesNumeros):
@@ -544,7 +548,7 @@ echidna_output = "failed!"
 sys.path.append("/Users/iangrinspan/Documents/1C2023/Beca/verisol-echidna/verisol-test-main/Configs")
 
 if __name__ == "__main__":
-    global mode, config, verbose, time_opt, test_limit
+    global mode, config, verbose, time_opt, TEST_LIMIT
     epaMode = False
     statesMode = False
     echidna = False
@@ -566,7 +570,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 4 and sys.argv[4] == "-echidna":
         echidna = True
     if len(sys.argv) > 5:
-        test_limit = int(sys.argv[5])
+        TEST_LIMIT = int(sys.argv[5])
     
     if epaMode:
         mode = Mode.epa
