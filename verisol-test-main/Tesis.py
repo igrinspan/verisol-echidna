@@ -408,7 +408,7 @@ def create_run_and_print_on_2(dir, dir_name):
 def logica_echidna_epa():
     dir_name = f'echidna_output/{contractFileName[:-4]}/{TEST_LIMIT}/epa' # -4 para sacarle el .sol
     dir = create_directory(dir_name)
-    discard_unreachable_states(dir)  # Ver si se puede cambiar para que descarte contradicciones sin correr echidna.
+    # discard_unreachable_states(dir)  # Ver si se puede cambiar para que descarte contradicciones sin correr echidna.
     create_run_and_print_on(dir, dir_name)
 
 

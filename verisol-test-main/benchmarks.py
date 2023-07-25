@@ -46,6 +46,8 @@ benchmark_2 = [
 	"ValidatorAuction",
 ]
 
+ignore_2 = []
+
 
 def change_contract_versions(version, contracts):
     for contract in contracts:
@@ -102,13 +104,13 @@ times = []
 def main():
     # measure time
     start_time = time.time()
-    contracts_to_run = [contract for contract in benchmark_1 if contract not in ignore_1]
-    print(f"Skipping the following contracts: {ignore_1}")
+    contracts_to_run = [contract for contract in benchmark_2 if contract not in ignore_2]
+    print(f"Skipping the following contracts: {ignore_2}")
     change_contract_versions(">=0.4.25 <0.9.0", contracts_to_run)
     run_all_contracts(500, contracts_to_run)
     run_all_contracts(50_000, contracts_to_run)
     run_all_contracts(500_000, contracts_to_run)
-    fileout = open("times_discard_unreachable_states.json", "a")
+    fileout = open("times_benchmark_2.json", "a")
     json.dump(times, fileout)
 
 
