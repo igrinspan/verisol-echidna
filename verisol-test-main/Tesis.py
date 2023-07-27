@@ -150,6 +150,35 @@ def print_output(indexPreconditionRequire, indexFunction, indexPreconditionAsser
     output ="Desde el estado: "+ output_combination(indexPreconditionRequire, combinations) + "\nHaciendo: " + functions[indexFunction] + "\nLlegas al estado: " + output_combination(indexPreconditionAssert, fullCombination) + "\n---------"
 
 
+def find_contract_start_line(contract_lines, contract_name):
+    for idx, line in enumerate(contract_lines):
+        if f"contract {contract_name}" in line and not(is_a_comment(line)): 
+            return idx
+    
+
+def find_contract_end_line(contract_lines, contract_name):
+    inside_function = False
+    bracket_count = 0
+    start_position = find_contract_start_line(contract_lines, contract_name)
+
+    for idx, line in enumerate(contract_lines):
+        if idx == start_position:  
+            bracket_count = 1
+            inside_function = True
+            continue
+        
+        if inside_function and '{' in line and not(is_a_comment(line)):
+            bracket_count += 1
+        if inside_function and '}' in line and not(is_a_comment(line)):
+            bracket_count -= 1
+        if inside_function and bracket_count == 0:
+            return idx 
+
+
+def is_a_comment(line):
+    return line.strip().startswith('//') or line.strip().startswith('/*') or line.strip().startswith('*') or line.strip().startswith('*/')
+
+
 class EchidnaRunner:
     def __init__(self, dir, contract, config_file_params):
         self.directory = dir
@@ -221,14 +250,24 @@ class ContractCreator:
         return filename_temp
 
     def transform_contract_for_init(self, filename_temp):
-        new_contract_body = self.remove_everything_after_constructor(filename_temp)
+        new_contract_body = self.remove_everything_after_constructor(filename_temp, contractName)
         write_file_from_string(filename_temp, new_contract_body)
 
-    def remove_everything_after_constructor(self, filename_temp):
-        lines = open(filename_temp, 'r').readlines()
-        _, end_line = self.get_constructor_start_and_end_lines(lines)
-        lines = lines[:end_line + 1] + ["}"]
-        return lines
+    def remove_everything_after_constructor(self, filename_temp, contractName):
+        file_lines = open(filename_temp, 'r').readlines()
+        _, _, contract_end = self.contract_body(file_lines, contractName)
+        _, constructor_end = self.get_constructor_start_and_end_lines(file_lines, contractName)
+        new_contract_lines = file_lines[:constructor_end + 1] + ["}"]
+        if contract_end < len(file_lines) - 1:
+            new_contract_lines += file_lines[contract_end + 1:]
+
+        return new_contract_lines
+
+    def contract_body(self, file_lines, contractName):
+        start = find_contract_start_line(file_lines, contractName)
+        end = find_contract_end_line(file_lines, contractName)
+        return file_lines[start:end+1], start, end
+
 
     # Para modo epa
     def create_combinations_contract(self, preconditions, extraconditions):
@@ -244,38 +283,64 @@ class ContractCreator:
         new_body = '\n'.join(cleaned_lines)
         return new_body
 
-    def get_constructor_start_and_end_lines(self, input_file):
-        start_line = next((index for index, line in enumerate(input_file) if line.strip().startswith('constructor(')), None)
-        end_line = next((index for index, line in enumerate(input_file[start_line:]) if line.strip() == '}'), None) + start_line + 1
-        return start_line, end_line
+    def get_constructor_start_and_end_lines(self, input_file, contractName):
+        in_target_contract = False
+        in_constructor = False
+        for index, line in enumerate(input_file):
+            if line.strip().startswith("contract " + contractName):
+                in_target_contract = True
 
-    # Refactorizar
-    def change_for_constructor_fuzzing(self, contract_filename):
-        # 1. Agregamos los modifiers y la variable de estado que dice si el contrato ya fue inicializado.
-        has_initialized_modifier = "\tmodifier hasInitialized {\n\t\trequire(has_initialized); \n\t\t_; \n\t}\n\n"
-        has_not_initialized_modifier = "\tmodifier hasNotInitialized {\n\t\trequire(!has_initialized); \n\t\t_; \n\t}\n\n"
+            if in_target_contract and line.strip().startswith('constructor('):
+                in_constructor = True
+                target_constructor_start_line = index
+
+            if in_target_contract and in_constructor and line.strip() == "}":
+                target_constructor_end_line = index + 1
+                break
+
+        return target_constructor_start_line, target_constructor_end_line
+
+    # Pure
+    def create_modifier(self, name, require_clauses):
+        res = f"\tmodifier {name} {{\n"
+        for require in require_clauses:
+            res += f"\t\trequire({require});\n"
+        res += "\t\t_;\n"
+        res += "\t}\n\n"
+        return res
+
+    # Pure
+    def has_initialized_code(self):
+        has_initialized_modifier = self.create_modifier("hasInitialized", ["has_initialized"])
+        has_not_initialized_modifier = self.create_modifier("hasNotInitialized", ["!has_initialized"])
         has_initialized_declaration = "\tbool has_initialized = false;\n\n"
-        cosas = has_initialized_modifier + has_not_initialized_modifier + has_initialized_declaration
-        write_file(contract_filename, cosas, contractName) # uso esta porque las puedo meter en cualquier lado del contrato
-        # 2. Le agregamos el modifier hasInitialized a todas las funciones, incluidos los tests.
-        lines = open(contract_filename, 'r').readlines()
-        new_lines = []
-        for line in lines:
-            if "function" in line:
-                new_lines += [line.replace(")", ") hasInitialized", 1)] # el 1 indica la cantidad de reemplazos.
-            else:
-                new_lines += [line]
-        # 3. Agregamos el require y el cambio de estado en el constructor.
+        return has_initialized_modifier + has_not_initialized_modifier + has_initialized_declaration
+
+    def change_for_constructor_fuzzing(self, contract_filename):
+        has_initialized_initial_code = self.has_initialized_code() 
+        write_file(contract_filename, has_initialized_initial_code, contractName)
+
+        new_lines = self.add_modifier_to_contract_functions(contract_filename, contractName, "hasInitialized")
+
         change_status = "\t\t\t\thas_initialized = true;\n"
-        start, end = self.get_constructor_start_and_end_lines(new_lines)
+        start, end = self.get_constructor_start_and_end_lines(new_lines, contractName)
         new_lines = new_lines[:end-1] + [change_status] + new_lines[end-1:]
-        # 4. Hacemos que el constructor sea una función común.
-        linea_a_cambiar = new_lines[start] # constructor(uint _max_block, uint _goal, uint _blockNumber) public payable {
-        linea_a_cambiar = linea_a_cambiar.replace("constructor", "function my_constructor")
-        linea_a_cambiar = linea_a_cambiar.replace(")", ") hasNotInitialized", 1)
-        new_lines[start] = linea_a_cambiar
+        new_lines[start] = new_lines[start].replace("constructor", "function my_constructor").replace(")", ") hasNotInitialized", 1)
 
         write_file_from_string(contract_filename, new_lines)
+
+    def add_modifier_to_contract_functions(self, contract_filename, contract_name, modifier_name):
+        lines = open(contract_filename, 'r').readlines()
+        new_lines = []
+        in_contract = False
+        for line in lines:
+            if line.strip().startswith("contract " + contract_name):
+                in_contract = True
+            if in_contract and "function" in line:
+                new_lines += [line.replace(")", f") {modifier_name}", 1)] # el 1 indica la cantidad de reemplazos.
+            else:
+                new_lines += [line]
+        return new_lines
 
 
 @dataclass
@@ -387,14 +452,14 @@ def create_run_and_print_on(dir, dir_name):
 
     ContractCreator(dir).change_for_constructor_fuzzing(init_contract_to_run)
     ContractCreator(dir).change_for_constructor_fuzzing(transitions_contract_to_run)
-
+    
     init_config_params = EchidnaConfigFileData(testLimit=TEST_LIMIT, workers=16, format='text')
     transitions_config_params = EchidnaConfigFileData(testLimit=TEST_LIMIT, workers=16, format='text')
 
     init_failed = EchidnaRunner(dir, init_contract_to_run, init_config_params).run_contract()
     tr_failed = EchidnaRunner(dir, transitions_contract_to_run, transitions_config_params).run_contract()
-    #OutputPrinter(dir).print_init_results(init_failed)
-    #OutputPrinter(dir).print_transitions_results(tr_failed)
+    OutputPrinter(dir).print_init_results(init_failed)
+    OutputPrinter(dir).print_transitions_results(tr_failed)
     
     #OutputPrinter(dir).print_results(tr_failed, init_failed)
     Graph(dir).build_graph(tr_failed, init_failed)
