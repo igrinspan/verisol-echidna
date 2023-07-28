@@ -268,7 +268,6 @@ class ContractCreator:
         end = find_contract_end_line(file_lines, contractName)
         return file_lines[start:end+1], start, end
 
-
     # Para modo epa
     def create_combinations_contract(self, preconditions, extraconditions):
         fileNameTemp = create_file('combinations', self.directory, fileName, contractName)
@@ -290,7 +289,7 @@ class ContractCreator:
             if line.strip().startswith("contract " + contractName):
                 in_target_contract = True
 
-            if in_target_contract and line.strip().startswith('constructor('):
+            if in_target_contract and line.strip().startswith('constructor') and not is_a_comment(line):
                 in_constructor = True
                 target_constructor_start_line = index
 
@@ -415,7 +414,6 @@ class Graph:
         self.graph.edge("init",combinationToString(states[indexPreconditionAssert]), "constructor")
 
 
-
 # Modo Epa.
 def discard_unreachable_states(dir):
     contract_created = ContractCreator(dir).create_combinations_contract(preconditions, extraConditions) 
@@ -458,13 +456,11 @@ def create_run_and_print_on(dir, dir_name):
 
     init_failed = EchidnaRunner(dir, init_contract_to_run, init_config_params).run_contract()
     tr_failed = EchidnaRunner(dir, transitions_contract_to_run, transitions_config_params).run_contract()
-    OutputPrinter(dir).print_init_results(init_failed)
-    OutputPrinter(dir).print_transitions_results(tr_failed)
     
-    #OutputPrinter(dir).print_results(tr_failed, init_failed)
+    OutputPrinter(dir).print_results(tr_failed, init_failed)
     Graph(dir).build_graph(tr_failed, init_failed)
 
-# Lo mismo pero corriendo una función a la vez
+# TODO. Lo mismo pero corriendo una función a la vez
 def create_run_and_print_on_2(dir, dir_name):
     print("TODO")
     return
@@ -473,7 +469,7 @@ def create_run_and_print_on_2(dir, dir_name):
 def logica_echidna_epa():
     dir_name = f'echidna_output/{contractFileName[:-4]}/{TEST_LIMIT}/epa' # -4 para sacarle el .sol
     dir = create_directory(dir_name)
-    # discard_unreachable_states(dir)  # Ver si se puede cambiar para que descarte contradicciones sin correr echidna.
+    # discard_unreachable_states(dir)
     create_run_and_print_on(dir, dir_name)
 
 
