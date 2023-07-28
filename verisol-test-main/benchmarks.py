@@ -47,14 +47,15 @@ benchmark_2 = [
 ]
 
 ignore_2 = [	
-    "Auction",
-	"Crowdfunding",
-	#"EPXCrowdsale",
-	"EscrowVault",
-	"RefundEscrow",
-	"RockPaperScissors",
-	"SimpleAuction",
-	"ValidatorAuction",]
+    # "Auction",
+	# "Crowdfunding",
+	# "EPXCrowdsale",
+	# "EscrowVault",
+	# "RefundEscrow",
+	# "RockPaperScissors",
+	# "SimpleAuction",
+	# "ValidatorAuction",
+]
 
 
 def change_contract_versions(version, contracts):
@@ -69,7 +70,6 @@ def find_and_replace_versions(contract, version):
     for i in range(len(lines)):
         if "pragma solidity" in lines[i]:
             lines[i] = f"pragma solidity {version};\n"
-            break
     return lines
 
 def run_all_contracts(test_limit, contracts):
@@ -121,9 +121,9 @@ def main():
     contracts_to_run = [contract for contract in benchmark_2 if contract not in ignore_2]
     print(f"Skipping the following contracts: {ignore_2}")
     change_contract_versions(">=0.4.25 <0.9.0", contracts_to_run)
-    run_all_contracts(500, contracts_to_run)
-    run_all_contracts(50_000, contracts_to_run)
-    run_all_contracts(500_000, contracts_to_run)
+    run_all_contracts(100, contracts_to_run)
+    #run_all_contracts(50_000, contracts_to_run)
+    #run_all_contracts(500_000, contracts_to_run)
     fileout = open("times_benchmark_2.json", "a")
     json.dump(times, fileout)
 

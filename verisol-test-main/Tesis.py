@@ -333,9 +333,9 @@ class ContractCreator:
         new_lines = []
         in_contract = False
         for line in lines:
-            if line.strip().startswith("contract " + contract_name):
+            if line.strip().startswith("contract " + contract_name) and not is_a_comment(line):
                 in_contract = True
-            if in_contract and "function" in line:
+            if in_contract and line.strip().startswith("function") and not is_a_comment(line):
                 new_lines += [line.replace(")", f") {modifier_name}", 1)] # el 1 indica la cantidad de reemplazos.
             else:
                 new_lines += [line]

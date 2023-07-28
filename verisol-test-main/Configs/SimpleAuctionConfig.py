@@ -9,7 +9,8 @@ functions = [
 statePreconditions = [
 "time <= (auctionStart + biddingTime)",
 "pendingReturnsArray.length != 0",
-# "!ended && time >= (auctionStart + biddingTime)","true"
+"!ended && time >= (auctionStart + biddingTime)",
+# "true"
 ]
 functionPreconditions = [
 "msg.value > highestBid",
