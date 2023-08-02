@@ -47,14 +47,22 @@ benchmark_2 = [
 ]
 
 ignore_2 = [	
-    # "Auction",
-	# "Crowdfunding",
-	# "EPXCrowdsale",
-	# "EscrowVault",
-	# "RefundEscrow",
-	# "RockPaperScissors",
-	# "SimpleAuction",
-	# "ValidatorAuction",
+    # ("Auction", 'e'),  # Tiene el problema de la variable State, que no existe en el contrato.
+    # ("Auction", 's'),
+	# ("Crowdfunding", 'e'),
+    # ("Crowdfunding", 's'),
+	# ("EPXCrowdsale", 'e'),  # Demoró 4 minutos con test limit 100
+    # ("EPXCrowdsale", 's'),
+	# ("EscrowVault", 'e'),  # Demoró 8 minutos con test limit 100
+    # ("EscrowVault", 's'),
+	# ("RefundEscrow", 'e'),
+    # ("RefundEscrow", 's'),
+	# ("RockPaperScissors", 'e'),
+    # ("RockPaperScissors", 's'),
+	# ("SimpleAuction", 'e'),
+    # ("SimpleAuction", 's'),
+	# ("ValidatorAuction", 'e'),  # Demoró horas con test limit 100.
+    # ("ValidatorAuction", 's'),  # Tiene el problema de la variable State, que no existe en el contrato.
 ]
 
 
@@ -74,8 +82,7 @@ def find_and_replace_versions(contract, version):
 
 def run_all_contracts(test_limit, contracts):
     for contract in contracts:
-        run_contract(contract, "e", test_limit)
-        run_contract(contract, "s", test_limit)
+        run_contract(contract[0], contract[1], test_limit)
         print("--------------\n")
 
 
@@ -118,9 +125,11 @@ times = []
 def main():
     # measure time
     start_time = time.time()
-    contracts_to_run = [contract for contract in benchmark_2 if contract not in ignore_2]
+    contracts = [(contract, mode) for contract in benchmark_2 for mode in ['e', 's']]
+    contracts_to_run = [c for c in contracts if c not in ignore_2]
+    print(contracts_to_run)
     print(f"Skipping the following contracts: {ignore_2}")
-    change_contract_versions(">=0.4.25 <0.9.0", contracts_to_run)
+    change_contract_versions(">=0.4.25 <0.9.0", [c[0] for c in contracts_to_run])
     run_all_contracts(100, contracts_to_run)
     #run_all_contracts(50_000, contracts_to_run)
     #run_all_contracts(500_000, contracts_to_run)
