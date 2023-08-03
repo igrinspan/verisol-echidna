@@ -196,5 +196,23 @@
         "test_limit": 500000,
         "mode": "s",
         "time_in_s": 575.38
+    },
+    {
+        "contract": "Auction",
+        "test_limit": 100,
+        "mode": "e",
+        "time_in_s": 20.03
+    },
+    {
+        "contract": "Auction",
+        "test_limit": 50000,
+        "mode": "e",
+        "time_in_s": 77.29
+    },
+    {
+        "contract": "Auction",
+        "test_limit": 500000,
+        "mode": "e",
+        "time_in_s": 653.61
     }
 ]
