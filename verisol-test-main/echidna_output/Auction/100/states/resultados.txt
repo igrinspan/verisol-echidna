@@ -1,0 +1,8 @@
+
+ --------------
+Resultados de init:
+ []
+
+Resultados de transitions:
+ []
+
