@@ -12,11 +12,6 @@ digraph {
 	"0-2-0-" [label="GetFunds();
 "]
 	init -> "0-2-0-" [label=constructor]
-	"1-0-0-" [label="Donate();
-"]
-	"0-2-0-" [label="GetFunds();
-"]
-	"1-0-0-" -> "0-2-0-" [label="Donate();"]
 	"0-2-0-" [label="GetFunds();
 "]
 	"0-2-0-" [label="GetFunds();
@@ -32,11 +27,6 @@ digraph {
 	"1-0-0-" [label="Donate();
 "]
 	"1-0-0-" -> "1-0-0-" [label="Donate();"]
-	"0-0-3-" [label="Claim();
-"]
-	"1-0-0-" [label="Donate();
-"]
-	"0-0-3-" -> "1-0-0-" [label="Claim();"]
 	"0-0-3-" [label="Claim();
 "]
 	"0-0-0-" [label=Vacio

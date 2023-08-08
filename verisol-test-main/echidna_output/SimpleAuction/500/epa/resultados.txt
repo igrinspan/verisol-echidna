@@ -1,0 +1,24 @@
+
+ --------------
+Resultados de init:
+ []
+
+Resultados de transitions:
+ []
+
+
+ --------------
+Resultados de init:
+ [[1, 0, 0], [3, 0, 0]]
+
+Resultados de transitions:
+ [[3, 0, 2], [4, 4, 1], [1, 1, 0]]
+
+
+ --------------
+Resultados de init:
+ [[1, 0, 0], [3, 0, 0]]
+
+Resultados de transitions:
+ [[4, 4, 1], [1, 1, 0]]
+

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: UNLICENSED 
 /**
  *Submitted for verification at Etherscan.io on 2017-08-04
 */
@@ -570,11 +571,11 @@ contract SimpleAuction {
     // It will be shown when the user is asked to
     // confirm a transaction.
 
-    /// Create a simple auction with `_biddingTime`
-    /// seconds bidding time on behalf of the
-    /// beneficiary address `_beneficiary`.
+    // Create a simple auction with `_biddingTime`
+    // seconds bidding time on behalf of the
+    // beneficiary address `_beneficiary`.
     
-    address payable _beneficiary = address(0xb23397f97715118532c8c1207F5678Ed4FbaEA6c);
+    address payable _beneficiary = payable(address(0xb23397f97715118532c8c1207F5678Ed4FbaEA6c));
     // UNICEF Multisig Wallet according to:
     // unicefstories.org/2017/08/04/unicef-ventures-exploring-smart-contracts/
     address payable beneficiary;
@@ -589,10 +590,10 @@ contract SimpleAuction {
 				has_initialized = true;
     }
 
-    /// Bid on the auction with the value sent
-    /// together with this transaction.
-    /// The value will only be refunded if the
-    /// auction is not won.
+    // Bid on the auction with the value sent
+    // together with this transaction.
+    // The value will only be refunded if the
+    // auction is not won.
     function bid() hasInitialized public payable {
         // No arguments are necessary, all
         // information is already part of
@@ -624,7 +625,7 @@ contract SimpleAuction {
         t();
     }
 
-    /// Withdraw a bid that was overbid.
+    // Withdraw a bid that was overbid.
     function withdraw() hasInitialized public returns (bool) {
         //time = time + 1;
         require(pendingReturnsArray.length != 0);
@@ -652,8 +653,8 @@ contract SimpleAuction {
         return auctionStart + biddingTime;
     }
     
-    /// End the auction and send the highest bid
-    /// to the beneficiary.
+    // End the auction and send the highest bid
+    // to the beneficiary.
     function auctionEnd() hasInitialized public {
         // It is a good guideline to structure functions that interact
         // with other contracts (i.e. they call functions or send Ether)

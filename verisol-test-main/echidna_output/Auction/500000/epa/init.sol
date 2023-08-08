@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: UNLICENSED 
 pragma solidity >=0.4.25 <0.9.0;
 
 // bugs:
@@ -46,8 +47,8 @@ contract Auction {
     address payable beneficiary;
 
     bool ended = false;
-    address payable highestBidder = address(0x0);
-    address payable A = address(0x0);
+    address payable highestBidder = payable(address(0x0));
+    address payable A = payable(address(0x0));
     uint highestBid = 0;
     mapping(address => uint) pendingReturns;
     address[] pendingReturnsArray = new address[](0);

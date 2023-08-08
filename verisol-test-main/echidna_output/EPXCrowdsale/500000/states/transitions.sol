@@ -1,4 +1,6 @@
-/**
+// SPDX-License-Identifier: UNLICENSED 
+
+/*
  *Submitted for verification at Etherscan.io on 2018-03-03
 */
 
@@ -36,7 +38,7 @@ contract owned {
   address public owner;
 
   /* function owned() internal { */
-  constructor() internal {
+  constructor() {
     owner = msg.sender;
   }
   modifier onlyOwner {
@@ -75,9 +77,9 @@ contract safeMath {
   }
 }
 
-contract StandardToken is owned, safeMath {
-  function balanceOf(address who) view public returns (uint256);
-  function transfer(address to, uint256 value) public returns (bool);
+abstract contract StandardToken is owned, safeMath {
+  function balanceOf(address who) virtual view public returns (uint256);
+  function transfer(address to, uint256 value) virtual public returns (bool);
   event Transfer(address indexed from, address indexed to, uint256 value);
 }
 
@@ -1330,7 +1332,7 @@ contract EPXCrowdsale is owned, safeMath {
 
   // multi-sig addresses and price variable
   /* address private beneficiaryWallet;                           // beneficiaryMultiSig (founder group) or wallet account */
-  address payable beneficiaryWallet = address(0x0);                       
+  address payable beneficiaryWallet = payable(address(0x0));                       
   // uint256 values for min,max,caps,tracking
   uint256 public amountRaisedInWei;                           //
   uint256 public fundingMinCapInWei;                          //
@@ -1380,7 +1382,7 @@ contract EPXCrowdsale is owned, safeMath {
     && (!(isCrowdSaleSetup))
 	&& (!(beneficiaryWallet != address(0x0)))) {
       // init addresses
-      beneficiaryWallet                       = address(0x7A29e1343c6a107ce78199F1b3a1d2952efd77bA);
+      beneficiaryWallet                       = payable(address(0x7A29e1343c6a107ce78199F1b3a1d2952efd77bA));
       tokenReward                             = StandardToken(address(0x35BAA72038F127f9f8C8f9B491049f64f377914d));
 
       // funding targets
@@ -1417,7 +1419,7 @@ contract EPXCrowdsale is owned, safeMath {
     }
   }
 
-  function () hasInitialized external payable {
+  receive() external payable {
     buy();
   }
   

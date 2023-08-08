@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: UNLICENSED 
 // Part of https://etherscan.io/address/0x30b149e87fc634faaca4e46a807a04357b0816d7#code
 
 pragma solidity >=0.4.25 <0.9.0;

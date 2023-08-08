@@ -1,5 +1,13 @@
 // RefundEscrow
 digraph {
+	init [label=init]
+	"1-2-3-0-5-6-" [label="deposit(refundee);
+close();
+enableRefunds();
+withdraw(payee);
+transferPrimary(recipient);
+"]
+	init -> "1-2-3-0-5-6-" [label=constructor]
 	"1-2-3-0-5-6-" [label="deposit(refundee);
 close();
 enableRefunds();

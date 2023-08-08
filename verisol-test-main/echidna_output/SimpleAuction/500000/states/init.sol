@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: UNLICENSED 
 /**
  *Submitted for verification at Etherscan.io on 2017-08-04
 */
@@ -76,11 +77,11 @@ contract SimpleAuction {
     // It will be shown when the user is asked to
     // confirm a transaction.
 
-    /// Create a simple auction with `_biddingTime`
-    /// seconds bidding time on behalf of the
-    /// beneficiary address `_beneficiary`.
+    // Create a simple auction with `_biddingTime`
+    // seconds bidding time on behalf of the
+    // beneficiary address `_beneficiary`.
     
-    address payable _beneficiary = address(0xb23397f97715118532c8c1207F5678Ed4FbaEA6c);
+    address payable _beneficiary = payable(address(0xb23397f97715118532c8c1207F5678Ed4FbaEA6c));
     // UNICEF Multisig Wallet according to:
     // unicefstories.org/2017/08/04/unicef-ventures-exploring-smart-contracts/
     address payable beneficiary;

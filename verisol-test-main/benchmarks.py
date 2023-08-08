@@ -29,10 +29,10 @@ benchmark_1 = [
 ]
 
 ignore_1 = [
-   "AssetTransfer",
-   "DigitalLocker",
-   "AssetTransferFixed",
-   "DigitalLockerFixed",
+   ("AssetTransfer", 'e')
+   ("DigitalLocker", 'e')
+   ("AssetTransferFixed", 'e')
+   ("DigitalLockerFixed", 'e')
 ]
 
 benchmark_2 = [
@@ -47,20 +47,28 @@ benchmark_2 = [
 ]
 
 ignore_2 = [	
-    ("Auction", 'e'),  # Tiene el problema de la variable State, que no existe en el contrato.
-    # ("Auction", 's'),
-	# ("Crowdfunding", 'e'),
-    # ("Crowdfunding", 's'),
+    ("Auction", 's'),  # Tiene el problema de la variable State, que no existe en el contrato.
 	("EPXCrowdsale", 'e'),  # Demoró 4 minutos con test limit 100
-    # ("EPXCrowdsale", 's'),
 	("EscrowVault", 'e'),  # Demoró 8 minutos con test limit 100
-    # ("EscrowVault", 's'),
-	# ("RefundEscrow", 'e'),
-    # ("RefundEscrow", 's'),
-	# ("RockPaperScissors", 'e'),
-    # ("RockPaperScissors", 's'),
-	# ("SimpleAuction", 'e'),
-    # ("SimpleAuction", 's'),
+	("ValidatorAuction", 'e'),  # Demoró horas con test limit 100.
+    ("ValidatorAuction", 's'),  # Tiene el problema de la variable State, que no existe en el contrato.
+]
+
+ignore_2b =  [	
+	# ("EPXCrowdsale", 'e'),  # Demoró 4 minutos con test limit 100
+	# ("EscrowVault", 'e'),  # Demoró 8 minutos con test limit 100
+    ("Auction", 'e'),
+    ("Auction", 's'),  # Tiene el problema de la variable State, que no existe en el contrato.
+	("Crowdfunding", 'e'),
+    ("Crowdfunding", 's'),
+    ("EPXCrowdsale", 's'),
+    ("EscrowVault", 's'),
+	("RefundEscrow", 'e'),
+    ("RefundEscrow", 's'),
+	("RockPaperScissors", 'e'),
+    ("RockPaperScissors", 's'),
+	("SimpleAuction", 'e'),
+    ("SimpleAuction", 's'),
 	("ValidatorAuction", 'e'),  # Demoró horas con test limit 100.
     ("ValidatorAuction", 's'),  # Tiene el problema de la variable State, que no existe en el contrato.
 ]
@@ -73,12 +81,15 @@ def change_contract_versions(version, contracts):
         c = open(f"Contracts/{contract}.sol", "w")
         c.writelines(lines)
 
+
 def find_and_replace_versions(contract, version):
     lines = contract.readlines()
+
     for i in range(len(lines)):
         if "pragma solidity" in lines[i]:
             lines[i] = f"pragma solidity {version};\n"
     return lines
+
 
 def run_all_contracts(test_limit, contracts):
     for contract in contracts:
@@ -126,14 +137,15 @@ def main():
     # measure time
     start_time = time.time()
     contracts = [(contract, mode) for contract in benchmark_2 for mode in ['e', 's']]
-    contracts_to_run = [c for c in contracts if c not in ignore_2]
+    contracts_to_run = [c for c in contracts if c not in ignore_2b]
     print(contracts_to_run)
-    print(f"Skipping the following contracts: {ignore_2}")
+    print(f"Skipping the following contracts: {ignore_2b}")
     change_contract_versions(">=0.4.25 <0.9.0", [c[0] for c in contracts_to_run])
-    run_all_contracts(100, contracts_to_run)
+    run_all_contracts(500, contracts_to_run)
     run_all_contracts(50_000, contracts_to_run)
     run_all_contracts(500_000, contracts_to_run)
-    fileout = open("times_benchmark_2.json", "a")
+    run_all_contracts(1_000_000, contracts_to_run)
+    fileout = open("times_epxcrowdsale_escrowvault", "a")
     json.dump(times, fileout)
 
 

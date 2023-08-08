@@ -6,3 +6,11 @@ Resultados de init:
 Resultados de transitions:
  [[4, 4, 4], [0, 0, 2], [3, 3, 4], [0, 0, 4], [4, 0, 0]]
 
+
+ --------------
+Resultados de init:
+ [[4, 0, 0]]
+
+Resultados de transitions:
+ [[4, 4, 4], [0, 3, 2], [3, 3, 2], [0, 0, 4], [4, 0, 0]]
+

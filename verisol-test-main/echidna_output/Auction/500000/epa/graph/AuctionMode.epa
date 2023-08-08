@@ -21,9 +21,26 @@ Withdraw();
 	"1-2-0-" -> "1-0-0-" [label="Withdraw();"]
 	"0-2-0-" [label="Withdraw();
 "]
+	"0-2-0-" [label="Withdraw();
+"]
+	"0-2-0-" -> "0-2-0-" [label="Withdraw();"]
+	"1-2-0-" [label="Bid();
+Withdraw();
+"]
+	"0-0-0-" [label=Vacio
+]
+	"1-2-0-" -> "0-0-0-" [label="Withdraw();"]
+	"0-2-0-" [label="Withdraw();
+"]
 	"0-0-0-" [label=Vacio
 ]
 	"0-2-0-" -> "0-0-0-" [label="Withdraw();"]
+	"1-2-0-" [label="Bid();
+Withdraw();
+"]
+	"0-2-0-" [label="Withdraw();
+"]
+	"1-2-0-" -> "0-2-0-" [label="Bid();"]
 	"1-2-0-" [label="Bid();
 Withdraw();
 "]

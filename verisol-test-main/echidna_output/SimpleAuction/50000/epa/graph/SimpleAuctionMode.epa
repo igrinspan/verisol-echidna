@@ -13,11 +13,6 @@ digraph {
 	"0-0-0-" [label=Vacio
 ]
 	"0-0-3-" -> "0-0-0-" [label="auctionEnd();"]
-	"0-0-3-" [label="auctionEnd();
-"]
-	"1-0-0-" [label="bid();
-"]
-	"0-0-3-" -> "1-0-0-" [label="auctionEnd();"]
 	"1-2-0-" [label="bid();
 withdraw();
 "]

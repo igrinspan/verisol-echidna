@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: UNLICENSED 
 // 0xBdB39870D0bB20dF10913ACDFce100029e2715A4
 
 /**
@@ -91,7 +92,7 @@ contract Secondary {
     /**
      * @dev Sets the primary account to the one that is creating the Secondary contract.
      */
-    constructor () internal {
+    constructor () {
         _primary = msg.sender;
         emit PrimaryTransferred(_primary);
     }
@@ -156,7 +157,7 @@ contract Escrow is Secondary {
      * @dev Stores the sent amount as credit to be withdrawn.
      * @param payee The destination address of the funds.
      */
-    function deposit(address payee) public payable onlyPrimary {
+    function deposit(address payee) virtual public payable onlyPrimary {
         uint256 amount = msg.value;
         _deposits[payee] = _deposits[payee].add(amount);
 
@@ -167,7 +168,7 @@ contract Escrow is Secondary {
      * @dev Withdraw accumulated balance for a payee.
      * @param payee The address whose funds will be withdrawn and transferred to.
      */
-    function withdraw(address payable payee) public onlyPrimary {
+    function withdraw(address payable payee) virtual public onlyPrimary {
         uint256 payment = _deposits[payee];
 
         _deposits[payee] = 0;
@@ -188,18 +189,18 @@ pragma solidity >=0.4.25 <0.9.0;
  * @dev Base abstract escrow to only allow withdrawal if a condition is met.
  * @dev Intended usage: See Escrow.sol. Same usage guidelines apply here.
  */
-contract ConditionalEscrow is Escrow {
+abstract contract ConditionalEscrow is Escrow {
     /**
      * @dev Returns whether an address is allowed to withdraw their funds. To be
      * implemented by derived contracts.
      * @param payee The destination address of the funds.
      */
-    function withdrawalAllowed(address payee) public view returns (bool);
+    //function withdrawalAllowed(address payee) virtual public view returns (bool);
 
-    function withdraw(address payable payee) public {
-        require(withdrawalAllowed(payee));
-        //super.withdraw(payee);
-    }
+    // function withdraw(address payable payee) override public {
+    //     require(withdrawalAllowed(payee));
+    //     //super.withdraw(payee);
+    // }
 }
 
 // File: installed_contracts/openzeppelin-solidity/contracts/payment/escrow/RefundEscrow.sol
