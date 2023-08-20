@@ -20,7 +20,7 @@ class Mode(Enum):
     states = "states"
 
 
-# Pure
+# Pure: combinationToString([1, 0, 0]) -> "1-0-0-"
 def combinationToString(combination):
     output = ""
     for i in combination:
@@ -101,12 +101,12 @@ def get_valid_preconditions_output(preconditions, extraConditions):
     return temp_output, tempFunctionNames
 
 
-def get_valid_transitions_output(preconditionsThread, preconditions, extraConditionsTemp, extraConditions, functions, statesThread): 
+def get_valid_transitions_output(preconditions_require, preconditions_assert, extraConditionsTemp, extraConditions, functions, statesThread): 
     global mode
     temp_output = ""
     tempFunctionNames = []
-    for indexPreconditionRequire, preconditionRequire in enumerate(preconditionsThread):
-        for indexPreconditionAssert, preconditionAssert in enumerate(preconditions):
+    for indexPreconditionRequire, preconditionRequire in enumerate(preconditions_require):
+        for indexPreconditionAssert, preconditionAssert in enumerate(preconditions_assert):
             for indexFunction, function in enumerate(functions):
                 extraConditionPre = extraConditionsTemp[indexPreconditionRequire]
                 extraConditionPost = extraConditions[indexPreconditionAssert]
@@ -136,11 +136,11 @@ def get_init_output(preconditions, extraConditions):
         temp_output += temp_function + "\n\t}\n"
     return temp_output, tempFunctionNames
 
-# Pure
+# Pure: get_temp_function_name(1, 2, 3) -> 1x2x3
 def get_temp_function_name(indexPrecondtion, indexAssert, indexFunction):
     return str(indexPrecondtion) + "x" + str(indexAssert) + "x" + str(indexFunction)
 
-# Pure
+# Pure: get_params_from_function_name("1x2x3") -> 1, 2, 3
 def get_params_from_function_name(temp_function_name):
     array = temp_function_name.split('x')
     return int(array[0]), int(array[1]), int(array[2])
@@ -174,10 +174,13 @@ def find_contract_end_line(contract_lines, contract_name):
         if inside_function and bracket_count == 0:
             return idx 
 
-
+# Pure
 def is_a_comment(line):
     return line.strip().startswith('//') or line.strip().startswith('/*') or line.strip().startswith('*') or line.strip().startswith('*/')
 
+# Pure
+def extract_query_name_from_function_line(line):
+    return line.strip().split('(')[0].split(' ')[1][2:] # hago el strip por si hay algún espacio de más.
 
 class EchidnaRunner:
     def __init__(self, dir, contract, config_file_params):
@@ -240,6 +243,68 @@ class ContractCreator:
         body = self.clean_true_requires(body)
         write_file(file_name_temp, body, contractName)
         return file_name_temp
+    
+    def create_multiple_transitions_contracts(self, pre_require, states, pre_assert, extra_cond):
+        file_name_temp = create_file("transitions", self.directory, fileName, contractName)
+        body, function_names = get_valid_transitions_output(pre_require, pre_assert, extra_cond, extra_cond, functions, states)
+        body = self.clean_true_requires(body)
+        write_file(file_name_temp, body, contractName)
+        # De function_names podemos sacar la cantidad de queries que se crearon y en base a eso ver cuántos contratos distintos creamos.
+        queries_count = len(function_names)
+        print(f"Queries count: {queries_count}")
+        contracts = []
+        if queries_count > 500:
+            splits = 32
+            print(f"Dividimos el contrato en {splits} porque tenía {queries_count} queries...")
+            contracts = self.split_contract(file_name_temp, function_names, splits)
+
+        return contracts
+    
+    def split_contract(self, contract_file_name, function_names, contracts_count):
+        contracts = []
+        # Nos fijamos en cuántos contratos lo vamos a dividir y en base a eso, nos fijamos cuántas queries va a tener cada contrato.
+        queries_per_contract = len(function_names) // contracts_count
+        # Luego, creamos un iterador que empiece en 0, y vamos creando los contratos de la siguiente manera.
+        for i in range(contracts_count):
+            queries_for_contract = function_names[i * queries_per_contract: (i+1) * queries_per_contract]
+            contracts.append(self.create_contract_with_these_queries(contract_file_name, queries_for_contract, i))
+        if (i+1) * queries_per_contract < len(function_names):
+            queries_for_contract = function_names[(i+1) * queries_per_contract:]
+            contracts.append(self.create_contract_with_these_queries(contract_file_name, queries_for_contract, i+1))
+        else: 
+            print("No sobraron queries.")
+
+        return contracts
+
+
+    def create_contract_with_these_queries(self, contract_file_name, queries, contract_number):
+        initial_contract_lines = open(contract_file_name, 'r').readlines()
+        new_contract_file_name = f"{contract_file_name[:-4]}_{contract_number}.sol"
+        new_contract_lines = self.remove_unwanted_queries_from_contract(initial_contract_lines, queries)
+        write_file_from_string(new_contract_file_name, new_contract_lines)
+
+        return new_contract_file_name
+    
+    def remove_unwanted_queries_from_contract(self, contract_lines, queries):
+        new_contract_lines = []
+        lines_iterator = 0
+        while lines_iterator < len(contract_lines): 
+            line = contract_lines[lines_iterator]
+            if line.strip().startswith("function vc") and not is_a_comment(line):
+                function_name = extract_query_name_from_function_line(line)
+                if function_name not in queries: # Si no la debemos agregar, salteamos sus líneas.
+                    while not line.strip().startswith("}"):
+                        lines_iterator += 1
+                        line = contract_lines[lines_iterator]
+                else:
+                    new_contract_lines.append(line)
+            else:
+                new_contract_lines.append(line)
+
+            lines_iterator += 1
+
+        return new_contract_lines
+    
 
     def create_init_contract(self):
         filename_temp = create_file("init", self.directory, fileName, contractName)
@@ -460,21 +525,37 @@ def create_run_and_print_on(dir, dir_name):
     OutputPrinter(dir).print_results(tr_failed, init_failed)
     Graph(dir).build_graph(tr_failed, init_failed)
 
-# TODO. Lo mismo pero corriendo una función a la vez
+# TODO. Lo mismo pero corriendo el contrato de a partes.
 def create_run_and_print_on_2(dir, dir_name):
-    print("TODO")
+    init_contract_to_run = ContractCreator(dir).create_init_contract()
+    transitions_contracts_to_run = ContractCreator(dir).create_multiple_transitions_contracts(preconditions, states, preconditions, extraConditions)
+    print("Contratos creados")
+    ContractCreator(dir).change_for_constructor_fuzzing(init_contract_to_run)
+    for transitions_contract in transitions_contracts_to_run:
+        ContractCreator(dir).change_for_constructor_fuzzing(transitions_contract)
+    
+    init_config_params = EchidnaConfigFileData(testLimit=TEST_LIMIT, workers=16, format='text')
+    transitions_config_params = EchidnaConfigFileData(testLimit=TEST_LIMIT, workers=16, format='text')
+
+    init_failed = EchidnaRunner(dir, init_contract_to_run, init_config_params).run_contract()
+    tr_failed = []
+    for contract in transitions_contracts_to_run:
+        tr_failed += EchidnaRunner(dir, contract, transitions_config_params).run_contract()
+
+    OutputPrinter(dir).print_results(tr_failed, init_failed)
+    Graph(dir).build_graph(tr_failed, init_failed)
     return
 
 # Lo estoy corriendo sin el discard_unreachable_states.
 def logica_echidna_epa():
-    dir_name = f'echidna_output/{contractFileName[:-4]}/{TEST_LIMIT}/epa' # -4 para sacarle el .sol
+    dir_name = f'echidna_output_0_5_0/{contractFileName[:-4]}/{TEST_LIMIT}/epa' # -4 para sacarle el .sol
     dir = create_directory(dir_name)
     # discard_unreachable_states(dir)
-    create_run_and_print_on(dir, dir_name)
+    create_run_and_print_on_2(dir, dir_name)
 
 
 def logica_echidna_states():
-    dir_name = f'echidna_output/{contractFileName[:-4]}/{TEST_LIMIT}/states' # -4 para sacarle el .sol
+    dir_name = f'echidna_output_0_5_0/{contractFileName[:-4]}/{TEST_LIMIT}/states' # -4 para sacarle el .sol
     dir = create_directory(dir_name)
     create_run_and_print_on(dir, dir_name)
 
@@ -606,7 +687,7 @@ tool_output = "Found a counterexample"
 echidna_output = "failed!"
 
 # Cambiar este path según dónde se ejecute
-sys.path.append("/Users/iangrinspan/Documents/1C2023/Beca/verisol-echidna/verisol-test-main/Configs")
+sys.path.append("/Users/iangrinspan/Documents/2C2023/Beca/verisol-echidna/verisol-test-main/Configs")
 
 if __name__ == "__main__":
     global mode, config, verbose, time_opt, TEST_LIMIT
