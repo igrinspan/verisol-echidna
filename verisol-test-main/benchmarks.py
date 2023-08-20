@@ -29,10 +29,10 @@ benchmark_1 = [
 ]
 
 ignore_1 = [
-   ("AssetTransfer", 'e')
-   ("DigitalLocker", 'e')
-   ("AssetTransferFixed", 'e')
-   ("DigitalLockerFixed", 'e')
+   ("AssetTransfer", 'e'),
+   ("DigitalLocker", 'e'),
+   ("AssetTransferFixed", 'e'),
+   ("DigitalLockerFixed", 'e'),
 ]
 
 benchmark_2 = [
@@ -50,25 +50,6 @@ ignore_2 = [
     ("Auction", 's'),  # Tiene el problema de la variable State, que no existe en el contrato.
 	("EPXCrowdsale", 'e'),  # Demoró 4 minutos con test limit 100
 	("EscrowVault", 'e'),  # Demoró 8 minutos con test limit 100
-	("ValidatorAuction", 'e'),  # Demoró horas con test limit 100.
-    ("ValidatorAuction", 's'),  # Tiene el problema de la variable State, que no existe en el contrato.
-]
-
-ignore_2b =  [	
-	# ("EPXCrowdsale", 'e'),  # Demoró 4 minutos con test limit 100
-	# ("EscrowVault", 'e'),  # Demoró 8 minutos con test limit 100
-    ("Auction", 'e'),
-    ("Auction", 's'),  # Tiene el problema de la variable State, que no existe en el contrato.
-	("Crowdfunding", 'e'),
-    ("Crowdfunding", 's'),
-    ("EPXCrowdsale", 's'),
-    ("EscrowVault", 's'),
-	("RefundEscrow", 'e'),
-    ("RefundEscrow", 's'),
-	("RockPaperScissors", 'e'),
-    ("RockPaperScissors", 's'),
-	("SimpleAuction", 'e'),
-    ("SimpleAuction", 's'),
 	("ValidatorAuction", 'e'),  # Demoró horas con test limit 100.
     ("ValidatorAuction", 's'),  # Tiene el problema de la variable State, que no existe en el contrato.
 ]
@@ -137,15 +118,15 @@ def main():
     # measure time
     start_time = time.time()
     contracts = [(contract, mode) for contract in benchmark_2 for mode in ['e', 's']]
-    contracts_to_run = [c for c in contracts if c not in ignore_2b]
+    contracts_to_run = [c for c in contracts if c not in ignore_2]
     print(contracts_to_run)
-    print(f"Skipping the following contracts: {ignore_2b}")
+    print(f"Skipping the following contracts: {ignore_2}")
     change_contract_versions(">=0.4.25 <0.9.0", [c[0] for c in contracts_to_run])
     run_all_contracts(500, contracts_to_run)
     run_all_contracts(50_000, contracts_to_run)
     run_all_contracts(500_000, contracts_to_run)
     run_all_contracts(1_000_000, contracts_to_run)
-    fileout = open("times_epxcrowdsale_escrowvault", "a")
+    fileout = open("times_0_5_0", "a")
     json.dump(times, fileout)
 
 
