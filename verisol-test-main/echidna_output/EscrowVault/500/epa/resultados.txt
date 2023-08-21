@@ -1,0 +1,16 @@
+
+ --------------
+Resultados de init:
+ [[5, 0, 0]]
+
+Resultados de transitions:
+ []
+
+
+ --------------
+Resultados de init:
+ [[5, 0, 0]]
+
+Resultados de transitions:
+ []
+
