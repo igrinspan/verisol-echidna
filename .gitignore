@@ -5,5 +5,3 @@ __pycache__/
 .idea/
 crytic-export/
 extra.py
-echidna_output/
-echidna_output_0_5_0/
