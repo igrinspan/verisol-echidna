@@ -20,6 +20,25 @@ class Mode(Enum):
     epa = "epa"
     states = "states"
 
+# Función que se encarga de crear los contratos y correrlos.
+def create_run_and_print_on_without_splitting(config_variables):
+    pre = config_variables.preconditions
+    states = config_variables.states
+    extraConditions = config_variables.extraConditions
+
+    init_contract_to_run = ContractCreator(config_variables).create_init_contract()
+    transitions_contract_to_run = ContractCreator(config_variables).create_transitions_contract(pre, states, pre, extraConditions)
+       
+    init_config_params = EchidnaConfigFileData(testLimit=TEST_LIMIT, workers=16, format='text')
+    transitions_config_params = EchidnaConfigFileData(testLimit=TEST_LIMIT, workers=16, format='text')
+
+    init_failed = EchidnaRunner(config_variables, init_contract_to_run, init_config_params).run_contract()
+    tr_failed = EchidnaRunner(config_variables, transitions_contract_to_run, transitions_config_params).run_contract()
+
+    OutputPrinter(config_variables).print_results(tr_failed, init_failed)
+    Graph(config_variables).build_graph(tr_failed, init_failed)
+    return
+
 
 # Función que se encarga de crear los contratos y correrlos.
 def create_run_and_print_on(config_variables):

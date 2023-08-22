@@ -36,7 +36,7 @@ class ContractCreator:
         print(f"Queries count: {queries_count}")
         contracts = []
         if queries_count > 500:
-            splits = 32
+            splits = 2
             print(f"Dividimos el contrato en {splits} porque tenía {queries_count} queries...")
             contracts = self.split_contract(file_name_temp, function_names, splits)
         else:
@@ -283,7 +283,7 @@ def output_valid_state(preconditionRequire, extraCondition):
     # return "require("+preconditionRequire+");\n" + extraConditionOutput + "assert(false);\n"
 
 def output_transitions_function(preconditionRequire, function, preconditionAssert, functionIndex, extraConditionPre, extraConditionPost, config_variables):
-    if config_variables.mode == Mode.epa:
+    if str(config_variables.mode) == str(Mode.epa):
         precondictionFunction = config_variables.functionPreconditions[functionIndex]
     else:
         precondictionFunction = "true"
