@@ -114,7 +114,6 @@ def main():
     config_variables.mode = mode
     if (echidna):
         start = time()
-        print(f" A ver: {mode == Mode.epa} ")
         logica_echidna_epa(config_variables) if mode == Mode.epa else logica_echidna_states(config_variables)
         end = time()
         print(f"The total time was: {round(end - start, 2)} seconds. \n")

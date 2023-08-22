@@ -27,7 +27,7 @@ class ConfigImporter:
 
     # Se ejecuta en el main para cargar las variables preconditions, states y extraConditions, dependiendo del modo.
     def prepare_variables(self, mode, funcionesNumeros):
-        if mode == Mode.epa :
+        if str(mode) == str(Mode.epa):
             self.update_variables_for_epa_mode(funcionesNumeros)
         else:
             self.update_variables_for_states_mode()

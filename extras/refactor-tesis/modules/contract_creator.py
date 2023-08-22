@@ -210,7 +210,7 @@ def output_valid_state(preconditionRequire, extraCondition):
     # return "require("+preconditionRequire+");\n" + extraConditionOutput + "assert(false);\n"
 
 def output_transitions_function(preconditionRequire, function, preconditionAssert, functionIndex, extraConditionPre, extraConditionPost, config_variables):
-    if config_variables.mode == Mode.epa:
+    if str(config_variables.mode) == str(Mode.epa):
         precondictionFunction = config_variables.functionPreconditions[functionIndex]
     else:
         precondictionFunction = "true"
