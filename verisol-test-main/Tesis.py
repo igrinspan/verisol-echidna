@@ -62,14 +62,14 @@ def create_run_and_print_on(config_variables):
     return
 
 def logica_echidna_epa(config_variables):
-    config_variables.dir_name = f'echidna_output_0_5_0/{config_variables.contractFileName[:-4]}/{TEST_LIMIT}/epa' # -4 para sacarle el .sol
+    config_variables.dir_name = f'echidna_output/{config_variables.contractFileName[:-4]}/{TEST_LIMIT}/epa' # -4 para sacarle el .sol
     config_variables.dir = create_directory(config_variables.dir_name)
     # discard_unreachable_states(dir)
     create_run_and_print_on(config_variables)
 
 
 def logica_echidna_states(config_variables):
-    config_variables.dir_name = f'echidna_output_0_5_0/{config_variables.contractFileName[:-4]}/{TEST_LIMIT}/states' # -4 para sacarle el .sol
+    config_variables.dir_name = f'echidna_output/{config_variables.contractFileName[:-4]}/{TEST_LIMIT}/states' # -4 para sacarle el .sol
     config_variables.dir = create_directory(config_variables.dir_name)
     create_run_and_print_on(config_variables)
 
