@@ -1,0 +1,21 @@
+// EscrowVault
+digraph {
+	init [label=init]
+	"1-2-0-0-0-6-0-8-" [label="deposit(investor);
+setGoalReached();
+enableRefunds();
+transferOwnership(newOwner);
+"]
+	init -> "1-2-0-0-0-6-0-8-" [label=constructor]
+	"1-2-0-0-0-6-0-8-" [label="deposit(investor);
+setGoalReached();
+enableRefunds();
+transferOwnership(newOwner);
+"]
+	"1-2-0-0-0-6-0-8-" [label="deposit(investor);
+setGoalReached();
+enableRefunds();
+transferOwnership(newOwner);
+"]
+	"1-2-0-0-0-6-0-8-" -> "1-2-0-0-0-6-0-8-" [label="transferOwnership(newOwner);"]
+}

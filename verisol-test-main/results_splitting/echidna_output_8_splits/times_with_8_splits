@@ -1,0 +1,38 @@
+[
+    {
+        "contract": "EPXCrowdsale",
+        "test_limit": 500,
+        "mode": "e",
+        "time_in_s": 171.44
+    },
+    {
+        "contract": "EscrowVault",
+        "test_limit": 500,
+        "mode": "e",
+        "time_in_s": 206.55
+    },
+    {
+        "contract": "EPXCrowdsale",
+        "test_limit": 25000,
+        "mode": "e",
+        "time_in_s": 414.96
+    },
+    {
+        "contract": "EscrowVault",
+        "test_limit": 25000,
+        "mode": "e",
+        "time_in_s": 696.94
+    },
+    {
+        "contract": "EPXCrowdsale",
+        "test_limit": 50000,
+        "mode": "e",
+        "time_in_s": 678.8
+    },
+    {
+        "contract": "EscrowVault",
+        "test_limit": 50000,
+        "mode": "e",
+        "time_in_s": 1175.82
+    }
+]
