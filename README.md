@@ -45,14 +45,3 @@ Call sequence:
   state2_to_state3_push(0)
   state2_to_state2_pop()
   ```
-
-
-### Hasta ahora
-
-- Agregué un -echidna que nos manda a main con echidna == True.
-- En el main cargamos todo.
-- Ignoramos todo lo de los threads (antes de que se haga eso, llamamos validCombinations(0, "echidna"))
-- A validCombinations le agregué el segundo parámetro (por default dejo verisol), para ver qué tool tiene que ejecutar.
-
-- El tema es que con verisol, se hace una corrida de la tool por cada función a testear, pero yo no necesito eso. 
-¿Lo hace por un tema de la tool en sí o porque es más fácil procesar el output para saber qué test falló y eso?
