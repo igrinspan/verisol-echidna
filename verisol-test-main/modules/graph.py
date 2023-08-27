@@ -1,9 +1,6 @@
 import graphviz
-from enum import Enum
+from contract_config import Mode
 
-class Mode(Enum):
-    epa = "epa"
-    states = "states"
 
 class Graph:
     def __init__(self, config_variables):
@@ -47,7 +44,7 @@ def output_combination(indexCombination, tempCombinations, config_variables):
     output = ""
     for function in combination:
         if function != 0:
-            if str(config_variables.mode) == str(Mode.epa):
+            if config_variables.mode == Mode.epa:
                 output += config_variables.functions[function-1] +"\n"
             else:
                 output += config_variables.statesNames[function-1]

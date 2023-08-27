@@ -1,5 +1,10 @@
 from file_manager import create_file, write_file, write_file_from_string
+import numpy as np
 from enum import Enum
+from contract_config import Mode
+
+CONTRACT_SPLITS = 8
+QUERIES_COUNT_THRESHOLD = 500
 
 class ContractCreator:
     def __init__(self, config_variables):
@@ -16,7 +21,7 @@ class ContractCreator:
         self.change_for_constructor_fuzzing(filename_temp)
         return filename_temp
 
-
+    # No se usa. Es sólo cuando se quiere correr un contrato sin separar las queries.
     def create_transitions_contract(self, pre_require, states, pre_assert, extra_cond):
         filename_temp = create_file("transitions", self.directory, self.config_variables.fileName, self.target_contract)
         body, _ = get_valid_transitions_output(pre_require, pre_assert, extra_cond, extra_cond, self.config_variables.functions, states, self.config_variables)
@@ -27,73 +32,35 @@ class ContractCreator:
     
 
     def create_multiple_transitions_contracts(self, pre_require, states, pre_assert, extra_cond):
-        file_name_temp = create_file("transitions", self.directory, self.config_variables.fileName, self.target_contract)
-        body, function_names = get_valid_transitions_output(pre_require, pre_assert, extra_cond, extra_cond, self.config_variables.functions, states, self.config_variables)
-        body = self.clean_true_requires(body)
-        write_file(file_name_temp, body, self.target_contract)
+        print(self.config_variables.mode)
+        queries, function_names  = get_valid_transitions_output(pre_require, pre_assert, extra_cond, extra_cond, self.config_variables.functions, states, self.config_variables)
         # De function_names podemos sacar la cantidad de queries que se crearon y en base a eso ver cuántos contratos distintos creamos.
         queries_count = len(function_names)
-        print(f"Queries count: {queries_count}")
         contracts = []
-        if queries_count > 500:
-            splits = 2
-            print(f"Dividimos el contrato en {splits} porque tenía {queries_count} queries...")
-            contracts = self.split_contract(file_name_temp, function_names, splits)
+        if queries_count > QUERIES_COUNT_THRESHOLD:
+            splits = CONTRACT_SPLITS
+            queries_splitted = np.array_split(queries, splits) # Crea un arreglo de arreglos de queries.
+            for idx, queries_list in enumerate(queries_splitted):
+                body = "" # Acá metemos las queries que queremos para el nuevo contrato.
+                for query in queries_list:
+                    body += query
+                body = self.clean_true_requires(body)
+                filename_temp = create_file(f"transitions{idx}", self.directory, self.config_variables.fileName, self.target_contract) # esto hace un archivo nuevo copiando los contenidos de EPXCrowdsale.sol
+                write_file(filename_temp, body, self.target_contract)
+                contracts.append(filename_temp)
         else:
-            print(f"No dividimos el contrato porque no había más de 500 queries.")
-            contracts = [file_name_temp]
+            body = ""
+            for query in queries:
+                body += query
+            body = self.clean_true_requires(body)
+            filename_temp = create_file("transitions", self.directory, self.config_variables.fileName, self.target_contract)
+            write_file(filename_temp, body, self.target_contract)
+            contracts = [filename_temp]
             
         for contract in contracts:
             self.change_for_constructor_fuzzing(contract)
 
         return contracts
-    
-
-    def split_contract(self, contract_file_name, function_names, contracts_count):
-        contracts = []
-        # Nos fijamos en cuántos contratos lo vamos a dividir y en base a eso, nos fijamos cuántas queries va a tener cada contrato.
-        queries_per_contract = len(function_names) // contracts_count
-        # Luego, creamos un iterador que empiece en 0, y vamos creando los contratos de la siguiente manera.
-        for i in range(contracts_count):
-            queries_for_contract = function_names[i * queries_per_contract: (i+1) * queries_per_contract]
-            contracts.append(self.create_contract_with_these_queries(contract_file_name, queries_for_contract, i))
-        if (i+1) * queries_per_contract < len(function_names):
-            queries_for_contract = function_names[(i+1) * queries_per_contract:]
-            contracts.append(self.create_contract_with_these_queries(contract_file_name, queries_for_contract, i+1))
-        else: 
-            print("No sobraron queries.")
-
-        return contracts
-
-
-    def create_contract_with_these_queries(self, contract_file_name, queries, contract_number):
-        initial_contract_lines = open(contract_file_name, 'r').readlines()
-        new_contract_file_name = f"{contract_file_name[:-4]}_{contract_number}.sol"
-        new_contract_lines = self.remove_unwanted_queries_from_contract(initial_contract_lines, queries)
-        write_file_from_string(new_contract_file_name, new_contract_lines)
-
-        return new_contract_file_name
-    
-
-    def remove_unwanted_queries_from_contract(self, contract_lines, queries):
-        new_contract_lines = []
-        lines_iterator = 0
-        while lines_iterator < len(contract_lines): 
-            line = contract_lines[lines_iterator]
-            if line.strip().startswith("function vc") and not is_a_comment(line):
-                function_name = extract_query_name_from_function_line(line)
-                if function_name not in queries: # Si no la debemos agregar, salteamos sus líneas.
-                    while not line.strip().startswith("}"):
-                        lines_iterator += 1
-                        line = contract_lines[lines_iterator]
-                else:
-                    new_contract_lines.append(line)
-            else:
-                new_contract_lines.append(line)
-
-            lines_iterator += 1
-
-        return new_contract_lines
     
 
     def transform_contract_for_init(self, filename_temp):
@@ -189,9 +156,6 @@ class ContractCreator:
         return new_lines
 
 
-class Mode(Enum):
-    epa = "epa"
-    states = "states"
 
 def find_contract_start_line(contract_lines, contract_name):
     for idx, line in enumerate(contract_lines):
@@ -234,25 +198,32 @@ def get_valid_preconditions_output(preconditions, extraConditions):
 def get_valid_transitions_output(preconditionsThread, preconditions, extraConditionsTemp, extraConditions, functions, statesThread, config_variables): 
     temp_output = ""
     tempFunctionNames = []
+    all_queries = []
     for indexPreconditionRequire, preconditionRequire in enumerate(preconditionsThread):
         for indexPreconditionAssert, preconditionAssert in enumerate(preconditions):
             for indexFunction, function in enumerate(functions):
                 extraConditionPre = extraConditionsTemp[indexPreconditionRequire]
                 extraConditionPost = extraConditions[indexPreconditionAssert]
-                if (indexFunction + 1) in statesThread[indexPreconditionRequire] and str(config_variables.mode) == str(Mode.epa):
+                if (indexFunction + 1) in statesThread[indexPreconditionRequire] and config_variables.mode == Mode.epa:
+                    # Abstraer esto de acá abajo en una función aparte
                     functionName = get_temp_function_name(indexPreconditionRequire, indexPreconditionAssert, indexFunction)
                     tempFunctionNames.append(functionName)
                     temp_function = functionOutput(functionName, config_variables) + "\n"
                     temp_function += output_transitions_function(preconditionRequire, function, preconditionAssert, indexFunction, extraConditionPre, extraConditionPost, config_variables)
-                    temp_output += temp_function + "\n\t}\n"
+                    temp_function += "\n\t}\n"
+                    temp_output += temp_function
+                    all_queries.append(temp_function)
 
-                elif str(config_variables.mode) == str(Mode.states):
+                elif config_variables.mode == Mode.states:
                     functionName = get_temp_function_name(indexPreconditionRequire, indexPreconditionAssert, indexFunction)
                     tempFunctionNames.append(functionName)
                     temp_function = functionOutput(functionName, config_variables) + "\n"
                     temp_function += output_transitions_function(preconditionRequire, function, preconditionAssert, indexFunction, extraConditionPre, extraConditionPost, config_variables)
-                    temp_output += temp_function + "\n\t}\n"
-    return temp_output, tempFunctionNames
+                    temp_function += "\n\t}\n"
+                    temp_output += temp_function
+                    all_queries.append(temp_function)
+
+    return all_queries, tempFunctionNames
 
 def get_init_output(config_variables): 
     temp_output = ""
@@ -283,7 +254,7 @@ def output_valid_state(preconditionRequire, extraCondition):
     # return "require("+preconditionRequire+");\n" + extraConditionOutput + "assert(false);\n"
 
 def output_transitions_function(preconditionRequire, function, preconditionAssert, functionIndex, extraConditionPre, extraConditionPost, config_variables):
-    if str(config_variables.mode) == str(Mode.epa):
+    if config_variables.mode == Mode.epa:
         precondictionFunction = config_variables.functionPreconditions[functionIndex]
     else:
         precondictionFunction = "true"
