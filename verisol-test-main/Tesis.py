@@ -1,8 +1,4 @@
-import os
-import numpy  as np
-from threading import Thread
-from time import time, sleep
-from enum import Enum
+from time import time
 import sys
 sys.path.append('../')
 sys.path.append('modules/')
@@ -10,15 +6,13 @@ from file_manager import create_directory
 from contract_creator import ContractCreator
 from echidna_runner import EchidnaRunner
 from echidna_config import EchidnaConfigFileData
-from contract_config import ConfigVariables, ConfigImporter
+from contract_config import ConfigVariables, ConfigImporter, Mode
 from output_printer import OutputPrinter
 from graph import Graph
 
 
 
-class Mode(Enum):
-    epa = "epa"
-    states = "states"
+
 
 # Función que se encarga de crear los contratos y correrlos.
 def create_run_and_print_on_without_splitting(config_variables):
@@ -62,14 +56,14 @@ def create_run_and_print_on(config_variables):
     return
 
 def logica_echidna_epa(config_variables):
-    config_variables.dir_name = f'echidna_output/{config_variables.contractFileName[:-4]}/{TEST_LIMIT}/epa' # -4 para sacarle el .sol
+    config_variables.dir_name = f'echidna_output_A/{config_variables.contractFileName[:-4]}/{TEST_LIMIT}/epa' # -4 para sacarle el .sol
     config_variables.dir = create_directory(config_variables.dir_name)
     # discard_unreachable_states(dir)
     create_run_and_print_on(config_variables)
 
 
 def logica_echidna_states(config_variables):
-    config_variables.dir_name = f'echidna_output/{config_variables.contractFileName[:-4]}/{TEST_LIMIT}/states' # -4 para sacarle el .sol
+    config_variables.dir_name = f'echidna_output_A/{config_variables.contractFileName[:-4]}/{TEST_LIMIT}/states' # -4 para sacarle el .sol
     config_variables.dir = create_directory(config_variables.dir_name)
     create_run_and_print_on(config_variables)
 
