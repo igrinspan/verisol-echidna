@@ -1,0 +1,8 @@
+
+ --------------
+Resultados de init:
+ [[4, 0, 0]]
+
+Resultados de transitions:
+ [[4, 4, 4], [0, 0, 4]]
+
