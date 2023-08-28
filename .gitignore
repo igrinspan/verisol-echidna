@@ -4,4 +4,3 @@ __pycache__/
 .vscode/ 
 .idea/
 crytic-export/
-extra.py

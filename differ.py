@@ -1,6 +1,8 @@
-import filecmp
-import os
-import graphviz
+# Este script es para comparar los grafos de verisol con los de echidna.
+# Están hardcodeados nombres de los contratos y las carpetas donde buscar sus grafos.
+# Devuelve un JSON con los diff results que luego puede ser analizado con el notebook
+# que está en diffs.
+
 import pygraphviz as pgv
 import json
 
@@ -65,7 +67,7 @@ def main():
   contracts_to_compare = benchmark_contracts
   test_limits = [500, 50_000, 500_000]
   diff_all_graphs(contracts_to_compare, test_limits)
-  fileout = open("diff_results_0_8_0.json", "a")
+  fileout = open("diff_results.json", "a")
   json.dump(diff_results, fileout)
 
 if __name__ == "__main__":

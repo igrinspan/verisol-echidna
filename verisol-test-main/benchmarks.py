@@ -1,3 +1,7 @@
+# Script para correr los contratos con echidna y guardar los tiempos.
+# Los resultados (grafos) se guardan en la respectiva carpeta de cada contrato,
+# y eso después lo podemos analizar con el differ.py.
+
 import os
 import sys
 import subprocess
@@ -36,22 +40,24 @@ ignore_1 = [
 ]
 
 benchmark_2 = [
-	"Auction",
-	"Crowdfunding",
+	# "Auction",
+	# "Crowdfunding",
 	"EPXCrowdsale",
 	"EscrowVault",
-	"RefundEscrow",
-	"RockPaperScissors",
-	"SimpleAuction",
-	"ValidatorAuction",
+	# "RefundEscrow",
+	# "RockPaperScissors",
+	# "SimpleAuction",
+	# "ValidatorAuction",
 ]
 
 ignore_2 = [	
-    ("Auction", 's'),  # Tiene el problema de la variable State, que no existe en el contrato.
-	("EPXCrowdsale", 'e'),  # Demoró 4 minutos con test limit 100
-	("EscrowVault", 'e'),  # Demoró 8 minutos con test limit 100
-	("ValidatorAuction", 'e'),  # Demoró horas con test limit 100.
-    ("ValidatorAuction", 's'),  # Tiene el problema de la variable State, que no existe en el contrato.
+    # ("Auction", 's'),  # Tiene el problema de la variable State, que no existe en el contrato.
+	# ("EPXCrowdsale", 'e'),  # Demoró 4 minutos con test limit 100
+	# ("EscrowVault", 'e'),  # Demoró 8 minutos con test limit 100
+	# ("ValidatorAuction", 'e'),  # Demoró horas con test limit 100.
+    # ("ValidatorAuction", 's'),  # Tiene el problema de la variable State, que no existe en el contrato.
+    ("EPXCrowdsale", 's'),  
+    ("EscrowVault", 's'),
 ]
 
 
@@ -81,12 +87,8 @@ def run_all_contracts(test_limit, contracts):
 def run_contract(contract, mode, test_limit):
     print(f"Running {contract} in {mode} mode with a test limit of: {test_limit}...")
     start_time = time.time()
-    command_to_run = (
-        f"python3 Tesis.py {contract}Config  -t -{mode} -echidna {test_limit}"
-    )
-    result = subprocess.check_call(
-        command_to_run, shell=True, cwd=dir, stdout=sys.stdout, stderr=subprocess.STDOUT
-    )
+    command_to_run = (f"python3 Tesis.py {contract}Config  -t -{mode} -echidna {test_limit}")
+    result = subprocess.check_call(command_to_run, shell=True, cwd=dir, stdout=sys.stdout, stderr=subprocess.STDOUT)
     time_taken_in_seconds = round(time.time() - start_time, 2)
     save_time(contract, mode, test_limit, time_taken_in_seconds)
 
@@ -115,7 +117,6 @@ def borrar_directorios():
 times = []
 
 def main():
-    # measure time
     start_time = time.time()
     contracts = [(contract, mode) for contract in benchmark_2 for mode in ['e', 's']]
     contracts_to_run = [c for c in contracts if c not in ignore_2]
@@ -123,10 +124,11 @@ def main():
     print(f"Skipping the following contracts: {ignore_2}")
     change_contract_versions(">=0.4.25 <0.9.0", [c[0] for c in contracts_to_run])
     run_all_contracts(500, contracts_to_run)
+    run_all_contracts(25_000, contracts_to_run)
     run_all_contracts(50_000, contracts_to_run)
-    run_all_contracts(500_000, contracts_to_run)
-    run_all_contracts(1_000_000, contracts_to_run)
-    fileout = open("times_0_5_0", "a")
+    # run_all_contracts(500_000, contracts_to_run)
+    # run_all_contracts(1_000_000, contracts_to_run)
+    fileout = open("echidna_output_0_5_0/times", "a")
     json.dump(times, fileout)
 
 
