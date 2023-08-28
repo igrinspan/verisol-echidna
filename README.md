@@ -1,12 +1,13 @@
 # verisol-echidna
 
-### Para correr el script de python (desde verisol-test-main)
+### Para correr el script de python (desde scripts)
 ```
-    python3 Tesis.py CrowdfundingTimeBalanceConfig  -echidna
+    python3 Tesis.py CrowdfundingTimeBalanceConfig  -echidna 50000
 ```
 
 
-Debemos cambiar el path.
+
+(Hay un path absoluto ahí adentro, hay que cambiarlo).
 
 #### Comando de echidna para correr un contrato y que devuelva directamente por consola
 Podemos ignorar la config file y directamente poner los valores de cada configuración dentro del comando. Tipo:
@@ -17,7 +18,7 @@ Podemos ignorar la config file y directamente poner los valores de cada configur
 
 El `--format 'text'` hace que no imprima la interfaz interactiva, sino que devuelve los resultados directamente por consola.
 
-Para crowdfunding nos sirve variar también el maxValue y el balanceContract, (maxValue: 100, balanceContract: 0)
+En algunos casos nos sirve variar también el maxValue y el balanceContract, (maxValue: 100, balanceContract: 0)
 
 ### Flags de echidna
 ```
