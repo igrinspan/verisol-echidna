@@ -14,52 +14,55 @@ dir = os.getcwd()
 
 # python3 Tesis.py RandomContractConfig  -v -s -echidna
 
-benchmark_1 = [
-	"AssetTransfer",
-	"BasicProvenance",
-	"DefectiveComponentCounter",
-	"DigitalLocker",
-	"FrequentFlyerRewardsCalculator",
-    "HelloBlockchain",
-    "RefrigeratedTransportation",
-    "RoomThermostat",
-    "SimpleMarketplace",
-	"AssetTransferFixed",
-	"BasicProvenanceFixed",
-    "DefectiveComponentCounterFixed",
-	"DigitalLockerFixed",
-    "HelloBlockchainFixed",
-    "RefrigeratedTransportationFixed",
-    "SimpleMarketplaceFixed",
-]
+benchmarks = { 
+    1: {
+        "contracts": [
+            "AssetTransfer",
+            "BasicProvenance",
+            "DefectiveComponentCounter",
+            "DigitalLocker",
+            "FrequentFlyerRewardsCalculator",
+            "HelloBlockchain",
+            "RefrigeratedTransportation",
+            "RoomThermostat",
+            "SimpleMarketplace",
+            "AssetTransferFixed",
+            "BasicProvenanceFixed",
+            "DefectiveComponentCounterFixed",
+            "DigitalLockerFixed",
+            "HelloBlockchainFixed",
+            "RefrigeratedTransportationFixed",
+            "SimpleMarketplaceFixed",
+        ],
+        "ignore": [
+            ("AssetTransfer", 'e'),
+            ("DigitalLocker", 'e'),
+            ("AssetTransferFixed", 'e'),
+            ("DigitalLockerFixed", 'e'),
+        ],
+    },
 
-ignore_1 = [
-   ("AssetTransfer", 'e'),
-   ("DigitalLocker", 'e'),
-   ("AssetTransferFixed", 'e'),
-   ("DigitalLockerFixed", 'e'),
-]
+    2: {
+        "contracts": [
+            "Auction",
+            "Crowdfunding",
+            "EPXCrowdsale",
+            "EscrowVault",
+            "RefundEscrow",
+            "RockPaperScissors",
+            "SimpleAuction",
+            "ValidatorAuction",
+        ],
+        "ignore": [
+            ("Auction", 's'),  # Tiene el problema de la variable State, que no existe en el contrato.
+            # ("EPXCrowdsale", 'e'),  # Demoró 4 minutos con test limit 100
+            # ("EscrowVault", 'e'),  # Demoró 8 minutos con test limit 100
+            ("ValidatorAuction", 'e'),  # Demoró horas con test limit 100. Tiene 57.000 queries.
+            ("ValidatorAuction", 's'),  # Tiene el problema de la variable State, que no existe en el contrato.
+        ],
+    }
+}
 
-benchmark_2 = [
-	# "Auction",
-	# "Crowdfunding",
-	"EPXCrowdsale",
-	"EscrowVault",
-	# "RefundEscrow",
-	# "RockPaperScissors",
-	# "SimpleAuction",
-	# "ValidatorAuction",
-]
-
-ignore_2 = [	
-    # ("Auction", 's'),  # Tiene el problema de la variable State, que no existe en el contrato.
-	# ("EPXCrowdsale", 'e'),  # Demoró 4 minutos con test limit 100
-	# ("EscrowVault", 'e'),  # Demoró 8 minutos con test limit 100
-	# ("ValidatorAuction", 'e'),  # Demoró horas con test limit 100.
-    # ("ValidatorAuction", 's'),  # Tiene el problema de la variable State, que no existe en el contrato.
-    ("EPXCrowdsale", 's'),  
-    ("EscrowVault", 's'),
-]
 
 
 def change_contract_versions(version, contracts):
@@ -68,11 +71,10 @@ def change_contract_versions(version, contracts):
         lines = find_and_replace_versions(c, version)
         c = open(f"Contracts/{contract}.sol", "w")
         c.writelines(lines)
-
+        
 
 def find_and_replace_versions(contract, version):
     lines = contract.readlines()
-
     for i in range(len(lines)):
         if "pragma solidity" in lines[i]:
             lines[i] = f"pragma solidity {version};\n"
@@ -88,7 +90,7 @@ def run_all_contracts(test_limit, contracts):
 def run_contract(contract, mode, test_limit):
     print(f"Running {contract} in {mode} mode with a test limit of: {test_limit}...")
     start_time = time.time()
-    command_to_run = (f"python3 Tesis.py {contract}Config  -t -{mode} -echidna {test_limit}")
+    command_to_run = (f"python3 echidna.py {contract}Config  -t -{mode} -echidna {test_limit}")
     result = subprocess.check_call(command_to_run, shell=True, cwd=dir, stdout=sys.stdout, stderr=subprocess.STDOUT)
     time_taken_in_seconds = round(time.time() - start_time, 2)
     save_time(contract, mode, test_limit, time_taken_in_seconds)
@@ -115,22 +117,27 @@ def save_time(contract, mode, test_limit, time_taken_in_seconds):
 #           shutil.rmtree(f'{f}/{new_level_filename}')
 
 
+def run_benchmark(benchmark):
+    contracts = benchmarks[benchmark]["contracts"]
+    contracts = [(c, mode) for c in contracts for mode in ['e', 's']]
+    contracts_to_run = [c for c in contracts if c not in benchmarks[benchmark]["ignore"]]
+    print(f"Skipping the following contracts: {benchmarks[benchmark]['ignore']}")
+    print(f"Running the following contracts: {contracts_to_run}")
+    change_contract_versions(">=0.4.25 <0.9.0", [c[0] for c in contracts_to_run])
+    run_all_contracts(500, contracts_to_run)
+    run_all_contracts(50_000, contracts_to_run)
+    run_all_contracts(500_000, contracts_to_run)
+    run_all_contracts(1_000_000, contracts_to_run)
+    fileout = open(f"../results/echidna_output_benchmark_{benchmark}/times", "a")
+    json.dump(times, fileout)
+
+
 times = []
 
 def main():
-    start_time = time.time()
-    contracts = [(contract, mode) for contract in benchmark_2 for mode in ['e', 's']]
-    contracts_to_run = [c for c in contracts if c not in ignore_2]
-    print(contracts_to_run)
-    print(f"Skipping the following contracts: {ignore_2}")
-    change_contract_versions(">=0.4.25 <0.9.0", [c[0] for c in contracts_to_run])
-    run_all_contracts(500, contracts_to_run)
-    run_all_contracts(25_000, contracts_to_run)
-    run_all_contracts(50_000, contracts_to_run)
-    # run_all_contracts(500_000, contracts_to_run)
-    # run_all_contracts(1_000_000, contracts_to_run)
-    fileout = open("../results/echidna_output_0_5_0/times", "a")
-    json.dump(times, fileout)
+    print("Descomentar la línea del benchmark que se quiere correr.")
+    # run_benchmark(1)
+    # run_benchmark(2)
 
 
 if __name__ == "__main__":
