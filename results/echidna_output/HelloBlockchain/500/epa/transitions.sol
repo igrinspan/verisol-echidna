@@ -25,11 +25,6 @@ contract HelloBlockchain {
 		assert(!(true && true&& true));
 	}
 
-    function vc0x0x2(uint256 a) hasInitialized payable public {
-		require(true);
-		prueba();
-		assert(false);
-	}
      //Set of States
     enum StateType { Request, Respond}
 
@@ -70,9 +65,5 @@ contract HelloBlockchain {
         // call ContractUpdated() to record this action
         ResponseMessage = responseMessage;
         State = StateType.Respond;
-    }
-
-    function prueba() public pure returns(bool){
-        return true;
     }
 }
