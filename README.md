@@ -1,6 +1,6 @@
 # verisol-echidna
 
-### Para correr el script de python (desde scripts)
+### Para correr el script de python (desde la carpeta app)
 ```
     python3 Tesis.py <ArchivoConfigDelContrato>  -echidna <TestLimit>
 ```
