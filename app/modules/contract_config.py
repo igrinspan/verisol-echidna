@@ -2,6 +2,13 @@ from dataclasses import dataclass
 from enum import Enum
 import itertools
 
+# Clases:
+# - Mode (epa o states)
+# - ConfigImporter: agarra el ContractConfig y se guarda todos los datos necesarios para la ejecución en un objeto de tipo ConfigVariables.
+# - ConfigVariables
+# - VerisolExecutionHistory: para guardar la cantidad de timeouts y corral fails.
+
+
 class Mode(Enum):
     epa = "epa"
     states = "states"
@@ -12,6 +19,17 @@ class ConfigImporter:
         self.contract_config_file = contract_config_file
         self.config_variables = config_variables_object
 
+    def config_variables_setup(self, mode):
+        # Traemos los datos del archivo Config del contrato que vamos a analizar.
+        self.import_config_variables()  # es lo mismo que el make_global_variables.
+
+        # Esta función define states, preconditions y extraconditions, dependiendo del modo.
+        funciones_numeros = list(range(1, len(self.config_variables.functions) + 1))
+        self.prepare_variables(mode, funciones_numeros)
+        self.config_variables.mode = mode
+
+        return self.config_variables
+
     def import_config_variables(self):
         c = self.contract_config_file
         self.config_variables.fileName = "Contracts/" + c.fileName
@@ -19,52 +37,47 @@ class ConfigImporter:
         self.config_variables.functions = c.functions
         self.config_variables.statePreconditions = c.statePreconditions
         self.config_variables.statesNames = c.statesNamesModeState
-        self.config_variables.statePreconditions = c.statePreconditions
         self.config_variables.contractName = c.contractName
         self.config_variables.functionVariables = c.functionVariables
         self.config_variables.functionPreconditions = c.functionPreconditions
-        self.config_variables.statePreconditionsModeState = c.statePreconditionsModeState
-        self.config_variables.statesModeState = c.statesModeState
 
     # Se ejecuta en el main para cargar las variables preconditions, states y extraConditions, dependiendo del modo.
-    def prepare_variables(self, mode, funcionesNumeros):
+    def prepare_variables(self, mode, funciones_numeros):
         if mode == Mode.epa:
-            self.update_variables_for_epa_mode(funcionesNumeros)
+            self.update_variables_for_epa_mode(funciones_numeros)
         else:
             self.update_variables_for_states_mode()
 
-        self.config_variables.preconditionsThreads = self.config_variables.preconditions
-        self.config_variables.statesThreads = self.config_variables.states
-        self.config_variables.extraConditionsThreads = self.config_variables.extraConditions
-
-    def update_variables_for_epa_mode(self, funcionesNumeros):
-        self.config_variables.states = self.getCombinations(funcionesNumeros)
-        self.config_variables.preconditions = self.getPreconditions(funcionesNumeros)
+    def update_variables_for_epa_mode(self, funciones_numeros):
+        self.config_variables.states = self.getCombinations(funciones_numeros)
+        self.config_variables.preconditions = self.getPreconditions(funciones_numeros)
         try:
-            self.config_variables.extraConditions = [self.contract_config_file.epaExtraConditions for i in range(len(self.config_variables.states))]
-        except:
-            self.config_variables.extraConditions = ["true" for i in range(len(self.config_variables.states))]
+            self.config_variables.extraConditions = [
+                self.contract_config_file.epaExtraConditions for _ in range(len(self.config_variables.states))
+            ]
+        except Exception:
+            self.config_variables.extraConditions = ["true" for _ in range(len(self.config_variables.states))]
 
     def update_variables_for_states_mode(self):
-        self.config_variables.preconditions = self.config_variables.statePreconditionsModeState
-        self.config_variables.states = self.config_variables.statesModeState
+        self.config_variables.preconditions = self.contract_config_file.statePreconditionsModeState
+        self.config_variables.states = self.contract_config_file.statesModeState
         try:
             self.config_variables.extraConditions = self.contract_config_file.statesExtraConditions
-        except:
-            self.config_variables.extraConditions = ["true" for i in range(len(self.config_variables.states))]
+        except Exception:
+            self.config_variables.extraConditions = ["true" for _ in range(len(self.config_variables.states))]
 
-    def getCombinations(self, funcionesNumeros):
+    def getCombinations(self, funciones_numeros):
         truePreconditions = []
         results = []
         statesTemp = []
-        count = len(funcionesNumeros)
+        count = len(funciones_numeros)
         for index, statePrecondition in enumerate(self.config_variables.statePreconditions):
             if statePrecondition == "true":
                 truePreconditions.append(index + 1)
 
         # Combinations
-        for L in range(len(funcionesNumeros) + 1):
-            for subset in itertools.combinations(funcionesNumeros, L):
+        for L in range(len(funciones_numeros) + 1):
+            for subset in itertools.combinations(funciones_numeros, L):
                 isTrue = True
                 for truePre in truePreconditions:
                     if truePre not in subset:
@@ -74,14 +87,14 @@ class ConfigImporter:
 
         for partialResult in results:
             paddingResult = []
-            paddingResult = [0 for i in range(count)] 
+            paddingResult = [0 for i in range(count)]
             for i in range(count):
-                if len(partialResult) > i and partialResult[i] >=0:
+                if len(partialResult) > i and partialResult[i] >= 0:
                     indice = partialResult[i]
-                    paddingResult[indice-1] = indice
+                    paddingResult[indice - 1] = indice
             statesTemp.append(paddingResult)
         statesTemp2 = []
-        
+
         for combination in statesTemp:
             isCorrect = True
             for iNumber, number in enumerate(combination):
@@ -90,25 +103,25 @@ class ConfigImporter:
                         if number == 0:
                             if self.config_variables.statePreconditions[iNumber] == x and combination[idx] != 0:
                                 isCorrect = False
-                        elif self.config_variables.statePreconditions[iNumber] == x and not((idx+1) in combination):
+                        elif self.config_variables.statePreconditions[iNumber] == x and not ((idx + 1) in combination):
                             isCorrect = False
-            
+
             if isCorrect:
                 statesTemp2.append(combination)
-                
+
         return statesTemp2
 
-    def getPreconditions(self, funcionesNumeros):
+    def getPreconditions(self, funciones_numeros):
         preconditions = []
         for result in self.config_variables.states:
             precondition = ""
-            for number in funcionesNumeros:
+            for number in funciones_numeros:
                 if precondition != "":
                     precondition += " && "
                 if number in result:
-                    precondition += self.config_variables.statePreconditions[number-1]
+                    precondition += self.config_variables.statePreconditions[number - 1]
                 else:
-                    precondition += "!(" + self.config_variables.statePreconditions[number-1] + ")"
+                    precondition += "!(" + self.config_variables.statePreconditions[number - 1] + ")"
             preconditions.append(precondition)
         return preconditions
 
@@ -121,16 +134,21 @@ class ConfigVariables:
     functions: list = None
     functionVariables: list = None
     functionPreconditions: list = None
-    statesThreads: list = None
-    preconditionsThreads: list = None
-    extraConditionsThreads: list = None
     contractName: str = None
     contractFileName: str = None
     fileName: str = None
     statePreconditions: list = None
     statesNames: list = None
-    statePreconditionsModeState: list = None
-    statesModeState: list = None
-    dir: str = None
-    dir_name: str = None
-    mode: Mode = None
+
+    dir: str = None # No debería ir acá.
+    dir_name: str = None # No debería ir acá.
+    mode: Mode = None # No debería ir acá.
+
+
+@dataclass
+class VerisolExecutionHistory:
+    # Estas 3 se usan sólo en try_command y en el main. Nos interesa cómo van cambiando. 
+    # Se incrementan en try_command y se imprimen al final.
+    number_to: int = 0 # Se usa para contar la cantidad de TimeOuts totales. Se incrementa en try_command y se imprime al final del main.
+    number_corral_fail: int = 0 # Lo mismo pero para la cantidad de fails de corral.
+    number_corral_fail_with_tackvars: int = 0 # Lo mismo pero para la cantidad de fails de corral con trackvars.

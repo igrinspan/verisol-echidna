@@ -1,5 +1,24 @@
 # verisol-echidna
 
+### Correr (desde la carpeta app)
+```
+    python3 main.py <contract-config-file> <mode> <tool> [tool specific options]
+```
+
+Por ejemplo:
+- python3 main.py RoomThermostatConfig e verisol txbound=4 time_out=30
+- python3 main.py RoomThermostatConfig s echidna test_limit=100000
+
+(Uso solc-select para instalar y cambiar la versión de Solidity. Actualmente lo estoy corriendo con la 0.8.0)  
+
+#### Resultados
+
+El grafo resultante se guarda en el directorio results, con el path:
+`{tool}_output/contract/mode/budget`, donde budget es txbound si corremos VeriSol y test_limit si corremos echidna.
+
+En esa carpeta también se guardan los contratos que fueron ejecutados para resolver las queries y todos los archivos que escupe VeriSol de Boogie y Corral.
+
+
 ### Para correr el script de python (desde la carpeta app)
 ```
     python3 Tesis.py <ArchivoConfigDelContrato>  -echidna <TestLimit>

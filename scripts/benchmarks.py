@@ -14,7 +14,7 @@ dir = os.getcwd()
 
 # python3 Tesis.py RandomContractConfig  -v -s -echidna
 
-benchmarks = { 
+benchmarks = {
     1: {
         "contracts": [
             "AssetTransfer",
@@ -35,13 +35,12 @@ benchmarks = {
             "SimpleMarketplaceFixed",
         ],
         "ignore": [
-            ("AssetTransfer", 'e'),
-            ("DigitalLocker", 'e'),
-            ("AssetTransferFixed", 'e'),
-            ("DigitalLockerFixed", 'e'),
+            ("AssetTransfer", "e"),
+            ("DigitalLocker", "e"),
+            ("AssetTransferFixed", "e"),
+            ("DigitalLockerFixed", "e"),
         ],
     },
-
     2: {
         "contracts": [
             "Auction",
@@ -54,15 +53,14 @@ benchmarks = {
             "ValidatorAuction",
         ],
         "ignore": [
-            ("Auction", 's'),  # Tiene el problema de la variable State, que no existe en el contrato.
+            ("Auction", "s"),  # Tiene el problema de la variable State, que no existe en el contrato.
             # ("EPXCrowdsale", 'e'),  # Demoró 4 minutos con test limit 100
             # ("EscrowVault", 'e'),  # Demoró 8 minutos con test limit 100
-            ("ValidatorAuction", 'e'),  # Demoró horas con test limit 100. Tiene 57.000 queries.
-            ("ValidatorAuction", 's'),  # Tiene el problema de la variable State, que no existe en el contrato.
+            ("ValidatorAuction", "e"),  # Demoró horas con test limit 100. Tiene 57.000 queries.
+            ("ValidatorAuction", "s"),  # Tiene el problema de la variable State, que no existe en el contrato.
         ],
-    }
+    },
 }
-
 
 
 def change_contract_versions(version, contracts):
@@ -71,7 +69,7 @@ def change_contract_versions(version, contracts):
         lines = find_and_replace_versions(c, version)
         c = open(f"Contracts/{contract}.sol", "w")
         c.writelines(lines)
-        
+
 
 def find_and_replace_versions(contract, version):
     lines = contract.readlines()
@@ -90,7 +88,7 @@ def run_all_contracts(test_limit, contracts):
 def run_contract(contract, mode, test_limit):
     print(f"Running {contract} in {mode} mode with a test limit of: {test_limit}...")
     start_time = time.time()
-    command_to_run = (f"python3 echidna.py {contract}Config  -t -{mode} -echidna {test_limit}")
+    command_to_run = f"python3 echidna.py {contract}Config  -t -{mode} -echidna {test_limit}"
     result = subprocess.check_call(command_to_run, shell=True, cwd=dir, stdout=sys.stdout, stderr=subprocess.STDOUT)
     time_taken_in_seconds = round(time.time() - start_time, 2)
     save_time(contract, mode, test_limit, time_taken_in_seconds)
@@ -119,7 +117,7 @@ def save_time(contract, mode, test_limit, time_taken_in_seconds):
 
 def run_benchmark(benchmark):
     contracts = benchmarks[benchmark]["contracts"]
-    contracts = [(c, mode) for c in contracts for mode in ['e', 's']]
+    contracts = [(c, mode) for c in contracts for mode in ["e", "s"]]
     contracts_to_run = [c for c in contracts if c not in benchmarks[benchmark]["ignore"]]
     print(f"Skipping the following contracts: {benchmarks[benchmark]['ignore']}")
     print(f"Running the following contracts: {contracts_to_run}")
@@ -133,6 +131,7 @@ def run_benchmark(benchmark):
 
 
 times = []
+
 
 def main():
     print("Descomentar la línea del benchmark que se quiere correr.")

@@ -1,23 +1,13 @@
 fileName = "CrowdfundingT.sol"
 contractName = "Crowdfunding"
-functions = [
-    "Donate();",
-    "GetFunds();",
-    "Claim();",
-    "t();"
-]
+functions = ["Donate();", "GetFunds();", "Claim();", "t();"]
 statePreconditions = [
     "(max_block > blockNumber)",
     "(max_block < blockNumber && goal <= balance)",
     "(max_block < blockNumber && !funded && goal > balance)",
-    "true"
+    "true",
 ]
-functionPreconditions = [
-    "backers[msg.sender] == 0",
-    "msg.sender == owner",
-    "backers[msg.sender] != 0",
-    "true"
-]
+functionPreconditions = ["backers[msg.sender] == 0", "msg.sender == owner", "backers[msg.sender] != 0", "true"]
 functionVariables = ""
 tool_output = "Found a counterexample"
 
