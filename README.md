@@ -5,9 +5,14 @@
     python3 main.py <contract-config-file> <mode> <tool> [tool specific options]
 ```
 
+[options]: txbound=..., time_out=..., test_limit=... 
+
 Por ejemplo:
+
 - python3 main.py RoomThermostatConfig e verisol txbound=4 time_out=30
 - python3 main.py RoomThermostatConfig s echidna test_limit=100000
+
+Por ahora test_limit y txbound son obligatorios (una cuando corremos echidna y la otra cuando corremos verisol), porque los estoy usando para definir el directorio donde se guardan los resultados.
 
 (Uso solc-select para instalar y cambiar la versión de Solidity. Actualmente lo estoy corriendo con la 0.8.0)  
 
