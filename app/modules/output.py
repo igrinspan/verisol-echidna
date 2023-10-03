@@ -7,7 +7,7 @@ class Graph:
         self.dir = config_variables.dir
         self.config_variables = config_variables
 
-    def build_graph(self, transition_tests_that_failed, init_tests_that_failed):
+    def build_graph(self, init_tests_that_failed, transition_tests_that_failed):
         # xxx_tests_that_failed = [   ([s1, s2, f], " "), ..., ([s1, s2, f], "?")])   ]
         self.add_failed_tests_init(init_tests_that_failed)
         self.add_failed_tests_transition(transition_tests_that_failed)
@@ -76,6 +76,15 @@ class OutputPrinter:
                     self.config_variables.states,
                     self.config_variables,
                 )  # print_output recibe como segundo param la función y tercero el assert.
+
+    def print_verisol_fails(self, verisol_fails):
+        total_to = "# Time Out: {}".format(str(verisol_fails.number_to))
+        total_cfail1 = "# Corral Fail without trackvars: {}".format(str(verisol_fails.number_corral_fail))
+        total_cfail2 = "# Corral Fail with trackvars: {}".format(str(verisol_fails.number_corral_fail_with_tackvars))
+        
+        print(total_to)
+        print(total_cfail1)
+        print(total_cfail2)
 
 
 def print_output(id_prec_require, id_function, id_prec_assert, combinations, full_combination, config_variables):

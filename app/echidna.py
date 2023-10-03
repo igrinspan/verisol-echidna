@@ -27,7 +27,7 @@ def create_run_and_print_on(config_variables):
         tr_failed += EchidnaRunner(config_variables, contract, transitions_config_params).run_contract()
 
     OutputPrinter(config_variables).print_results(tr_failed, init_failed)
-    Graph(config_variables).build_graph(tr_failed, init_failed)
+    Graph(config_variables).build_graph(init_failed, tr_failed)
 
 
 

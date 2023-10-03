@@ -30,9 +30,8 @@ def create_config_variables():
     config_variables = importer.config_variables_setup(mode)
     return config_variables
 
+# TODO: lógica de cantidad de contratos y threads.
 def set_thread_and_contracts_count():
-    # TODO: lógica de cantidad de contratos y threads.
-    print("Implementar bien el set_thread_and_contracts_count")
     if tool == "echidna":
         threads_count = 16
         contracts_count = 8
@@ -43,7 +42,7 @@ def set_thread_and_contracts_count():
     return threads_count, contracts_count
 
 # Crea los threads y cada uno corre reduceCombinations.
-def reduce_combinations(config_variables, threads_count, verisol_fails):
+def discard_unreachable_states(config_variables, threads_count, verisol_fails):
     preconditionsThreads = np.array_split(config_variables.preconditions, threads_count)
     statesThreads = np.array_split(config_variables.states, threads_count)
     extraConditionsThreads = []
@@ -53,7 +52,7 @@ def reduce_combinations(config_variables, threads_count, verisol_fails):
     verisol_config = VerisolConfigData(4, None)
 
     count_pre_initial = len(config_variables.preconditions)
-    # Corremos reduce_combinations.
+    # Corremos discard_unreachable_states.
     threads = []
     results = {'preconditions': [None]*threads_count, 'states': [None]*threads_count, 'extra_conditions': [None]*threads_count}
     for i in range(threads_count):
@@ -74,7 +73,7 @@ def reduce_combinations(config_variables, threads_count, verisol_fails):
     if len(new_extra) != 0:
         new_extra = np.concatenate(new_extra)
 
-    print("----Resultados luego de correr reduce_combinations----")
+    print("----Resultados luego de correr discard_unreachable_states----")
     print(new_pre)
     print(new_states)
     print(new_extra)
@@ -131,7 +130,6 @@ def echidna_execution_logic(config_variables, init_contract_to_run, transitions_
     return init_failed, tr_failed
 
 def verisol_execution_logic(config_variables, init_contract_to_run, transitions_contracts_to_run, verisol_config, verisol_fails, threads_count, queries_per_contract, init_queries_names):
-    
     # Valid INIT
     tool_command = f"VeriSol {init_contract_to_run} {config_variables.contractName}"
     init_failed = VerisolRunner(config_variables, init_contract_to_run, verisol_config, verisol_fails).try_init(tool_command, init_queries_names, config_variables.dir)
@@ -155,19 +153,11 @@ def verisol_execution_logic(config_variables, init_contract_to_run, transitions_
     for thread in threads:
         thread.join()
 
-    print(f"Init failed: {init_failed}")
-    results_2 = list(filter(lambda item: item is not None, results))
-    tr_failed = [item for sublist in results_2 for item in sublist]
-    # print(f"Transitions failed: {results}")
-    print(f"Transitions failed: {tr_failed}")
+    # results = [ [(vc0x0x1, ""), (vc3x0x2, "?")], None, None, [...], ... ]
+    results_filtered = list(filter(lambda item: item is not None, results)) # filter None
+    tr_failed = [item for sublist in results_filtered for item in sublist] # flatten
 
-    total_to = "# Time Out: {}".format(str(verisol_fails.number_to))
-    total_cfail1 = "# Corral Fail without trackvars: {}".format(str(verisol_fails.number_corral_fail))
-    total_cfail2 = "# Corral Fail with trackvars: {}".format(str(verisol_fails.number_corral_fail_with_tackvars))
-    
-    print(total_to)
-    print(total_cfail1)
-    print(total_cfail2)
+    OutputPrinter(config_variables).print_verisol_fails(verisol_fails)
 
     return init_failed, tr_failed
 
@@ -181,15 +171,15 @@ def main():
     config_variables.dir_name = f"../results/{tool}_output/{config_variables.contractFileName[:-4]}/{mode.name}/{budget}"
     config_variables.dir = create_directory(config_variables.dir_name) # devuelve el path completo.
 
-    threads_count, contracts_count = set_thread_and_contracts_count() # Para el reduce_combinations.
+    threads_count, contracts_count = set_thread_and_contracts_count() # Para el discard_unreachable_states.
 
     # En VeriSol, creamos un contrato por thread. O sea contracts_count = threads_count.
     # En Echidna, creamos una cierta cantidad de contratos dependiendo de la cantidad de queries que tengamos. (ej: > 100 queries).
 
-    # Hacemos lo de reduce_combinations (sólo con VeriSol?) y actualizamos variables.
+    # Hacemos lo de discard_unreachable_states (sólo con VeriSol?) y actualizamos variables.
     verisol_fails = VerisolExecutionHistory()
     if mode == Mode.epa: # and tool == "verisol": 
-        reduce_combinations(config_variables, threads_count, verisol_fails)
+        discard_unreachable_states(config_variables, threads_count, verisol_fails)
 
     # Volvemos a calcular la cantidad de queries para definir cuántos contratos distintos vamos a correr.
     threads_count, contracts_count = set_thread_and_contracts_count()
@@ -217,7 +207,7 @@ def main():
     print(f"Init failed: {init_failed}")
     print(f"Transitions failed: {tr_failed}")
 
-    Graph(config_variables).build_graph(tr_failed, init_failed)
+    Graph(config_variables).build_graph(init_failed, tr_failed)
 
 
 
@@ -228,8 +218,9 @@ if __name__ == "__main__":
 
     start = time()
 
-    txBound = None # VeriSol. Si no se pasan como parámetro, se inicializan en el configImporter.
+    txBound = 4 # VeriSol. Si no se pasan como parámetro, se inicializan en el configImporter.
     time_out = None # VeriSol
+    test_limit = 50000 # Echidna
     
     verbose = False # Execution. Por ahora no se usan. Quedaron las dos medio desactualizadas, ¿no? Después veo si usarlas o no. 
     time_mode = False # Execution
@@ -238,10 +229,12 @@ if __name__ == "__main__":
     reducedTrue = True # Optimization
     reducedEqual = False # Optimization
 
-    # Podría crear un InputValidator.
     # Estas variables, como están definidas acá, son globales.
     # Faltan agregar las flags de las optimizaciones, el time_mode y el verbose.
     # Flags optimizaciones: -default, -rs, -rt, -re, -rte, -ra. 
+
+    # TODO: setear valores por default para los parámetros de VeriSol y Echidna,
+    # para cuando no se pasan como parámetros. No olvidarse de la variable budget.
     contract_config = sys.argv[1]
     if sys.argv[2] == "e":
         mode = Mode.epa
