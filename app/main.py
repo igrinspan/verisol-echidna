@@ -25,7 +25,7 @@ def create_config_variables():
 
     # Creamos el objeto que va a importar y hacer el setUp de esas variables. 
     config = __import__(contract_config, level=0)
-    importer = ConfigImporter(config, config_variables)
+    importer = ConfigImporter(config, config_variables, optimization_settings)
     
     config_variables = importer.config_variables_setup(mode)
     return config_variables
@@ -178,7 +178,7 @@ def main():
 
     # Hacemos lo de discard_unreachable_states (sólo con VeriSol?) y actualizamos variables.
     verisol_fails = VerisolExecutionHistory()
-    if mode == Mode.epa: # and tool == "verisol": 
+    if mode == Mode.epa and not(optimization_settings.reduced): # Optimización reduced.
         discard_unreachable_states(config_variables, threads_count, verisol_fails)
 
     # Volvemos a calcular la cantidad de queries para definir cuántos contratos distintos vamos a correr.
@@ -194,12 +194,12 @@ def main():
     tr_failed = []
     if tool == "echidna":  # Definimos los parámetros del config.yaml de echidna.
         init_failed, tr_failed = echidna_execution_logic(config_variables, init_contract_to_run, transitions_contracts_to_run, test_limit)
-    
+
     elif tool == "verisol":
         verisol_config = VerisolConfigData(txBound=txBound, time_out=time_out)
         init_failed, tr_failed = verisol_execution_logic(config_variables, init_contract_to_run, transitions_contracts_to_run, verisol_config, verisol_fails, threads_count, queries_per_contract, init_queries_names)
 
-        
+
 
     # OutputPrinter(config_variables).print_results(tr_failed, init_failed)
 
@@ -209,9 +209,28 @@ def main():
 
     Graph(config_variables).build_graph(init_failed, tr_failed)
 
+class Optimizer():
+    """ Clase para guardar las flags de optimización. """
+    def __init__(self):
+        self.reduced = False
+        self.reduced_true = True
+        self.reduced_equal = False
+        self.flag_mapping = {
+            "-rs": {"reduced": True},
+            "-rt": {"reduced_true": False},
+            "-re": {"reduced_equal": True},
+            "-rte": {"reduced_equal": True, "reduced_true": False},
+            "-ra": {"reduced_equal": True, "reduced_true": False, "reduced": True}
+        }
 
+    def __str__(self): 
+        return f"reduced: {self.reduced}\nreduced_true: {self.reduced_true}\nreduced_equal: {self.reduced_equal}"
 
-
+    def set_flags(self, flag):
+        if flag in self.flag_mapping:
+            flags_to_update = self.flag_mapping[flag]
+            for variable, value in flags_to_update.items():
+                setattr(self, variable, value)
 
 
 if __name__ == "__main__":
@@ -221,17 +240,15 @@ if __name__ == "__main__":
     txBound = 4 # VeriSol. Si no se pasan como parámetro, se inicializan en el configImporter.
     time_out = None # VeriSol
     test_limit = 50000 # Echidna
-    
-    verbose = False # Execution. Por ahora no se usan. Quedaron las dos medio desactualizadas, ¿no? Después veo si usarlas o no. 
+
+    verbose = False # Execution. Por ahora no se usan. Quedaron las dos medio desactualizadas, ¿no? 
     time_mode = False # Execution
 
-    reduced = False # Optimization. Queda la optimización -default.
-    reducedTrue = True # Optimization
-    reducedEqual = False # Optimization
+    optimization_settings = Optimizer()
 
     # Estas variables, como están definidas acá, son globales.
     # Faltan agregar las flags de las optimizaciones, el time_mode y el verbose.
-    # Flags optimizaciones: -default, -rs, -rt, -re, -rte, -ra. 
+    # Flags optimizaciones: -rs, -rt, -re, -rte, -ra.
 
     # TODO: setear valores por default para los parámetros de VeriSol y Echidna,
     # para cuando no se pasan como parámetros. No olvidarse de la variable budget.
@@ -251,7 +268,7 @@ if __name__ == "__main__":
                 raise InvalidParametersException("txbound is only available for VeriSol.")
             txBound = int(sys.argv[i].replace("txbound=","").strip())
             budget = txBound
-        if "time_out=" in sys.argv[i]:
+        elif "time_out=" in sys.argv[i]:
             if tool != "verisol":
                 raise InvalidParametersException("time_out is only available for VeriSol.")
             to = sys.argv[i].replace("time_out=","").strip()
@@ -259,19 +276,21 @@ if __name__ == "__main__":
                 time_out = None
             else:
                 time_out = float(to)
-
         # Parámetros extra de Echidna
-        if "test_limit=" in sys.argv[i]:
+        elif "test_limit=" in sys.argv[i]:
             if tool != "echidna":
                 raise InvalidParametersException("test_limit is only available for Echidna.")
             test_limit = int(sys.argv[i].replace("test_limit=","").strip())
             budget = test_limit
-
+        else:
+            optimization_flag = sys.argv[i]
+            optimization_settings.set_flags(optimization_flag)
 
     main()
 
     end = time()
     print(f"Tiempo total: {end - start}")
 
-    # En lo de Edén se creaba un nuevo archivo al finalizar la ejecución con el tiempo, la cantidad de timeouts, 
-    # y la cantidad de fails de corral (con y sin trackvars). Pero creo que no hace falta, era más para debug.
+    # En lo de Edén se creaba un nuevo archivo al finalizar la ejecución con el tiempo,
+    # la cantidad de timeouts, y la cantidad de fails de corral (con y sin trackvars).
+    # Pero creo que no hace falta, era más para debug.

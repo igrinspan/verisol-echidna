@@ -15,9 +15,10 @@ class Mode(Enum):
 
 
 class ConfigImporter:
-    def __init__(self, contract_config_file, config_variables_object):
+    def __init__(self, contract_config_file, config_variables_object, optimizations):
         self.contract_config_file = contract_config_file
         self.config_variables = config_variables_object
+        self.optimizations = optimizations
 
     def config_variables_setup(self, mode):
         # Traemos los datos del archivo Config del contrato que vamos a analizar.
@@ -78,13 +79,15 @@ class ConfigImporter:
         # Combinations
         for L in range(len(funciones_numeros) + 1):
             for subset in itertools.combinations(funciones_numeros, L):
-                isTrue = True
-                for truePre in truePreconditions:
-                    if truePre not in subset:
-                        isTrue = False
-                if isTrue == True:
+                if self.optimizations.reduced_true: # Optimización reduced_true
+                    is_true = True
+                    for true_pre in truePreconditions:
+                        if true_pre not in subset:
+                            is_true = False
+                    if is_true:
+                        results.append(subset)
+                else:
                     results.append(subset)
-
         for partialResult in results:
             paddingResult = []
             paddingResult = [0 for i in range(count)]
@@ -95,19 +98,23 @@ class ConfigImporter:
             statesTemp.append(paddingResult)
         statesTemp2 = []
 
-        for combination in statesTemp:
-            isCorrect = True
-            for iNumber, number in enumerate(combination):
-                for idx, x in enumerate(self.config_variables.statePreconditions):
-                    if iNumber != idx:
-                        if number == 0:
-                            if self.config_variables.statePreconditions[iNumber] == x and combination[idx] != 0:
+        # Sacamos estados en los que haya una función i y no haya otra función j tales que precondition[i] = precondition[j].
+        if not(self.optimizations.reduced_equal): # Optimización reduced_equal
+            for combination in statesTemp:
+                isCorrect = True
+                for iNumber, number in enumerate(combination):
+                    for idx, x in enumerate(self.config_variables.statePreconditions):
+                        if iNumber != idx:
+                            if number == 0:
+                                if self.config_variables.statePreconditions[iNumber] == x and combination[idx] != 0:
+                                    isCorrect = False
+                            elif self.config_variables.statePreconditions[iNumber] == x and not((idx+1) in combination):
                                 isCorrect = False
-                        elif self.config_variables.statePreconditions[iNumber] == x and not ((idx + 1) in combination):
-                            isCorrect = False
-
-            if isCorrect:
-                statesTemp2.append(combination)
+                
+                if isCorrect:
+                    statesTemp2.append(combination)
+        else:
+            statesTemp2 = statesTemp
 
         return statesTemp2
 
