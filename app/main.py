@@ -240,10 +240,13 @@ class Optimizer():
         return f"reduced: {self.reduced}\nreduced_true: {self.reduced_true}\nreduced_equal: {self.reduced_equal}"
 
     def set_flags(self, flag):
+        """ Setea las variables de optimización según la flag que se le pase """
         if flag in self.flag_mapping:
             flags_to_update = self.flag_mapping[flag]
             for variable, value in flags_to_update.items():
                 setattr(self, variable, value)
+        else:
+            raise InvalidParametersException("Unrecognized parameter.")
 
 
 if __name__ == "__main__":
