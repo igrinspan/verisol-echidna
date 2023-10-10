@@ -15,6 +15,8 @@ class Mode(Enum):
 
 
 class ConfigImporter:
+    """ Importa las variables del ContractConfig y las pepara según si estamos en 
+    modo epa o states """
     def __init__(self, contract_config_file, config_variables_object, optimizations):
         self.contract_config_file = contract_config_file
         self.config_variables = config_variables_object

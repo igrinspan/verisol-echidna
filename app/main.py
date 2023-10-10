@@ -1,19 +1,22 @@
+""" Main module """
+
 import sys
 from time import time
 import os
 from threading import Thread
 import numpy as np
 
+from modules.file_manager import create_directory, create_directory_2
+from modules.contract_creation import ContractCreatorFactory, VerisolContractCreator
+from modules.tools_configs import EchidnaConfigData, VerisolConfigData
+from modules.tools_runners import EchidnaRunner, VerisolRunner
+from modules.contract_config import ConfigVariables, ConfigImporter, Mode, VerisolExecutionHistory
+from modules.output import Graph, OutputPrinter
+
 sys.path.append("../")
 sys.path.append("Configs")
 sys.path.append("modules/")
 
-from file_manager import create_directory, create_directory_2
-from contract_creation import ContractCreatorFactory, VerisolContractCreator
-from tools_configs import EchidnaConfigData, VerisolConfigData
-from tools_runners import EchidnaRunner, VerisolRunner
-from contract_config import ConfigVariables, ConfigImporter, Mode, VerisolExecutionHistory
-from output import Graph, OutputPrinter
 
 class InvalidParametersException(Exception):
     pass
@@ -43,11 +46,12 @@ def set_thread_and_contracts_count():
 
 # Crea los threads y cada uno corre reduceCombinations.
 def discard_unreachable_states(config_variables, threads_count, verisol_fails):
-    preconditionsThreads = np.array_split(config_variables.preconditions, threads_count)
-    statesThreads = np.array_split(config_variables.states, threads_count)
-    extraConditionsThreads = []
+    """ Corre el reduceCombinations de VeriSol para descartar estados espurios/inalcanzables """
+    preconditions_per_thread = np.array_split(config_variables.preconditions, threads_count)
+    states_per_thread = np.array_split(config_variables.states, threads_count)
+    extra_cond_per_thread = []
     if len(config_variables.extraConditions) != 0:
-        extraConditionsThreads = np.array_split(config_variables.extraConditions, threads_count)
+        extra_cond_per_thread = np.array_split(config_variables.extraConditions, threads_count)
 
     verisol_config = VerisolConfigData(4, None)
 
@@ -55,15 +59,21 @@ def discard_unreachable_states(config_variables, threads_count, verisol_fails):
     # Corremos discard_unreachable_states.
     threads = []
     results = {'preconditions': [None]*threads_count, 'states': [None]*threads_count, 'extra_conditions': [None]*threads_count}
-    for i in range(threads_count):
-        thread = Thread(target = reduceCombinations, args = [config_variables, verisol_config, verisol_fails, preconditionsThreads[i], statesThreads[i], extraConditionsThreads[i], i, results])
+    for tid in range(threads_count):
+        thread = Thread(target = reduceCombinations, args = [config_variables, verisol_config, verisol_fails, preconditions_per_thread[tid], states_per_thread[tid], extra_cond_per_thread[tid], tid, results])
         thread.start()
         threads.append(thread)
 
     for thread in threads:
         thread.join()
 
-    # Actualizamos las variables (preconditions, states y extra_conditions).
+    config_variables = update_variables_after_reduce_combinations(config_variables, results)
+    save_results_in_file(config_variables, count_pre_initial)
+
+    print("Acá termina el reduceCombinations de VeriSol.")
+
+def update_variables_after_reduce_combinations(config_variables, results):
+    """ Se actualizan preconditions, states y extra_conditions """
     new_pre = [x for x in results["preconditions"] if x]
     new_states = [x for x in results["states"] if x]
     new_extra = [x for x in results["extra_conditions"] if x]
@@ -80,20 +90,21 @@ def discard_unreachable_states(config_variables, threads_count, verisol_fails):
 
     config_variables.preconditions = new_pre
     config_variables.states = new_states
-    config_variables.extraConditions = new_extra 
+    config_variables.extraConditions = new_extra
 
-    # Guardamos los resultados en un archivo.
+    return config_variables 
+
+def save_results_in_file(config_variables, count_pre_initial):
+    """ Devolvemos los resultados del reduce_combinations en un archivo """
     count_pre_final = len(config_variables.preconditions)
     temp_dir = create_directory_2(config_variables.dir, "temp")
     temp_dir = os.path.join(temp_dir, contract_config + "-" + str(mode) + ".txt")
-    f = open(temp_dir, "w")
-    f.write(str(count_pre_initial) + "\n" + str(count_pre_final) + "\n" + str(len(config_variables.functions)))
-    f.close()
-    print("Acá termina el reduceCombinations de VeriSol.")
+    with open(temp_dir, "w", encoding="utf-8") as f:
+        f.write(str(count_pre_initial) + "\n" + str(count_pre_final) + "\n" + str(len(config_variables.functions)))
 
 def reduceCombinations(config_variables, verisol_config, verisol_fails, preconditions, states, extra_conditions, thread_id, results):
     if len(preconditions) == 0:
-        # print(f"Soy el thread {thread_id} y no tengo preconditions.")
+        print(f"Soy el thread {thread_id} y no tengo preconditions para testear.")
         return
 
     # Llamamos a create_preconditions_contract(preconditions, extra_conditions, thread_id)
@@ -118,6 +129,7 @@ def validCombinations(config_variables, verisol_config, verisol_fails, contract_
     results[thread_id] = resultado
 
 def echidna_execution_logic(config_variables, init_contract_to_run, transitions_contracts_to_run, test_limit):
+    """ Corre los contratos con Echidna. Para eso prepara la configFile y llama al EchidnaRunner """
     init_failed = []
     tr_failed = []
     init_config_params = EchidnaConfigData(testLimit=test_limit, workers=16, format="text")
@@ -130,6 +142,7 @@ def echidna_execution_logic(config_variables, init_contract_to_run, transitions_
     return init_failed, tr_failed
 
 def verisol_execution_logic(config_variables, init_contract_to_run, transitions_contracts_to_run, verisol_config, verisol_fails, threads_count, queries_per_contract, init_queries_names):
+    """ Corre los contratos con VeriSol, llamando a ValidInit y a ValidCombiations"""
     # Valid INIT
     tool_command = f"VeriSol {init_contract_to_run} {config_variables.contractName}"
     init_failed = VerisolRunner(config_variables, init_contract_to_run, verisol_config, verisol_fails).try_init(tool_command, init_queries_names, config_variables.dir)
@@ -143,7 +156,7 @@ def verisol_execution_logic(config_variables, init_contract_to_run, transitions_
     for i in range(threads_count):
         queries_de_este_thread = queries_per_contract[i]
         if len(queries_de_este_thread) == 0:
-            # print(f"Soy el thread {i} y no tengo queries para validCombinations.")
+            print(f"Soy el thread {i} y no tengo queries para validCombinations.")
             continue
         contract_to_run = transitions_contracts_to_run[i]
         thread = Thread(target = validCombinations, args = [config_variables, verisol_config, verisol_fails, contract_to_run, queries_de_este_thread, i, results])

@@ -1,5 +1,5 @@
 import graphviz
-from contract_config import Mode
+from modules.contract_config import Mode
 
 class Graph:
     def __init__(self, config_variables):

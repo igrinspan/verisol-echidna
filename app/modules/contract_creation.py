@@ -1,8 +1,8 @@
 import numpy as np
-from file_manager import create_file, write_file, write_file_from_string, create_directory_2
-from contract_config import Mode
 import os
-from app.modules.file_manager import create_directory_2, create_file, write_file
+
+from modules.file_manager import create_file, write_file, write_file_from_string, create_directory_2
+from modules.contract_config import Mode
 
 # Clases: 
 # - ContractCreatorFactory

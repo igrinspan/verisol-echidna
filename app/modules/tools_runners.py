@@ -4,7 +4,8 @@ import re
 from dataclasses import asdict
 import subprocess
 import psutil
-from contract_config import Mode
+
+from modules.contract_config import Mode
 
 verbose = False
 verisol_output = "Found a counterexample"
