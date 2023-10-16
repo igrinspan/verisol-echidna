@@ -7,7 +7,7 @@ from threading import Thread
 import numpy as np
 
 from modules.file_manager import create_directory, create_directory_2
-from modules.contract_creation import ContractCreatorFactory, VerisolContractCreator
+from modules.contract_creation import ContractCreator, VerisolContractCreator
 from modules.tools_configs import EchidnaConfigData, VerisolConfigData
 from modules.tools_runners import EchidnaRunner, VerisolRunner
 from modules.contract_config import ConfigVariables, ConfigImporter, Mode, VerisolExecutionHistory
@@ -198,7 +198,7 @@ def main():
     threads_count, contracts_count = set_thread_and_contracts_count()
 
     # Creamos los contratos.
-    contract_creator = ContractCreatorFactory().create_contract_creator(tool, config_variables)
+    contract_creator = ContractCreator().create_contract_creator(config_variables, tool)
 
     init_contract_to_run, init_queries_names = contract_creator.create_init_contract()
     transitions_contracts_to_run, queries_per_contract = contract_creator.create_multiple_transitions_contracts(contracts_count)
@@ -246,7 +246,7 @@ class Optimizer():
             for variable, value in flags_to_update.items():
                 setattr(self, variable, value)
         else:
-            raise InvalidParametersException("Unrecognized parameter.")
+            raise InvalidParametersException(f"Unrecognized parameter: {flag}.")
 
 
 if __name__ == "__main__":
@@ -277,7 +277,7 @@ if __name__ == "__main__":
         raise InvalidParametersException("Invalid mode, must be 'e' or 's'.")
     tool = sys.argv[3]
 
-    for i in range(1, len(sys.argv)):
+    for i in range(4, len(sys.argv)): # los primeros 4 los ignoramos. Ya los usamos.
         # Parámetros extra de VeriSol
         if "txbound=" in sys.argv[i]:
             if tool != "verisol":

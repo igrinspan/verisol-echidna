@@ -5,7 +5,6 @@ from modules.file_manager import create_file, write_file, write_file_from_string
 from modules.contract_config import Mode
 
 # Clases: 
-# - ContractCreatorFactory
 # - ContractCreator (superclase)
 #   - EchidnaContractCreator
 #   - VerisolContractCreator
@@ -22,21 +21,16 @@ from modules.contract_config import Mode
 
 QUERIES_COUNT_THRESHOLD = 250
 
-class ContractCreatorFactory:  
-    def create_contract_creator(self, tool, config_variables_object):
+
+class ContractCreator:
+    def create_contract_creator(self, config_variables, tool):
         if tool == "verisol":
-            return VerisolContractCreator(config_variables_object)
+            return VerisolContractCreator(config_variables)
         elif tool == "echidna":
-            return EchidnaContractCreator(config_variables_object)
+            return EchidnaContractCreator(config_variables)
         else:
             raise Exception("Invalid tool name")
 
-
-class ContractCreator:
-    def __init__(self, config_variables):
-        self.directory = config_variables.dir
-        self.config_variables = config_variables
-        self.target_contract = config_variables.contractName
     
     def create_init_contract(self):
         # Method is implemented by subclass.
@@ -187,8 +181,10 @@ class ContractCreator:
 
 
 class EchidnaContractCreator(ContractCreator):
-    def __init__(self, config_variables_object):
-        super().__init__(config_variables_object)
+    def __init__(self, config_variables):
+        self.directory = config_variables.dir
+        self.config_variables = config_variables
+        self.target_contract = config_variables.contractName
 
     def create_init_contract(self):
         filename_temp = create_file("init", self.directory, self.config_variables.fileName, self.target_contract)
@@ -232,8 +228,10 @@ class EchidnaContractCreator(ContractCreator):
 
 
 class VerisolContractCreator(ContractCreator):
-    def __init__(self, config_variables_object):
-        super().__init__(config_variables_object)
+    def __init__(self, config_variables):
+        self.directory = config_variables.dir
+        self.config_variables = config_variables
+        self.target_contract = config_variables.contractName
 
     # Para hacer el discard_unreachable_states. En el modo EPA.
     def create_preconditions_contract(self, preconditions, extraconditions, thread_id):
