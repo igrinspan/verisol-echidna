@@ -132,7 +132,7 @@ class VerisolRunner:
                 command += "/ignoreMethod:vc"+ combi +"@" + self.config_variables.contractName + " "
         # print(command)
         return command
-    
+
 
 class EchidnaRunner:
     def __init__(self, config_variables, contract, config_file_params):

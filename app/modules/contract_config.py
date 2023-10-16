@@ -23,16 +23,17 @@ class ConfigImporter:
         self.optimizations = optimizations
 
     def config_variables_setup(self, mode):
-        # Traemos los datos del archivo Config del contrato que vamos a analizar.
+        """ Traemos los datos del archivo Config del contrato que vamos a analizar y 
+        los preparamos (seteamos states, preconditions, extraconditions) según el modo."""
         self.import_config_variables()  # es lo mismo que el make_global_variables.
 
-        # Esta función define states, preconditions y extraconditions, dependiendo del modo.
         funciones_numeros = list(range(1, len(self.config_variables.functions) + 1))
         self.prepare_variables(mode, funciones_numeros)
         self.config_variables.mode = mode
 
         return self.config_variables
 
+    # Private methods
     def import_config_variables(self):
         c = self.contract_config_file
         self.config_variables.fileName = "Contracts/" + c.fileName
@@ -149,15 +150,15 @@ class ConfigVariables:
     statePreconditions: list = None
     statesNames: list = None
 
-    dir: str = None # No debería ir acá.
-    dir_name: str = None # No debería ir acá.
-    mode: Mode = None # No debería ir acá.
+    dir: str = None
+    dir_name: str = None
+    mode: Mode = None
 
 
 @dataclass
 class VerisolExecutionHistory:
-    # Estas 3 se usan sólo en try_command y en el main. Nos interesa cómo van cambiando. 
-    # Se incrementan en try_command y se imprimen al final.
-    number_to: int = 0 # Se usa para contar la cantidad de TimeOuts totales. Se incrementa en try_command y se imprime al final del main.
-    number_corral_fail: int = 0 # Lo mismo pero para la cantidad de fails de corral.
-    number_corral_fail_with_tackvars: int = 0 # Lo mismo pero para la cantidad de fails de corral con trackvars.
+    """ Variables para guardar la cantidad de timeouts y corral fails cuando corremos VeriSol.
+    Se incrementan en try_command y se imprimen al final. """
+    number_to: int = 0
+    number_corral_fail: int = 0
+    number_corral_fail_with_tackvars: int = 0

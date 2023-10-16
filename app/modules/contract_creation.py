@@ -23,6 +23,7 @@ QUERIES_COUNT_THRESHOLD = 250
 
 
 class ContractCreator:
+    # Public methods
     def create_contract_creator(self, config_variables, tool):
         if tool == "verisol":
             return VerisolContractCreator(config_variables)
@@ -31,7 +32,6 @@ class ContractCreator:
         else:
             raise Exception("Invalid tool name")
 
-    
     def create_init_contract(self):
         # Method is implemented by subclass.
         pass
@@ -40,6 +40,7 @@ class ContractCreator:
         # Method is implemented by subclass.
         pass
 
+    # Private methods
     def transform_contract_for_init(self, filename_temp):
         new_contract_body = self.remove_everything_after_constructor(filename_temp)
         write_file_from_string(filename_temp, new_contract_body)
@@ -82,7 +83,6 @@ class ContractCreator:
                 break
         return target_constructor_start_line, target_constructor_end_line
 
-    # Pure
     def create_modifier(self, name, require_clauses):
         res = f"\tmodifier {name} {{\n"
         for require in require_clauses:
@@ -91,7 +91,6 @@ class ContractCreator:
         res += "\t}\n\n"
         return res
 
-    # Pure
     def has_initialized_code(self):
         has_initialized_modifier = self.create_modifier("hasInitialized", ["has_initialized"])
         has_not_initialized_modifier = self.create_modifier("hasNotInitialized", ["!has_initialized"])
@@ -194,7 +193,7 @@ class EchidnaContractCreator(ContractCreator):
         self.transform_contract_for_init(filename_temp)
         self.change_for_constructor_fuzzing(filename_temp)
         return filename_temp, all_queries_names
-    
+
     def create_multiple_transitions_contracts(self, count):
         queries, function_names = self.get_valid_transitions_output(self.config_variables.preconditions,self.config_variables.states,self.config_variables.extraConditions,self.config_variables.functions,self.config_variables,)
 
@@ -223,7 +222,7 @@ class EchidnaContractCreator(ContractCreator):
 
         for contract in contracts:
             self.change_for_constructor_fuzzing(contract)
-        
+
         return contracts, None
 
 
@@ -233,8 +232,8 @@ class VerisolContractCreator(ContractCreator):
         self.config_variables = config_variables
         self.target_contract = config_variables.contractName
 
-    # Para hacer el discard_unreachable_states. En el modo EPA.
     def create_preconditions_contract(self, preconditions, extraconditions, thread_id):
+        """ Se usa en el discard_unreachable_states. Sólo en el modo EPA."""
         new_dir = create_directory_2(self.config_variables.dir, f"thread_{thread_id}")
         filename_temp = create_file("preconditions", new_dir, self.config_variables.fileName, self.target_contract)
         body, all_queries_names = self.get_valid_preconditions_output(preconditions, extraconditions, self.config_variables.functionVariables)
@@ -255,7 +254,7 @@ class VerisolContractCreator(ContractCreator):
     def create_multiple_transitions_contracts(self, count):
         contracts = []
         # queries_names_per_contract = []
-        
+
         queries, queries_names = self.get_valid_transitions_output(self.config_variables.preconditions,self.config_variables.states,self.config_variables.extraConditions,self.config_variables.functions,self.config_variables,)
 
         queries_splitted = np.array_split(queries, count)  # Crea un arreglo de arreglos de queries.
@@ -264,12 +263,12 @@ class VerisolContractCreator(ContractCreator):
             if len(queries_list) == 0:
                 # print(f"Queries list vacío para idx={idx}, no se crea contrato de transiciones.")
                 continue
-            body = ""  # Acá metemos las queries que queremos para el nuevo contrato.
-            for query in queries_list:
-                body += query
+            # Acá metemos las queries que queremos para el nuevo contrato.
+            body = ''.join(queries_list)
             body = self.clean_true_requires(body)
             new_dir = create_directory_2(self.config_variables.dir, f"thread_{idx}")
-            filename_temp = create_file(f"transitions_{idx}", new_dir, self.config_variables.fileName, self.target_contract)  # esto hace un archivo nuevo copiando los contenidos de EPXCrowdsale.sol
+            # create_file hace un archivo nuevo copiando los contenidos de EPXCrowdsale.sol
+            filename_temp = create_file(f"transitions_{idx}", new_dir, self.config_variables.fileName, self.target_contract)
             write_file(filename_temp, body, self.target_contract)
             filename_temp = os.path.realpath(filename_temp)
             contracts.append(filename_temp)
@@ -281,7 +280,7 @@ class VerisolContractCreator(ContractCreator):
 
 def find_contract_start_line(contract_lines, contract_name):
     for idx, line in enumerate(contract_lines):
-        if f"contract {contract_name}" in line and not (is_a_comment(line)):
+        if f"contract {contract_name}" in line and not is_a_comment(line):
             return idx
 
 
@@ -296,13 +295,13 @@ def find_contract_end_line(contract_lines, contract_name):
             inside_function = True
             continue
 
-        if inside_function and "{" in line and not (is_a_comment(line)):
+        if inside_function and "{" in line and not is_a_comment(line):
             bracket_count += 1
-        if inside_function and "}" in line and not (is_a_comment(line)):
+        if inside_function and "}" in line and not is_a_comment(line):
             bracket_count -= 1
         if inside_function and bracket_count == 0:
             return idx
-    
+
     return -1
 
 
@@ -334,7 +333,7 @@ def output_transitions_function(precondition_require, function, precondition_ass
     verisol_function_output = (
         "\t\trequire("+ precondition_require + ");\n"
         + "\t\trequire(" + function_precondition + ");\n"
-        + "\t\t" + extra_condition_output_pre 
+        + "\t\t" + extra_condition_output_pre
         + "\t\t" + function + "\n"
         + "\t\tassert(!(" + precondition_assert + "&& " + extra_condition_post + "));"
     )

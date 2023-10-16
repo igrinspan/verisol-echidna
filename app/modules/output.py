@@ -13,6 +13,7 @@ class Graph:
         self.add_failed_tests_transition(transition_tests_that_failed)
         self.graph.render(f"{self.dir}/graph/{self.config_variables.contractName}_{self.config_variables.mode}")
 
+    # Private methods
     def add_failed_tests_init(self, tests_that_failed):
         for test in tests_that_failed:
             parameters = test[0]
@@ -53,6 +54,7 @@ class Graph:
 
 
 class OutputPrinter:
+    """ Imprime los ejes encontrados por consola y la cantidad de fails de VeriSol. """
     def __init__(self, config_variables):
         self.directory = config_variables.dir
         self.config_variables = config_variables
@@ -61,6 +63,16 @@ class OutputPrinter:
         self.print_failed_tests(transition_tests_that_failed)
         self.print_failed_tests(init_tests_that_failed, True)
 
+    def print_verisol_fails(self, verisol_fails):
+        total_to = f"# Time Out: {verisol_fails.number_to}"
+        total_cfail1 = f"# Corral Fail without trackvars: {verisol_fails.number_corral_fail}"
+        total_cfail2 = f"# Corral Fail with trackvars: {verisol_fails.number_corral_fail_with_tackvars}"
+
+        print(total_to)
+        print(total_cfail1)
+        print(total_cfail2)
+
+    # Private methods
     def print_failed_tests(self, tests_that_failed, init=False):
         if init:
             output = "Desde el constructor, se puede llegar a: "
@@ -76,15 +88,6 @@ class OutputPrinter:
                     self.config_variables.states,
                     self.config_variables,
                 )  # print_output recibe como segundo param la función y tercero el assert.
-
-    def print_verisol_fails(self, verisol_fails):
-        total_to = "# Time Out: {}".format(str(verisol_fails.number_to))
-        total_cfail1 = "# Corral Fail without trackvars: {}".format(str(verisol_fails.number_corral_fail))
-        total_cfail2 = "# Corral Fail with trackvars: {}".format(str(verisol_fails.number_corral_fail_with_tackvars))
-        
-        print(total_to)
-        print(total_cfail1)
-        print(total_cfail2)
 
 
 def print_output(id_prec_require, id_function, id_prec_assert, combinations, full_combination, config_variables):

@@ -2,7 +2,8 @@ from dataclasses import dataclass
 
 @dataclass
 class EchidnaConfigData:
-    # La inicializo con los parámetros por default (menos testMode y shrinkLimit). 
+    """ Datos de la Config File que usa Echidna para ejecutar. 
+    La inicializo con los parámetros por default (menos testMode y shrinkLimit). """
     testLimit: int = 50000
     balanceContract: int = 0
     workers: int = 1
@@ -15,5 +16,6 @@ class EchidnaConfigData:
 
 @dataclass
 class VerisolConfigData:
+    """ Datos  de configuración para ejecutar VeriSol. """
     txBound: int 
     time_out: int
