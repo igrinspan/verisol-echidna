@@ -14,7 +14,7 @@ contract FrequentFlyerRewardsCalculator {
     uint public TotalRewards;
 
     // constructor function
-    constructor(address flyer, int rewardsPerMile) public 
+    constructor(address flyer, int rewardsPerMile) public
     {
         AirlineRepresentative = msg.sender;
         Flyer = flyer;
@@ -25,7 +25,8 @@ contract FrequentFlyerRewardsCalculator {
     }
 
     // call this function to add miles
-    function AddMiles(int[] memory miles) public {
+    function AddMiles(int[] memory miles) public
+    {
         if (Flyer != msg.sender)
         {
             revert();
@@ -41,7 +42,8 @@ contract FrequentFlyerRewardsCalculator {
         State = StateType.MilesAdded;
     }
 
-    function ComputeTotalRewards() private {
+    function ComputeTotalRewards() internal
+    {
         // make length uint compatible
         uint milesLength = uint(Miles.length);
         for (uint i = IndexCalculatedUpto; i < milesLength; i++)

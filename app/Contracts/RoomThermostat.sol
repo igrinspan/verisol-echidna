@@ -1,6 +1,5 @@
 pragma solidity >=0.4.25 <0.9.0;
 
-
 contract RoomThermostat {
     //Set of States
     enum StateType { Created, InUse}
@@ -21,7 +20,8 @@ contract RoomThermostat {
         State = StateType.Created;
     }
 
-    function StartThermostat() public{
+    function StartThermostat() public
+    {
         if (Installer != msg.sender || State != StateType.Created)
         {
             revert();
@@ -30,7 +30,8 @@ contract RoomThermostat {
         State = StateType.InUse;
     }
 
-    function SetTargetTemperature(int targetTemperature) public{
+    function SetTargetTemperature(int targetTemperature) public
+    {
         if (User != msg.sender || State != StateType.InUse)
         {
             revert();
@@ -38,7 +39,8 @@ contract RoomThermostat {
         TargetTemperature = targetTemperature;
     }
 
-    function SetMode(ModeEnum mode) public{
+    function SetMode(ModeEnum mode) public
+    {
         if (User != msg.sender || State != StateType.InUse)
         {
             revert();

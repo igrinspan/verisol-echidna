@@ -20,7 +20,7 @@ contract DigitalLocker {
         Owner = msg.sender;
         LockerFriendlyName = lockerFriendlyName;
 
-        State = StateType.DocumentReview; //////////////// should be StateType.Requested?
+        State = StateType.DocumentReview; // should be StateType.Requested?
 
         BankAgent = bankAgent;
     }

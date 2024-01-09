@@ -2,7 +2,7 @@
  *Submitted for verification at Etherscan.io on 2017-08-04
 */
 
-pragma solidity ^0.5.0;
+pragma solidity >=0.4.25 <0.9.0;
 
 contract SimpleAuction {
     // 
@@ -31,8 +31,8 @@ contract SimpleAuction {
     // Allowed withdrawals of previous bids
     mapping(address => uint) pendingReturns;
     uint pendingReturnsCount = 0;
-    address[] pendingReturnsArray = new address[](0);
-    address[] auxArray;
+    // address[] pendingReturnsArray = new address[](0);
+    // address[] auxArray;
 
     // Set to true at the end, disallows any change
     bool ended;
@@ -46,11 +46,11 @@ contract SimpleAuction {
     // It will be shown when the user is asked to
     // confirm a transaction.
 
-    /// Create a simple auction with `_biddingTime`
-    /// seconds bidding time on behalf of the
-    /// beneficiary address `_beneficiary`.
+    // Create a simple auction with `_biddingTime`
+    // seconds bidding time on behalf of the
+    // beneficiary address `_beneficiary`.
     
-    address payable _beneficiary = address(0xb23397f97715118532c8c1207F5678Ed4FbaEA6c);
+    address payable _beneficiary = payable(address(0xb23397f97715118532c8c1207F5678Ed4FbaEA6c));
     // UNICEF Multisig Wallet according to:
     // unicefstories.org/2017/08/04/unicef-ventures-exploring-smart-contracts/
     address payable beneficiary;
@@ -64,10 +64,10 @@ contract SimpleAuction {
         highestBidderA = _highestBidderA;
     }
 
-    /// Bid on the auction with the value sent
-    /// together with this transaction.
-    /// The value will only be refunded if the
-    /// auction is not won.
+    // Bid on the auction with the value sent
+    // together with this transaction.
+    // The value will only be refunded if the
+    // auction is not won.
     function bid() public payable {
         // No arguments are necessary, all
         // information is already part of
@@ -89,9 +89,12 @@ contract SimpleAuction {
             // because it can be prevented by the caller by e.g.
             // raising the call stack to 1023. It is always safer
             // to let the recipients withdraw their money themselves.
+            if (pendingReturns[highestBidder] == 0){
+                pendingReturnsCount += 1;
+            }
             pendingReturns[highestBidder] += highestBid;
-            pendingReturnsCount = pendingReturnsCount + 1;
-            pendingReturnsArray.push(msg.sender);
+            
+            // pendingReturnsArray.push(msg.sender);
         }
         highestBidder = msg.sender;
         highestBid = msg.value;
@@ -99,10 +102,11 @@ contract SimpleAuction {
         //t();
     }
 
-    /// Withdraw a bid that was overbid.
+    // Withdraw a bid that was overbid.
     function withdraw() public returns (bool) {
         //time = time + 1;
-        require(pendingReturnsArray.length != 0);
+        // require(pendingReturnsArray.length != 0);
+        require(pendingReturnsCount > 0);
         uint amount = pendingReturns[msg.sender];
         if (amount > 0) {
             // It is important to set this to zero because the recipient
@@ -110,12 +114,11 @@ contract SimpleAuction {
             // before `send` returns.
             pendingReturns[msg.sender] = 0;
             pendingReturnsCount = pendingReturnsCount - 1;
-            pendingReturnsArray = remove(msg.sender, pendingReturnsArray);
+            // pendingReturnsArray = remove(msg.sender, pendingReturnsArray);
 
             // if (!msg.sender.send(amount)) {
             //     // No need to call throw here, just reset the amount owing
             //     pendingReturns[msg.sender] = amount;
-            //     time = now;
             //     return false;
             // }
         }
@@ -127,8 +130,8 @@ contract SimpleAuction {
         return auctionStart + biddingTime;
     }
     
-    /// End the auction and send the highest bid
-    /// to the beneficiary.
+    // End the auction and send the highest bid
+    // to the beneficiary.
     function auctionEnd() public {
         // It is a good guideline to structure functions that interact
         // with other contracts (i.e. they call functions or send Ether)
@@ -152,18 +155,6 @@ contract SimpleAuction {
         // 3. Interaction
         // beneficiary.transfer(highestBid);
         //t();
-    }
-
-    function remove(address _valueToFindAndRemove, address[] memory _array) public  returns(address[] memory) {
-
-        auxArray = new address[](0); 
-
-        for (uint i = 0; i < _array.length; i++){
-            if(_array[i] != _valueToFindAndRemove)
-                auxArray.push(_array[i]);
-        }
-
-        return auxArray;
     }
 
     function t() public {

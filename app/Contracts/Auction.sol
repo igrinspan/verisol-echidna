@@ -1,8 +1,12 @@
-pragma solidity ^0.5.0;
+pragma solidity >=0.4.25 <0.9.0;
 
 // bugs:
 // 1. Auction can never end
 // 2. highest bidder can never be refunded their highest bid
+
+// fixes for 0.8.0:
+// line 17: address(0x0) -> payable(address(0x0))
+// line 44: msg.sender -> payable(msg.sender)
 
 contract Auction {
     uint auctionStart;
@@ -10,16 +14,13 @@ contract Auction {
     address payable beneficiary;
 
     bool ended = false;
-    address payable highestBidder = address(0x0);
-    address payable A = address(0x0);
+    address payable highestBidder = payable(address(0x0));
     uint highestBid = 0;
     mapping(address => uint) pendingReturns;
-    address[] pendingReturnsArray = new address[](0);
-    address[] auxArray;
     uint pendingReturnsCount = 0;
     uint blockNumber;
 
-    constructor(uint _auctionStart, uint _biddingTime, address payable _beneficiary, address payable payable_a,  uint _blockNumber) public {
+    constructor(uint _auctionStart, uint _biddingTime, address payable _beneficiary,  uint _blockNumber) public {
         auctionStart = _auctionStart;
         biddingTime = _biddingTime;
         beneficiary = _beneficiary;
@@ -36,12 +37,11 @@ contract Auction {
                 revert();
             }
             else {
-                pendingReturns[highestBidder] += highestBid;
-                pendingReturnsCount = 2;
-                if (highestBidder != address(0x0)) {
-                    pendingReturnsArray.push(highestBidder);
+                if (highestBidder != address(0x0) && pendingReturns[highestBidder] == 0) {
+                    pendingReturnsCount += 1;
                 }
-                highestBidder = msg.sender;
+                pendingReturns[highestBidder] += highestBid;
+                highestBidder = payable(msg.sender);
                 highestBid = msg.value;
             }
         }
@@ -49,29 +49,17 @@ contract Auction {
     }
 
     function Withdraw() public {
-        if(pendingReturns[msg.sender] != 0 && pendingReturnsArray.length != 0) {
+        if(pendingReturns[msg.sender] != 0 && pendingReturnsCount > 0) {
             uint pr = pendingReturns[msg.sender];
             pendingReturns[msg.sender] = 0;
-            pendingReturnsCount = pendingReturnsCount - 1;
-            pendingReturnsArray = remove(msg.sender, pendingReturnsArray);
-            //msg.sender.transfer(pr);  
+            pendingReturnsCount -= 1;
+            //msg.sender.transfer(pr);
+            t();
         }
         else {
             revert();
         }
-        t();
-    }
-
-    function remove(address _valueToFindAndRemove, address[] memory _array) public  returns(address[] memory) {
-
-        auxArray = new address[](0); 
-
-        for (uint i = 0; i < _array.length; i++){
-             if(_array[i] != _valueToFindAndRemove) 
-                auxArray.push(_array[i]);
-        }
-
-        return auxArray;
+        
     }
 
     function AuctionEnd() public {
@@ -88,7 +76,7 @@ contract Auction {
         t();
     }
 
-    function t() public {
+    function t() internal {
         blockNumber = blockNumber + 1;
     }
 }

@@ -6,7 +6,7 @@ functionPreconditions = ["Installer == msg.sender", "User == msg.sender", "User 
 functionVariables = "int targetTemperature, ModeEnum mode"
 tool_output = "Found a counterexample"
 
-statesModeState = [[1, 0], [0, 2]]
+statesModeState = [[1,0], [0,2]]
 statesNamesModeState = ["Created", "InUse"]
 statePreconditionsModeState = ["State == StateType.Created", "State == StateType.InUse"]
 txBound = 4
