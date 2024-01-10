@@ -1,0 +1,156 @@
+[
+    {
+        "Contract": "Auction",
+        "TxBound": 4,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "EscrowVault",
+        "TxBound": 4,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "RefundEscrow",
+        "TxBound": 4,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "RockPaperScissors",
+        "TxBound": 4,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "SimpleAuction",
+        "TxBound": 4,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "RefundEscrowWithdraw",
+        "TxBound": 4,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": -1
+    },
+    {
+        "Contract": "CrowdfundingTime_Base",
+        "TxBound": 4,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "CrowdfundingTime_BaseBalance",
+        "TxBound": 4,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "CrowdfundingTime_BaseBalanceFix",
+        "TxBound": 4,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 6
+    },
+    {
+        "Contract": "SimpleAuctionTime",
+        "TxBound": 4,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": -3
+    },
+    {
+        "Contract": "SimpleAuctionEnded",
+        "TxBound": 4,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "AuctionEnded",
+        "TxBound": 4,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "AuctionWithdraw",
+        "TxBound": 4,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "Crowdfunding",
+        "TxBound": 4,
+        "Mode": "states",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "EscrowVault",
+        "TxBound": 4,
+        "Mode": "states",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "RefundEscrow",
+        "TxBound": 4,
+        "Mode": "states",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "RockPaperScissors",
+        "TxBound": 4,
+        "Mode": "states",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "SimpleAuctionHB",
+        "TxBound": 4,
+        "Mode": "states",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "Crowdfunding",
+        "TxBound": 4,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "EPXCrowdsale",
+        "TxBound": 4,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": -4
+    },
+    {
+        "Contract": "EPXCrowdsale",
+        "TxBound": 4,
+        "Mode": "states",
+        "Node Difference": 0,
+        "Edge Difference": -7
+    },
+    {
+        "Contract": "EPXCrowdsaleIsCrowdsaleClosed",
+        "TxBound": 4,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": -4
+    }
+]

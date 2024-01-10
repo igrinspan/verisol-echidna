@@ -1,0 +1,800 @@
+[
+    {
+        "contract": "Auction",
+        "test_limit": 1000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 14.71
+    },
+    {
+        "contract": "Crowdfunding",
+        "test_limit": 1000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 8.61
+    },
+    {
+        "contract": "Crowdfunding",
+        "test_limit": 1000,
+        "mode": "s",
+        "reduce combinations": false,
+        "time_in_s": 9.86
+    },
+    {
+        "contract": "EPXCrowdsale",
+        "test_limit": 1000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 91.62
+    },
+    {
+        "contract": "EPXCrowdsale",
+        "test_limit": 1000,
+        "mode": "s",
+        "reduce combinations": false,
+        "time_in_s": 13.61
+    },
+    {
+        "contract": "EscrowVault",
+        "test_limit": 1000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 168.02
+    },
+    {
+        "contract": "EscrowVault",
+        "test_limit": 1000,
+        "mode": "s",
+        "reduce combinations": false,
+        "time_in_s": 7.88
+    },
+    {
+        "contract": "RefundEscrow",
+        "test_limit": 1000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 29.51
+    },
+    {
+        "contract": "RefundEscrow",
+        "test_limit": 1000,
+        "mode": "s",
+        "reduce combinations": false,
+        "time_in_s": 5.41
+    },
+    {
+        "contract": "RockPaperScissors",
+        "test_limit": 1000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 9.5
+    },
+    {
+        "contract": "RockPaperScissors",
+        "test_limit": 1000,
+        "mode": "s",
+        "reduce combinations": false,
+        "time_in_s": 8.36
+    },
+    {
+        "contract": "SimpleAuction",
+        "test_limit": 1000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 8.93
+    },
+    {
+        "contract": "RefundEscrowWithdraw",
+        "test_limit": 1000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 183.11
+    },
+    {
+        "contract": "CrowdfundingTime_Base",
+        "test_limit": 1000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 16.58
+    },
+    {
+        "contract": "CrowdfundingTime_BaseBalance",
+        "test_limit": 1000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 416.47
+    },
+    {
+        "contract": "CrowdfundingTime_BaseBalanceFix",
+        "test_limit": 1000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 428.74
+    },
+    {
+        "contract": "EPXCrowdsaleIsCrowdsaleClosed",
+        "test_limit": 1000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 497.36
+    },
+    {
+        "contract": "SimpleAuctionTime",
+        "test_limit": 1000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 13.84
+    },
+    {
+        "contract": "SimpleAuctionEnded",
+        "test_limit": 1000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 41.75
+    },
+    {
+        "contract": "SimpleAuctionHB",
+        "test_limit": 1000,
+        "mode": "s",
+        "reduce combinations": false,
+        "time_in_s": 8.74
+    },
+    {
+        "contract": "AuctionEnded",
+        "test_limit": 1000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 43.46
+    },
+    {
+        "contract": "AuctionWithdraw",
+        "test_limit": 1000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 50.93
+    },
+    {
+        "contract": "Auction",
+        "test_limit": 50000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 41.96
+    },
+    {
+        "contract": "Crowdfunding",
+        "test_limit": 50000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 37.02
+    },
+    {
+        "contract": "Crowdfunding",
+        "test_limit": 50000,
+        "mode": "s",
+        "reduce combinations": false,
+        "time_in_s": 35.67
+    },
+    {
+        "contract": "EPXCrowdsale",
+        "test_limit": 50000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 443.36
+    },
+    {
+        "contract": "EPXCrowdsale",
+        "test_limit": 50000,
+        "mode": "s",
+        "reduce combinations": false,
+        "time_in_s": 96.82
+    },
+    {
+        "contract": "EscrowVault",
+        "test_limit": 50000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 1300.67
+    },
+    {
+        "contract": "EscrowVault",
+        "test_limit": 50000,
+        "mode": "s",
+        "reduce combinations": false,
+        "time_in_s": 60.21
+    },
+    {
+        "contract": "RefundEscrow",
+        "test_limit": 50000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 209.31
+    },
+    {
+        "contract": "RefundEscrow",
+        "test_limit": 50000,
+        "mode": "s",
+        "reduce combinations": false,
+        "time_in_s": 34.06
+    },
+    {
+        "contract": "RockPaperScissors",
+        "test_limit": 50000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 44.37
+    },
+    {
+        "contract": "RockPaperScissors",
+        "test_limit": 50000,
+        "mode": "s",
+        "reduce combinations": false,
+        "time_in_s": 43.95
+    },
+    {
+        "contract": "SimpleAuction",
+        "test_limit": 50000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 43.15
+    },
+    {
+        "contract": "RefundEscrowWithdraw",
+        "test_limit": 50000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 1108.78
+    },
+    {
+        "contract": "CrowdfundingTime_Base",
+        "test_limit": 50000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 62.43
+    },
+    {
+        "contract": "CrowdfundingTime_BaseBalance",
+        "test_limit": 50000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 1285.64
+    },
+    {
+        "contract": "CrowdfundingTime_BaseBalanceFix",
+        "test_limit": 50000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 1306.9
+    },
+    {
+        "contract": "EPXCrowdsaleIsCrowdsaleClosed",
+        "test_limit": 50000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 1951.03
+    },
+    {
+        "contract": "SimpleAuctionTime",
+        "test_limit": 50000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 61.79
+    },
+    {
+        "contract": "SimpleAuctionEnded",
+        "test_limit": 50000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 222.24
+    },
+    {
+        "contract": "SimpleAuctionHB",
+        "test_limit": 50000,
+        "mode": "s",
+        "reduce combinations": false,
+        "time_in_s": 57.96
+    },
+    {
+        "contract": "AuctionEnded",
+        "test_limit": 50000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 187.72
+    },
+    {
+        "contract": "AuctionWithdraw",
+        "test_limit": 50000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 207.65
+    },
+    {
+        "contract": "Auction",
+        "test_limit": 500000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 291.16
+    },
+    {
+        "contract": "Crowdfunding",
+        "test_limit": 500000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 296.77
+    },
+    {
+        "contract": "Crowdfunding",
+        "test_limit": 500000,
+        "mode": "s",
+        "reduce combinations": false,
+        "time_in_s": 267.84
+    },
+    {
+        "contract": "EPXCrowdsale",
+        "test_limit": 500000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 3814.16
+    },
+    {
+        "contract": "EPXCrowdsale",
+        "test_limit": 500000,
+        "mode": "s",
+        "reduce combinations": false,
+        "time_in_s": 913.58
+    },
+    {
+        "contract": "EscrowVault",
+        "test_limit": 500000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 11851.1
+    },
+    {
+        "contract": "EscrowVault",
+        "test_limit": 500000,
+        "mode": "s",
+        "reduce combinations": false,
+        "time_in_s": 507.71
+    },
+    {
+        "contract": "RefundEscrow",
+        "test_limit": 500000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 1783.9
+    },
+    {
+        "contract": "RefundEscrow",
+        "test_limit": 500000,
+        "mode": "s",
+        "reduce combinations": false,
+        "time_in_s": 284.69
+    },
+    {
+        "contract": "RockPaperScissors",
+        "test_limit": 500000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 362.27
+    },
+    {
+        "contract": "RockPaperScissors",
+        "test_limit": 500000,
+        "mode": "s",
+        "reduce combinations": false,
+        "time_in_s": 356.21
+    },
+    {
+        "contract": "SimpleAuction",
+        "test_limit": 500000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 333.24
+    },
+    {
+        "contract": "RefundEscrowWithdraw",
+        "test_limit": 500000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 9938.97
+    },
+    {
+        "contract": "CrowdfundingTime_Base",
+        "test_limit": 500000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 469.38
+    },
+    {
+        "contract": "CrowdfundingTime_BaseBalance",
+        "test_limit": 500000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 9115.68
+    },
+    {
+        "contract": "CrowdfundingTime_BaseBalanceFix",
+        "test_limit": 500000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 9377.87
+    },
+    {
+        "contract": "EPXCrowdsaleIsCrowdsaleClosed",
+        "test_limit": 500000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 16253.27
+    },
+    {
+        "contract": "SimpleAuctionTime",
+        "test_limit": 500000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 494.77
+    },
+    {
+        "contract": "SimpleAuctionEnded",
+        "test_limit": 500000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 1759.46
+    },
+    {
+        "contract": "SimpleAuctionHB",
+        "test_limit": 500000,
+        "mode": "s",
+        "reduce combinations": false,
+        "time_in_s": 472.67
+    },
+    {
+        "contract": "AuctionEnded",
+        "test_limit": 500000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 1415.04
+    },
+    {
+        "contract": "AuctionWithdraw",
+        "test_limit": 500000,
+        "mode": "e",
+        "reduce combinations": false,
+        "time_in_s": 1573.73
+    },
+    {
+        "contract": "Auction",
+        "test_limit": 1000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 7.52
+    },
+    {
+        "contract": "EscrowVault",
+        "test_limit": 1000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 21.72
+    },
+    {
+        "contract": "RefundEscrow",
+        "test_limit": 1000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 13.25
+    },
+    {
+        "contract": "RockPaperScissors",
+        "test_limit": 1000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 10.38
+    },
+    {
+        "contract": "SimpleAuction",
+        "test_limit": 1000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 5.13
+    },
+    {
+        "contract": "RefundEscrowWithdraw",
+        "test_limit": 1000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 27.39
+    },
+    {
+        "contract": "CrowdfundingTime_Base",
+        "test_limit": 1000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 10.86
+    },
+    {
+        "contract": "CrowdfundingTime_BaseBalance",
+        "test_limit": 1000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 47.22
+    },
+    {
+        "contract": "CrowdfundingTime_BaseBalanceFix",
+        "test_limit": 1000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 61.09
+    },
+    {
+        "contract": "SimpleAuctionTime",
+        "test_limit": 1000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 5.82
+    },
+    {
+        "contract": "SimpleAuctionEnded",
+        "test_limit": 1000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 7.27
+    },
+    {
+        "contract": "AuctionEnded",
+        "test_limit": 1000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 6.9
+    },
+    {
+        "contract": "AuctionWithdraw",
+        "test_limit": 1000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 6.79
+    },
+    {
+        "contract": "Auction",
+        "test_limit": 50000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 17.41
+    },
+    {
+        "contract": "EscrowVault",
+        "test_limit": 50000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 84.66
+    },
+    {
+        "contract": "RefundEscrow",
+        "test_limit": 50000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 53.17
+    },
+    {
+        "contract": "RockPaperScissors",
+        "test_limit": 50000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 28.45
+    },
+    {
+        "contract": "SimpleAuction",
+        "test_limit": 50000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 17.48
+    },
+    {
+        "contract": "RefundEscrowWithdraw",
+        "test_limit": 50000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 118.8
+    },
+    {
+        "contract": "CrowdfundingTime_Base",
+        "test_limit": 50000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 28.3
+    },
+    {
+        "contract": "CrowdfundingTime_BaseBalance",
+        "test_limit": 50000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 88.13
+    },
+    {
+        "contract": "CrowdfundingTime_BaseBalanceFix",
+        "test_limit": 50000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 95.89
+    },
+    {
+        "contract": "SimpleAuctionTime",
+        "test_limit": 50000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 19
+    },
+    {
+        "contract": "SimpleAuctionEnded",
+        "test_limit": 50000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 20.85
+    },
+    {
+        "contract": "AuctionEnded",
+        "test_limit": 50000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 19.18
+    },
+    {
+        "contract": "AuctionWithdraw",
+        "test_limit": 50000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 19.95
+    },
+    {
+        "contract": "Auction",
+        "test_limit": 500000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 126.89
+    },
+    {
+        "contract": "EscrowVault",
+        "test_limit": 500000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 664.75
+    },
+    {
+        "contract": "RefundEscrow",
+        "test_limit": 500000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 426.01
+    },
+    {
+        "contract": "RockPaperScissors",
+        "test_limit": 500000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 185.15
+    },
+    {
+        "contract": "SimpleAuction",
+        "test_limit": 500000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 131.72
+    },
+    {
+        "contract": "RefundEscrowWithdraw",
+        "test_limit": 500000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 977.72
+    },
+    {
+        "contract": "CrowdfundingTime_Base",
+        "test_limit": 500000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 186.89
+    },
+    {
+        "contract": "CrowdfundingTime_BaseBalance",
+        "test_limit": 500000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 447.48
+    },
+    {
+        "contract": "CrowdfundingTime_BaseBalanceFix",
+        "test_limit": 500000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 391.08
+    },
+    {
+        "contract": "SimpleAuctionTime",
+        "test_limit": 500000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 146.93
+    },
+    {
+        "contract": "SimpleAuctionEnded",
+        "test_limit": 500000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 148.19
+    },
+    {
+        "contract": "AuctionEnded",
+        "test_limit": 500000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 130.94
+    },
+    {
+        "contract": "AuctionWithdraw",
+        "test_limit": 500000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 139.96
+    },
+    {
+        "contract": "EPXCrowdsaleIsCrowdsaleClosed",
+        "test_limit": 1000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 183.86
+    },
+    {
+        "contract": "EPXCrowdsaleIsCrowdsaleClosed",
+        "test_limit": 50000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 221.91
+    },
+    {
+        "contract": "EPXCrowdsaleIsCrowdsaleClosed",
+        "test_limit": 500000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 619.11
+    },
+    {
+        "contract": "EPXCrowdsale",
+        "test_limit": 1000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 59.63
+    },
+    {
+        "contract": "EPXCrowdsale",
+        "test_limit": 50000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 96.87
+    },
+    {
+        "contract": "EPXCrowdsale",
+        "test_limit": 500000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 403.6
+    },
+    {
+        "contract": "Crowdfunding",
+        "test_limit": 1000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 10.94
+    },
+    {
+        "contract": "Crowdfunding",
+        "test_limit": 50000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 31.6
+    },
+    {
+        "contract": "Crowdfunding",
+        "test_limit": 500000,
+        "mode": "e",
+        "reduce combinations": true,
+        "time_in_s": 229.73
+    }
+]

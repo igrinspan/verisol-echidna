@@ -1,0 +1,86 @@
+[
+    {
+        "contract": "HelloBlockchain",
+        "mode": "e",
+        "time_in_s": 11.37,
+        "app": "solidityAbstractor",
+        "txBound": 8
+    },
+    {
+        "contract": "HelloBlockchain",
+        "mode": "s",
+        "time_in_s": 10.76,
+        "app": "solidityAbstractor",
+        "txBound": 8
+    },
+    {
+        "contract": "RefrigeratedTransportation",
+        "mode": "e",
+        "time_in_s": 19.49,
+        "app": "solidityAbstractor",
+        "txBound": 8
+    },
+    {
+        "contract": "RefrigeratedTransportation",
+        "mode": "s",
+        "time_in_s": 43.77,
+        "app": "solidityAbstractor",
+        "txBound": 8
+    },
+    {
+        "contract": "HelloBlockchainFixed",
+        "mode": "e",
+        "time_in_s": 10.05,
+        "app": "solidityAbstractor",
+        "txBound": 8
+    },
+    {
+        "contract": "HelloBlockchainFixed",
+        "mode": "s",
+        "time_in_s": 10.55,
+        "app": "solidityAbstractor",
+        "txBound": 8
+    },
+    {
+        "contract": "RefrigeratedTransportationFixed",
+        "mode": "e",
+        "time_in_s": 29.19,
+        "app": "solidityAbstractor",
+        "txBound": 8
+    },
+    {
+        "contract": "RefrigeratedTransportationFixed",
+        "mode": "s",
+        "time_in_s": 44.06,
+        "app": "solidityAbstractor",
+        "txBound": 8
+    },
+    {
+        "contract": "RockPaperScissors",
+        "mode": "e",
+        "time_in_s": 33.35,
+        "app": "solidityAbstractor",
+        "txBound": 8
+    },
+    {
+        "contract": "RockPaperScissors",
+        "mode": "s",
+        "time_in_s": 96.61,
+        "app": "solidityAbstractor",
+        "txBound": 8
+    },
+    {
+        "contract": "CrowdfundingTime_BaseBalanceFix",
+        "mode": "e",
+        "time_in_s": 135.29,
+        "app": "solidityAbstractor",
+        "txBound": 8
+    },
+    {
+        "contract": "RefundEscrowWithdraw",
+        "mode": "e",
+        "time_in_s": 151.88,
+        "app": "solidityAbstractor",
+        "txBound": 8
+    }
+]

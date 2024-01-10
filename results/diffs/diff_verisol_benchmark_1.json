@@ -1,0 +1,198 @@
+[
+    {
+        "Contract": "BasicProvenance",
+        "TxBound": 4,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "DefectiveComponentCounter",
+        "TxBound": 4,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "FrequentFlyerRewardsCalculator",
+        "TxBound": 4,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "HelloBlockchain",
+        "TxBound": 4,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "RefrigeratedTransportation",
+        "TxBound": 4,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "RoomThermostat",
+        "TxBound": 4,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "SimpleMarketplace",
+        "TxBound": 4,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "BasicProvenanceFixed",
+        "TxBound": 4,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "DefectiveComponentCounterFixed",
+        "TxBound": 4,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "HelloBlockchainFixed",
+        "TxBound": 4,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "RefrigeratedTransportationFixed",
+        "TxBound": 4,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "SimpleMarketplaceFixed",
+        "TxBound": 4,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "AssetTransfer",
+        "TxBound": 4,
+        "Mode": "states",
+        "Node Difference": -3,
+        "Edge Difference": -12
+    },
+    {
+        "Contract": "BasicProvenance",
+        "TxBound": 4,
+        "Mode": "states",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "DefectiveComponentCounter",
+        "TxBound": 4,
+        "Mode": "states",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "DigitalLocker",
+        "TxBound": 4,
+        "Mode": "states",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "FrequentFlyerRewardsCalculator",
+        "TxBound": 4,
+        "Mode": "states",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "HelloBlockchain",
+        "TxBound": 4,
+        "Mode": "states",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "RefrigeratedTransportation",
+        "TxBound": 4,
+        "Mode": "states",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "RoomThermostat",
+        "TxBound": 4,
+        "Mode": "states",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "SimpleMarketplace",
+        "TxBound": 4,
+        "Mode": "states",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "AssetTransferFixed",
+        "TxBound": 4,
+        "Mode": "states",
+        "Node Difference": -3,
+        "Edge Difference": -10
+    },
+    {
+        "Contract": "BasicProvenanceFixed",
+        "TxBound": 4,
+        "Mode": "states",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "DefectiveComponentCounterFixed",
+        "TxBound": 4,
+        "Mode": "states",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "DigitalLockerFixed",
+        "TxBound": 4,
+        "Mode": "states",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "HelloBlockchainFixed",
+        "TxBound": 4,
+        "Mode": "states",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "RefrigeratedTransportationFixed",
+        "TxBound": 4,
+        "Mode": "states",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "SimpleMarketplaceFixed",
+        "TxBound": 4,
+        "Mode": "states",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    }
+]

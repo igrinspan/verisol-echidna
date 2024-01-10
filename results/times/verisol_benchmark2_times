@@ -1,0 +1,324 @@
+[
+    {
+        "contract": "Auction",
+        "txBound": 4,
+        "timeout": 60000,
+        "mode": "e",
+        "time_in_s": 3.12
+    },
+    {
+        "contract": "Auction",
+        "txBound": 4,
+        "timeout": 60000,
+        "mode": "e",
+        "time_in_s": 3.02
+    },
+    {
+        "contract": "Auction",
+        "txBound": 4,
+        "timeout": 60000,
+        "mode": "e",
+        "time_in_s": 2.34
+    },
+    {
+        "contract": "Crowdfunding",
+        "txBound": 4,
+        "timeout": 600,
+        "mode": "e",
+        "time_in_s": 56.67
+    },
+    {
+        "contract": "Crowdfunding",
+        "txBound": 4,
+        "timeout": 60000,
+        "mode": "s",
+        "time_in_s": 28.96
+    },
+    {
+        "contract": "EscrowVault",
+        "txBound": 4,
+        "timeout": 60000,
+        "mode": "e",
+        "time_in_s": 87
+    },
+    {
+        "contract": "EscrowVault",
+        "txBound": 4,
+        "timeout": 60000,
+        "mode": "s",
+        "time_in_s": 114.95
+    },
+    {
+        "contract": "RefundEscrow",
+        "txBound": 4,
+        "timeout": 60000,
+        "mode": "e",
+        "time_in_s": 67.18
+    },
+    {
+        "contract": "RefundEscrow",
+        "txBound": 4,
+        "timeout": 60000,
+        "mode": "s",
+        "time_in_s": 55.34
+    },
+    {
+        "contract": "RockPaperScissors",
+        "txBound": 4,
+        "timeout": 60000,
+        "mode": "e",
+        "time_in_s": 33
+    },
+    {
+        "contract": "RockPaperScissors",
+        "txBound": 4,
+        "timeout": 60000,
+        "mode": "s",
+        "time_in_s": 100.16
+    },
+    {
+        "contract": "SimpleAuction",
+        "txBound": 4,
+        "timeout": 60000,
+        "mode": "e",
+        "time_in_s": 2.34
+    },
+    {
+        "contract": "RefundEscrowWithdraw",
+        "txBound": 4,
+        "timeout": 60000,
+        "mode": "e",
+        "time_in_s": 162.39
+    },
+    {
+        "contract": "CrowdfundingTime_Base",
+        "txBound": 4,
+        "timeout": 60000,
+        "mode": "e",
+        "time_in_s": 39.45
+    },
+    {
+        "contract": "CrowdfundingTime_BaseBalance",
+        "txBound": 4,
+        "timeout": 60000,
+        "mode": "e",
+        "time_in_s": 142.92
+    },
+    {
+        "contract": "CrowdfundingTime_BaseBalanceFix",
+        "txBound": 4,
+        "timeout": 60000,
+        "mode": "e",
+        "time_in_s": 133.18
+    },
+    {
+        "contract": "SimpleAuctionTime",
+        "txBound": 4,
+        "timeout": 60000,
+        "mode": "e",
+        "time_in_s": 180.16
+    },
+    {
+        "contract": "SimpleAuctionEnded",
+        "txBound": 4,
+        "timeout": 60000,
+        "mode": "e",
+        "time_in_s": 128.9
+    },
+    {
+        "contract": "SimpleAuctionHB",
+        "txBound": 4,
+        "timeout": 60000,
+        "mode": "s",
+        "time_in_s": 131.77
+    },
+    {
+        "contract": "AuctionEnded",
+        "txBound": 4,
+        "timeout": 60000,
+        "mode": "e",
+        "time_in_s": 40.3
+    },
+    {
+        "contract": "AuctionWithdraw",
+        "txBound": 4,
+        "timeout": 60000,
+        "mode": "e",
+        "time_in_s": 67.9
+    },
+    {
+        "contract": "EPXCrowdsaleIsCrowdsaleClosed",
+        "txBound": 4,
+        "timeout": 600,
+        "mode": "e",
+        "time_in_s": 260.88
+    },
+    {
+        "contract": "EPXCrowdsale",
+        "txBound": 4,
+        "timeout": 600,
+        "mode": "e",
+        "time_in_s": 111.15
+    },
+    {
+        "contract": "EPXCrowdsale",
+        "txBound": 4,
+        "timeout": 600,
+        "mode": "s",
+        "time_in_s": 323.75
+    },
+    {
+        "contract": "Auction",
+        "txBound": 8,
+        "timeout": 60000,
+        "mode": "e",
+        "time_in_s": 2.06
+    },
+    {
+        "contract": "Crowdfunding",
+        "txBound": 8,
+        "timeout": 600,
+        "mode": "e",
+        "time_in_s": 45.94
+    },
+    {
+        "contract": "Crowdfunding",
+        "txBound": 8,
+        "timeout": 60000,
+        "mode": "s",
+        "time_in_s": 28.2
+    },
+    {
+        "contract": "EscrowVault",
+        "txBound": 8,
+        "timeout": 60000,
+        "mode": "e",
+        "time_in_s": 98.76
+    },
+    {
+        "contract": "EscrowVault",
+        "txBound": 8,
+        "timeout": 60000,
+        "mode": "s",
+        "time_in_s": 114.99
+    },
+    {
+        "contract": "RefundEscrow",
+        "txBound": 8,
+        "timeout": 60000,
+        "mode": "e",
+        "time_in_s": 63.37
+    },
+    {
+        "contract": "RefundEscrow",
+        "txBound": 8,
+        "timeout": 60000,
+        "mode": "s",
+        "time_in_s": 52.33
+    },
+    {
+        "contract": "RockPaperScissors",
+        "txBound": 8,
+        "timeout": 60000,
+        "mode": "e",
+        "time_in_s": 33.07
+    },
+    {
+        "contract": "RockPaperScissors",
+        "txBound": 8,
+        "timeout": 60000,
+        "mode": "s",
+        "time_in_s": 99.28
+    },
+    {
+        "contract": "SimpleAuction",
+        "txBound": 8,
+        "timeout": 60000,
+        "mode": "e",
+        "time_in_s": 2.11
+    },
+    {
+        "contract": "RefundEscrowWithdraw",
+        "txBound": 8,
+        "timeout": 60000,
+        "mode": "e",
+        "time_in_s": 150.53
+    },
+    {
+        "contract": "CrowdfundingTime_Base",
+        "txBound": 8,
+        "timeout": 60000,
+        "mode": "e",
+        "time_in_s": 37.07
+    },
+    {
+        "contract": "CrowdfundingTime_BaseBalance",
+        "txBound": 8,
+        "timeout": 60000,
+        "mode": "e",
+        "time_in_s": 1350.96
+    },
+    {
+        "contract": "CrowdfundingTime_BaseBalanceFix",
+        "txBound": 8,
+        "timeout": 60000,
+        "mode": "e",
+        "time_in_s": 132.31
+    },
+    {
+        "contract": "SimpleAuctionTime",
+        "txBound": 8,
+        "timeout": 60000,
+        "mode": "e",
+        "time_in_s": 182.82
+    },
+    {
+        "contract": "SimpleAuctionEnded",
+        "txBound": 8,
+        "timeout": 60000,
+        "mode": "e",
+        "time_in_s": 129.3
+    },
+    {
+        "contract": "SimpleAuctionHB",
+        "txBound": 8,
+        "timeout": 60000,
+        "mode": "s",
+        "time_in_s": 264.34
+    },
+    {
+        "contract": "AuctionEnded",
+        "txBound": 8,
+        "timeout": 60000,
+        "mode": "e",
+        "time_in_s": 40.25
+    },
+    {
+        "contract": "AuctionWithdraw",
+        "txBound": 8,
+        "timeout": 60000,
+        "mode": "e",
+        "time_in_s": 69.77
+    },
+    {
+        "contract": "EPXCrowdsaleIsCrowdsaleClosed",
+        "txBound": 8,
+        "timeout": 600,
+        "mode": "e",
+        "time_in_s": 814.31
+    },
+    {
+        "contract": "EPXCrowdsale",
+        "txBound": 8,
+        "timeout": 600,
+        "mode": "e",
+        "time_in_s": 305.58
+    },
+    {
+        "contract": "EPXCrowdsale",
+        "txBound": 8,
+        "timeout": 600,
+        "mode": "s",
+        "time_in_s": 5447.05
+    }
+]

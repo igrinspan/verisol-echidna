@@ -1,0 +1,17 @@
+contract,Ver States Time 4,Ver States Time 8,Ech States Time 1000,Ech States Time 50000,Ech States Time 500000
+AssetTransfer,1474.8,1500.64,52.69,532.97,4893.47
+AssetTransferFixed,1472.43,1484.59,47.01,509.38,4742.92
+BasicProvenance,18.48,18.36,3.79,20.46,169.55
+BasicProvenanceFixed,18.4,22.65,3.69,18.19,148.81
+DefectiveComponentCounter,10.46,14.09,3.84,26.36,217.15
+DefectiveComponentCounterFixed,11.79,15.9,3.77,23.37,199.13
+DigitalLocker,385.28,435.44,31.44,406.08,3820.48
+DigitalLockerFixed,372.7,358.51,25.39,221.09,1986.26
+FrequentFlyerRewardsCalculator,11.27,12.02,5.25,64.85,637.5
+HelloBlockchain,11.62,10.49,3.89,27.47,241.99
+HelloBlockchainFixed,10.31,10.44,3.51,17.77,143.41
+RefrigeratedTransportation,48.63,43.17,5.18,43.64,388.29
+RefrigeratedTransportationFixed,47.45,42.85,4.9,37.43,332.81
+RoomThermostat,14.73,14.53,3.65,18.33,154.18
+SimpleMarketplace,25.69,25.26,4.04,24.22,206.27
+SimpleMarketplaceFixed,25.01,27.11,3.84,20.36,171.0
