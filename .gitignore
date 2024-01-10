@@ -4,3 +4,7 @@ __pycache__/
 .vscode/ 
 .idea/
 crytic-export/
+pruebas/
+echidna_output/
+verisol_output/
+benchmarks/
