@@ -4,8 +4,11 @@ import re
 from dataclasses import asdict
 import subprocess
 import psutil
+import platform
+
 
 from modules.contract_config import Mode
+from modules.output import output_combination
 
 verbose = False
 verisol_output = "Found a counterexample"
@@ -63,7 +66,7 @@ class VerisolRunner:
 
     def try_transaction(self, tool, function_names, final_directory, states):
         results = []
-        for function_name in function_names:            
+        for function_name in function_names:
             query_result = self.try_command(tool, function_name, function_names, final_directory, states, self.txBound, self.time_out, False)
             if query_result[1] == TRACK_VARS:
                 query_result = self.try_command(tool, function_name, function_names, final_directory, states, self.txBound, self.time_out, True)
@@ -77,6 +80,8 @@ class VerisolRunner:
 
     def try_command(self, tool, function_name, function_names, final_directory, states, txBound, time_out, trackAllVars):
         global verisol_output, verbose
+        
+        trackAllVars = True
         
         #Evito chequear funciones "dummy"
         if len(states) > 0:
@@ -92,12 +97,20 @@ class VerisolRunner:
         
         command = self.getToolCommand(function_name, tool, function_names, txBound, trackAllVars)
         result = ""
+
+        time_start = time()
         try:    
-            proc = subprocess.Popen(command.split(" "), stdout=subprocess.PIPE, cwd=final_directory)
-            result = proc.communicate(timeout=time_out)
-        except Exception as e:
-            self.verisol_fails.number_to += 1
-            print(f"---EXCEPTION por time out de {str(time_out)} segs.")
+            if platform.system() == "Windows":
+                proc = subprocess.Popen(command.split(" "), stdout=subprocess.PIPE, cwd=final_directory)
+                result = proc.communicate(timeout=time_out)
+                output_verisol = str(result[0].decode('utf-8'))
+            else:
+                result = subprocess.run([command, ""], shell = True, cwd=final_directory, stdout=subprocess.PIPE)
+                output_verisol = result.stdout.decode('utf-8')
+        except Exception:
+            # number_to += 1
+            # print("---EXCEPTION por time out de {} segs ".format(time_out))
+            # indexPreconditionRequire, indexPreconditionAssert, indexFunction = get_params_from_function_name(temp_function_name)
             process = psutil.Process(proc.pid)
             for proc in process.children(recursive=True):
                 proc.kill()
@@ -105,7 +118,8 @@ class VerisolRunner:
             process.wait(2) # wait for killing subprocess
             return True,"?"
 
-        output_verisol = str(result[0].decode('utf-8'))
+        time_end = time()
+
         output_successful = "Formal Verification successful"
         if verbose and verisol_output not in output_verisol and output_successful not in output_verisol:
             print(output_verisol)
@@ -125,12 +139,13 @@ class VerisolRunner:
     def getToolCommand(self, include_number, tool_command, combinations, txBound, trackAllVars):
         command = tool_command + " " 
         command = command + "/txBound:" + str(txBound) + " "
+        command = command + "/noPrf "
         if trackAllVars:
             command = command + "/trackAllVars"+ " "
         for combi in combinations:
             if combi != include_number: 
                 command += "/ignoreMethod:vc"+ combi +"@" + self.config_variables.contractName + " "
-        # print(command)
+
         return command
 
 
@@ -190,18 +205,3 @@ class EchidnaRunner:
 def get_params_from_function_name(temp_function_name):
     array = temp_function_name.split("x")
     return int(array[0]), int(array[1]), int(array[2])
-
-
-def output_combination(indexCombination, tempCombinations, config_variables):
-    combination = tempCombinations[indexCombination]
-    output = ""
-    for function in combination:
-        if function != 0:
-            if config_variables.mode == Mode.epa:
-                output += config_variables.functions[function - 1] + "\n"
-            else:
-                output += config_variables.statesNames[function - 1]
-
-    if output == "":
-        output = "Vacio\n"
-    return output
