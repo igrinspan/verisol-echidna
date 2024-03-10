@@ -1,0 +1,122 @@
+[
+    {
+        "Contract": "Crowdfunding",
+        "Test Limit": 1000,
+        "Mode": "states",
+        "Node Difference": 0,
+        "Edge Difference": 1,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "Crowdfunding",
+        "Test Limit": 50000,
+        "Mode": "states",
+        "Node Difference": 2,
+        "Edge Difference": 3,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "Crowdfunding",
+        "Test Limit": 500000,
+        "Mode": "states",
+        "Node Difference": 2,
+        "Edge Difference": 5,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "EscrowVault",
+        "Test Limit": 1000,
+        "Mode": "states",
+        "Node Difference": -2,
+        "Edge Difference": -9,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "EscrowVault",
+        "Test Limit": 50000,
+        "Mode": "states",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "EscrowVault",
+        "Test Limit": 500000,
+        "Mode": "states",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "RefundEscrow",
+        "Test Limit": 1000,
+        "Mode": "states",
+        "Node Difference": 0,
+        "Edge Difference": -3,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "RefundEscrow",
+        "Test Limit": 50000,
+        "Mode": "states",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "RefundEscrow",
+        "Test Limit": 500000,
+        "Mode": "states",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "RockPaperScissors",
+        "Test Limit": 1000,
+        "Mode": "states",
+        "Node Difference": -5,
+        "Edge Difference": -11,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "RockPaperScissors",
+        "Test Limit": 50000,
+        "Mode": "states",
+        "Node Difference": -3,
+        "Edge Difference": -9,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "RockPaperScissors",
+        "Test Limit": 500000,
+        "Mode": "states",
+        "Node Difference": -3,
+        "Edge Difference": -9,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "SimpleAuctionHB",
+        "Test Limit": 1000,
+        "Mode": "states",
+        "Node Difference": -4,
+        "Edge Difference": -15,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "SimpleAuctionHB",
+        "Test Limit": 50000,
+        "Mode": "states",
+        "Node Difference": -2,
+        "Edge Difference": -10,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "SimpleAuctionHB",
+        "Test Limit": 500000,
+        "Mode": "states",
+        "Node Difference": 0,
+        "Edge Difference": -4,
+        "Reduce Combinations": "not_reduce_combinations"
+    }
+]

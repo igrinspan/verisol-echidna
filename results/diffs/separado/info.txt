@@ -1,0 +1,5 @@
+Estos archivos tienen la misma información que está en diff_echidna_benchmark_1.json y diff_echidna_benchmark_2.json.
+
+La dividí a su vez en modo epa y states para poder analizarla mejor en conjunto con las tablitas de tiempos que tengo en Notion.
+
+Corresponden a los ejes y aristas encontrados por echidna en contraste a los encontrados por verisol con txBound = 8.

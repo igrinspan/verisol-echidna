@@ -1,0 +1,578 @@
+[
+    {
+        "Contract": "BasicProvenance",
+        "Test Limit": 1000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "BasicProvenance",
+        "Test Limit": 50000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "BasicProvenance",
+        "Test Limit": 500000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "BasicProvenance",
+        "Test Limit": 1000,
+        "Mode": "epa",
+        "Node Difference": -1,
+        "Edge Difference": -1,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "BasicProvenance",
+        "Test Limit": 50000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "BasicProvenance",
+        "Test Limit": 500000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "DefectiveComponentCounter",
+        "Test Limit": 1000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "DefectiveComponentCounter",
+        "Test Limit": 50000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 1,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "DefectiveComponentCounter",
+        "Test Limit": 500000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 1,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "DefectiveComponentCounter",
+        "Test Limit": 1000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "DefectiveComponentCounter",
+        "Test Limit": 50000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 1,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "DefectiveComponentCounter",
+        "Test Limit": 500000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 1,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "FrequentFlyerRewardsCalculator",
+        "Test Limit": 1000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": -1,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "FrequentFlyerRewardsCalculator",
+        "Test Limit": 50000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "FrequentFlyerRewardsCalculator",
+        "Test Limit": 500000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "FrequentFlyerRewardsCalculator",
+        "Test Limit": 1000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": -1,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "FrequentFlyerRewardsCalculator",
+        "Test Limit": 50000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "FrequentFlyerRewardsCalculator",
+        "Test Limit": 500000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "HelloBlockchain",
+        "Test Limit": 1000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "HelloBlockchain",
+        "Test Limit": 50000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "HelloBlockchain",
+        "Test Limit": 500000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "HelloBlockchain",
+        "Test Limit": 1000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "HelloBlockchain",
+        "Test Limit": 50000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "HelloBlockchain",
+        "Test Limit": 500000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "RefrigeratedTransportation",
+        "Test Limit": 1000,
+        "Mode": "epa",
+        "Node Difference": -1,
+        "Edge Difference": -3,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "RefrigeratedTransportation",
+        "Test Limit": 50000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": -1,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "RefrigeratedTransportation",
+        "Test Limit": 500000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "RefrigeratedTransportation",
+        "Test Limit": 1000,
+        "Mode": "epa",
+        "Node Difference": -1,
+        "Edge Difference": -3,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "RefrigeratedTransportation",
+        "Test Limit": 50000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "RefrigeratedTransportation",
+        "Test Limit": 500000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "RoomThermostat",
+        "Test Limit": 1000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": -2,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "RoomThermostat",
+        "Test Limit": 50000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "RoomThermostat",
+        "Test Limit": 500000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "RoomThermostat",
+        "Test Limit": 1000,
+        "Mode": "epa",
+        "Node Difference": -1,
+        "Edge Difference": -3,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "RoomThermostat",
+        "Test Limit": 50000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "RoomThermostat",
+        "Test Limit": 500000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "SimpleMarketplace",
+        "Test Limit": 1000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": -3,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "SimpleMarketplace",
+        "Test Limit": 50000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "SimpleMarketplace",
+        "Test Limit": 500000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "SimpleMarketplace",
+        "Test Limit": 1000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": -2,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "SimpleMarketplace",
+        "Test Limit": 50000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "SimpleMarketplace",
+        "Test Limit": 500000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "BasicProvenanceFixed",
+        "Test Limit": 1000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "BasicProvenanceFixed",
+        "Test Limit": 50000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "BasicProvenanceFixed",
+        "Test Limit": 500000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "BasicProvenanceFixed",
+        "Test Limit": 1000,
+        "Mode": "epa",
+        "Node Difference": -1,
+        "Edge Difference": -1,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "BasicProvenanceFixed",
+        "Test Limit": 50000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "BasicProvenanceFixed",
+        "Test Limit": 500000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "DefectiveComponentCounterFixed",
+        "Test Limit": 1000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "DefectiveComponentCounterFixed",
+        "Test Limit": 50000,
+        "Mode": "epa",
+        "Node Difference": 1,
+        "Edge Difference": 2,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "DefectiveComponentCounterFixed",
+        "Test Limit": 500000,
+        "Mode": "epa",
+        "Node Difference": 1,
+        "Edge Difference": 2,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "DefectiveComponentCounterFixed",
+        "Test Limit": 1000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "DefectiveComponentCounterFixed",
+        "Test Limit": 50000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "DefectiveComponentCounterFixed",
+        "Test Limit": 500000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "HelloBlockchainFixed",
+        "Test Limit": 1000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "HelloBlockchainFixed",
+        "Test Limit": 50000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "HelloBlockchainFixed",
+        "Test Limit": 500000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "HelloBlockchainFixed",
+        "Test Limit": 1000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "HelloBlockchainFixed",
+        "Test Limit": 50000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "HelloBlockchainFixed",
+        "Test Limit": 500000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "RefrigeratedTransportationFixed",
+        "Test Limit": 1000,
+        "Mode": "epa",
+        "Node Difference": -1,
+        "Edge Difference": -5,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "RefrigeratedTransportationFixed",
+        "Test Limit": 50000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "RefrigeratedTransportationFixed",
+        "Test Limit": 500000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "RefrigeratedTransportationFixed",
+        "Test Limit": 1000,
+        "Mode": "epa",
+        "Node Difference": -1,
+        "Edge Difference": -6,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "RefrigeratedTransportationFixed",
+        "Test Limit": 50000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "RefrigeratedTransportationFixed",
+        "Test Limit": 500000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "SimpleMarketplaceFixed",
+        "Test Limit": 1000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "SimpleMarketplaceFixed",
+        "Test Limit": 50000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "SimpleMarketplaceFixed",
+        "Test Limit": 500000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "SimpleMarketplaceFixed",
+        "Test Limit": 1000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "SimpleMarketplaceFixed",
+        "Test Limit": 50000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "SimpleMarketplaceFixed",
+        "Test Limit": 500000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0,
+        "Reduce Combinations": "reduce_combinations"
+    }
+]
