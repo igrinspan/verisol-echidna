@@ -3,40 +3,40 @@
         "Contract": "Auction",
         "Test Limit": 1000,
         "Mode": "epa",
-        "Node Difference": 4,
-        "Edge Difference": 4,
+        "Node Difference": -1,
+        "Edge Difference": -10,
         "Reduce Combinations": "not_reduce_combinations"
     },
     {
         "Contract": "Auction",
         "Test Limit": 50000,
         "Mode": "epa",
-        "Node Difference": 5,
-        "Edge Difference": 10,
+        "Node Difference": 0,
+        "Edge Difference": -4,
         "Reduce Combinations": "not_reduce_combinations"
     },
     {
         "Contract": "Auction",
         "Test Limit": 500000,
         "Mode": "epa",
-        "Node Difference": 5,
-        "Edge Difference": 12,
+        "Node Difference": 0,
+        "Edge Difference": -2,
         "Reduce Combinations": "not_reduce_combinations"
     },
     {
         "Contract": "Auction",
         "Test Limit": 1000,
         "Mode": "epa",
-        "Node Difference": 0,
-        "Edge Difference": 0,
+        "Node Difference": -1,
+        "Edge Difference": -7,
         "Reduce Combinations": "reduce_combinations"
     },
     {
         "Contract": "Auction",
         "Test Limit": 50000,
         "Mode": "epa",
-        "Node Difference": 0,
-        "Edge Difference": 0,
+        "Node Difference": -1,
+        "Edge Difference": -7,
         "Reduce Combinations": "reduce_combinations"
     },
     {
@@ -44,7 +44,103 @@
         "Test Limit": 500000,
         "Mode": "epa",
         "Node Difference": 0,
-        "Edge Difference": 0,
+        "Edge Difference": -2,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "Crowdfunding",
+        "Test Limit": 1000,
+        "Mode": "epa",
+        "Node Difference": -1,
+        "Edge Difference": -7,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "Crowdfunding",
+        "Test Limit": 50000,
+        "Mode": "epa",
+        "Node Difference": -1,
+        "Edge Difference": -7,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "Crowdfunding",
+        "Test Limit": 500000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": -2,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "Crowdfunding",
+        "Test Limit": 1000,
+        "Mode": "epa",
+        "Node Difference": -1,
+        "Edge Difference": -7,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "Crowdfunding",
+        "Test Limit": 50000,
+        "Mode": "epa",
+        "Node Difference": -1,
+        "Edge Difference": -5,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "Crowdfunding",
+        "Test Limit": 500000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": -1,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "EPXCrowdsale",
+        "Test Limit": 1000,
+        "Mode": "epa",
+        "Node Difference": -3,
+        "Edge Difference": -16,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "EPXCrowdsale",
+        "Test Limit": 50000,
+        "Mode": "epa",
+        "Node Difference": -1,
+        "Edge Difference": -11,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "EPXCrowdsale",
+        "Test Limit": 500000,
+        "Mode": "epa",
+        "Node Difference": -1,
+        "Edge Difference": -9,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "EPXCrowdsale",
+        "Test Limit": 1000,
+        "Mode": "epa",
+        "Node Difference": -1,
+        "Edge Difference": -11,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "EPXCrowdsale",
+        "Test Limit": 50000,
+        "Mode": "epa",
+        "Node Difference": -1,
+        "Edge Difference": -9,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "EPXCrowdsale",
+        "Test Limit": 500000,
+        "Mode": "epa",
+        "Node Difference": -1,
+        "Edge Difference": -8,
         "Reduce Combinations": "reduce_combinations"
     },
     {
@@ -195,40 +291,40 @@
         "Contract": "SimpleAuction",
         "Test Limit": 1000,
         "Mode": "epa",
-        "Node Difference": 4,
-        "Edge Difference": 3,
+        "Node Difference": -5,
+        "Edge Difference": -23,
         "Reduce Combinations": "not_reduce_combinations"
     },
     {
         "Contract": "SimpleAuction",
         "Test Limit": 50000,
         "Mode": "epa",
-        "Node Difference": 6,
-        "Edge Difference": 9,
+        "Node Difference": -3,
+        "Edge Difference": -17,
         "Reduce Combinations": "not_reduce_combinations"
     },
     {
         "Contract": "SimpleAuction",
         "Test Limit": 500000,
         "Mode": "epa",
-        "Node Difference": 9,
-        "Edge Difference": 22,
+        "Node Difference": 0,
+        "Edge Difference": -4,
         "Reduce Combinations": "not_reduce_combinations"
     },
     {
         "Contract": "SimpleAuction",
         "Test Limit": 1000,
         "Mode": "epa",
-        "Node Difference": 0,
-        "Edge Difference": 0,
+        "Node Difference": -4,
+        "Edge Difference": -22,
         "Reduce Combinations": "reduce_combinations"
     },
     {
         "Contract": "SimpleAuction",
         "Test Limit": 50000,
         "Mode": "epa",
-        "Node Difference": 0,
-        "Edge Difference": 0,
+        "Node Difference": -3,
+        "Edge Difference": -17,
         "Reduce Combinations": "reduce_combinations"
     },
     {
@@ -236,7 +332,7 @@
         "Test Limit": 500000,
         "Mode": "epa",
         "Node Difference": 0,
-        "Edge Difference": 0,
+        "Edge Difference": -3,
         "Reduce Combinations": "reduce_combinations"
     },
     {
@@ -285,6 +381,54 @@
         "Mode": "epa",
         "Node Difference": 0,
         "Edge Difference": -2,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "EPXCrowdsaleIsCrowdsaleClosed",
+        "Test Limit": 1000,
+        "Mode": "epa",
+        "Node Difference": -4,
+        "Edge Difference": -19,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "EPXCrowdsaleIsCrowdsaleClosed",
+        "Test Limit": 50000,
+        "Mode": "epa",
+        "Node Difference": -2,
+        "Edge Difference": -14,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "EPXCrowdsaleIsCrowdsaleClosed",
+        "Test Limit": 500000,
+        "Mode": "epa",
+        "Node Difference": -1,
+        "Edge Difference": -8,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "EPXCrowdsaleIsCrowdsaleClosed",
+        "Test Limit": 1000,
+        "Mode": "epa",
+        "Node Difference": -3,
+        "Edge Difference": -16,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "EPXCrowdsaleIsCrowdsaleClosed",
+        "Test Limit": 50000,
+        "Mode": "epa",
+        "Node Difference": -1,
+        "Edge Difference": -8,
+        "Reduce Combinations": "reduce_combinations"
+    },
+    {
+        "Contract": "EPXCrowdsaleIsCrowdsaleClosed",
+        "Test Limit": 500000,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": -3,
         "Reduce Combinations": "reduce_combinations"
     },
     {
@@ -388,7 +532,7 @@
         "Test Limit": 1000,
         "Mode": "epa",
         "Node Difference": -3,
-        "Edge Difference": -24,
+        "Edge Difference": -18,
         "Reduce Combinations": "not_reduce_combinations"
     },
     {
@@ -396,7 +540,7 @@
         "Test Limit": 50000,
         "Mode": "epa",
         "Node Difference": -1,
-        "Edge Difference": -15,
+        "Edge Difference": -9,
         "Reduce Combinations": "not_reduce_combinations"
     },
     {
@@ -404,7 +548,7 @@
         "Test Limit": 500000,
         "Mode": "epa",
         "Node Difference": 0,
-        "Edge Difference": -6,
+        "Edge Difference": 0,
         "Reduce Combinations": "not_reduce_combinations"
     },
     {
@@ -412,7 +556,7 @@
         "Test Limit": 1000,
         "Mode": "epa",
         "Node Difference": -3,
-        "Edge Difference": -21,
+        "Edge Difference": -15,
         "Reduce Combinations": "reduce_combinations"
     },
     {
@@ -420,7 +564,7 @@
         "Test Limit": 50000,
         "Mode": "epa",
         "Node Difference": 0,
-        "Edge Difference": -6,
+        "Edge Difference": 0,
         "Reduce Combinations": "reduce_combinations"
     },
     {
@@ -428,7 +572,7 @@
         "Test Limit": 500000,
         "Mode": "epa",
         "Node Difference": 0,
-        "Edge Difference": -1,
+        "Edge Difference": 5,
         "Reduce Combinations": "reduce_combinations"
     },
     {
@@ -459,24 +603,24 @@
         "Contract": "SimpleAuctionTime",
         "Test Limit": 1000,
         "Mode": "epa",
-        "Node Difference": -9,
-        "Edge Difference": -33,
+        "Node Difference": -6,
+        "Edge Difference": -30,
         "Reduce Combinations": "reduce_combinations"
     },
     {
         "Contract": "SimpleAuctionTime",
         "Test Limit": 50000,
         "Mode": "epa",
-        "Node Difference": -9,
-        "Edge Difference": -33,
+        "Node Difference": -4,
+        "Edge Difference": -21,
         "Reduce Combinations": "reduce_combinations"
     },
     {
         "Contract": "SimpleAuctionTime",
         "Test Limit": 500000,
         "Mode": "epa",
-        "Node Difference": -9,
-        "Edge Difference": -33,
+        "Node Difference": 0,
+        "Edge Difference": -6,
         "Reduce Combinations": "reduce_combinations"
     },
     {
@@ -507,24 +651,24 @@
         "Contract": "SimpleAuctionEnded",
         "Test Limit": 1000,
         "Mode": "epa",
-        "Node Difference": -9,
-        "Edge Difference": -28,
+        "Node Difference": -5,
+        "Edge Difference": -26,
         "Reduce Combinations": "reduce_combinations"
     },
     {
         "Contract": "SimpleAuctionEnded",
         "Test Limit": 50000,
         "Mode": "epa",
-        "Node Difference": -9,
-        "Edge Difference": -28,
+        "Node Difference": -4,
+        "Edge Difference": -20,
         "Reduce Combinations": "reduce_combinations"
     },
     {
         "Contract": "SimpleAuctionEnded",
         "Test Limit": 500000,
         "Mode": "epa",
-        "Node Difference": -9,
-        "Edge Difference": -28,
+        "Node Difference": 0,
+        "Edge Difference": -5,
         "Reduce Combinations": "reduce_combinations"
     },
     {
@@ -555,24 +699,24 @@
         "Contract": "AuctionEnded",
         "Test Limit": 1000,
         "Mode": "epa",
-        "Node Difference": -5,
-        "Edge Difference": -14,
+        "Node Difference": -1,
+        "Edge Difference": -7,
         "Reduce Combinations": "reduce_combinations"
     },
     {
         "Contract": "AuctionEnded",
         "Test Limit": 50000,
         "Mode": "epa",
-        "Node Difference": -5,
-        "Edge Difference": -14,
+        "Node Difference": -1,
+        "Edge Difference": -7,
         "Reduce Combinations": "reduce_combinations"
     },
     {
         "Contract": "AuctionEnded",
         "Test Limit": 500000,
         "Mode": "epa",
-        "Node Difference": -5,
-        "Edge Difference": -14,
+        "Node Difference": 0,
+        "Edge Difference": -2,
         "Reduce Combinations": "reduce_combinations"
     },
     {
@@ -603,24 +747,24 @@
         "Contract": "AuctionWithdraw",
         "Test Limit": 1000,
         "Mode": "epa",
-        "Node Difference": -7,
-        "Edge Difference": -26,
+        "Node Difference": -3,
+        "Edge Difference": -22,
         "Reduce Combinations": "reduce_combinations"
     },
     {
         "Contract": "AuctionWithdraw",
         "Test Limit": 50000,
         "Mode": "epa",
-        "Node Difference": -7,
-        "Edge Difference": -26,
+        "Node Difference": -1,
+        "Edge Difference": -8,
         "Reduce Combinations": "reduce_combinations"
     },
     {
         "Contract": "AuctionWithdraw",
         "Test Limit": 500000,
         "Mode": "epa",
-        "Node Difference": -7,
-        "Edge Difference": -26,
+        "Node Difference": -1,
+        "Edge Difference": -12,
         "Reduce Combinations": "reduce_combinations"
     },
     {
@@ -645,6 +789,30 @@
         "Mode": "states",
         "Node Difference": 2,
         "Edge Difference": 5,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "EPXCrowdsale",
+        "Test Limit": 1000,
+        "Mode": "states",
+        "Node Difference": -6,
+        "Edge Difference": -35,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "EPXCrowdsale",
+        "Test Limit": 50000,
+        "Mode": "states",
+        "Node Difference": -3,
+        "Edge Difference": -26,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "EPXCrowdsale",
+        "Test Limit": 500000,
+        "Mode": "states",
+        "Node Difference": -3,
+        "Edge Difference": -22,
         "Reduce Combinations": "not_reduce_combinations"
     },
     {

@@ -24,6 +24,30 @@
         "Reduce Combinations": "not_reduce_combinations"
     },
     {
+        "Contract": "EPXCrowdsale",
+        "Test Limit": 1000,
+        "Mode": "states",
+        "Node Difference": -6,
+        "Edge Difference": -35,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "EPXCrowdsale",
+        "Test Limit": 50000,
+        "Mode": "states",
+        "Node Difference": -3,
+        "Edge Difference": -26,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
+        "Contract": "EPXCrowdsale",
+        "Test Limit": 500000,
+        "Mode": "states",
+        "Node Difference": -3,
+        "Edge Difference": -22,
+        "Reduce Combinations": "not_reduce_combinations"
+    },
+    {
         "Contract": "EscrowVault",
         "Test Limit": 1000,
         "Mode": "states",

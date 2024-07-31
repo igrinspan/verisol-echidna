@@ -3,3 +3,5 @@ Estos archivos tienen la misma información que está en diff_echidna_benchmark_
 La dividí a su vez en modo epa y states para poder analizarla mejor en conjunto con las tablitas de tiempos que tengo en Notion.
 
 Corresponden a los ejes y aristas encontrados por echidna en contraste a los encontrados por verisol con txBound = 8.
+
+En el directorio "tables" están estos resultados bien presentados.

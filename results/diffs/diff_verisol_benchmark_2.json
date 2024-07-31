@@ -7,6 +7,20 @@
         "Edge Difference": 0
     },
     {
+        "Contract": "Crowdfunding",
+        "TxBound": 4,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": 0
+    },
+    {
+        "Contract": "EPXCrowdsale",
+        "TxBound": 4,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": -4
+    },
+    {
         "Contract": "EscrowVault",
         "TxBound": 4,
         "Mode": "epa",
@@ -42,6 +56,13 @@
         "Edge Difference": -1
     },
     {
+        "Contract": "EPXCrowdsaleIsCrowdsaleClosed",
+        "TxBound": 4,
+        "Mode": "epa",
+        "Node Difference": 0,
+        "Edge Difference": -4
+    },
+    {
         "Contract": "CrowdfundingTime_Base",
         "TxBound": 4,
         "Mode": "epa",
@@ -60,7 +81,7 @@
         "TxBound": 4,
         "Mode": "epa",
         "Node Difference": 0,
-        "Edge Difference": 0
+        "Edge Difference": 6
     },
     {
         "Contract": "SimpleAuctionTime",
@@ -96,6 +117,13 @@
         "Mode": "states",
         "Node Difference": 0,
         "Edge Difference": 0
+    },
+    {
+        "Contract": "EPXCrowdsale",
+        "TxBound": 4,
+        "Mode": "states",
+        "Node Difference": 0,
+        "Edge Difference": -7
     },
     {
         "Contract": "EscrowVault",
