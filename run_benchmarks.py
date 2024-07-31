@@ -11,7 +11,7 @@ import shutil
 import multiprocessing
 
 
-os.chdir("../app/")
+os.chdir("app/")
 dir = os.getcwd()
 
 # python3 Tesis.py RandomContractConfig  -v -s -echidna
@@ -165,8 +165,11 @@ def save_time_echidna(
         "reduce combinations": reducing,
         "time_in_s": time_taken_in_seconds,
     }
+
+    print(obj)
+
     with open(
-        f"../results/benchmarks/echidna_benchmark_{benchmark}", "a", encoding="utf-8"
+        f"../results/benchmarks/echidna_benchmark_{benchmark}/times", "a", encoding="utf-8"
     ) as fileout:
         json.dump(obj, fileout)
         fileout.write(", ")
@@ -184,14 +187,10 @@ def run_contract_verisol(contract, mode, tx_bound, benchmark):
     command_to_run = (
         f"python3 main.py {contract}Config  {mode} verisol txbound={tx_bound}"
     )
-    result = subprocess.check_call(
-        command_to_run, shell=True, cwd=dir, stdout=sys.stdout, stderr=subprocess.STDOUT
-    )
+    result = subprocess.check_call(command_to_run, shell=True, cwd=dir, stdout=sys.stdout, stderr=subprocess.STDOUT)
     time_taken_in_seconds = round(time.time() - start_time, 2)
     _, timeout = get_tx_bound_and_timeout_from_config(contract)
-    save_time_verisol(
-        contract, mode, tx_bound, timeout, time_taken_in_seconds, benchmark
-    )
+    save_time_verisol(contract, mode, tx_bound, timeout, time_taken_in_seconds, benchmark)
 
 
 sys.path.append("../app/Configs")
@@ -275,6 +274,18 @@ def create_times_directories(benchmark):
         os.makedirs(directory_path)
 
 
+def run_verisol(contracts_to_run, tx_bounds, benchmark):
+    for tx_bound in tx_bounds:
+        run_all_contracts_verisol(contracts_to_run, tx_bound, benchmark)
+
+def run_echidna(contracts_to_run, test_limits, benchmark):
+    test_limits = [1_000, 50_000, 500_000]
+    for test_limit in test_limits:
+        run_all_contracts_echidna(contracts_to_run, test_limit, False, benchmark)
+
+    for test_limit in test_limits:
+        run_all_contracts_echidna(contracts_to_run, test_limit, True, benchmark)
+
 def run_benchmark(benchmark):
     create_times_directories(benchmark)
 
@@ -289,17 +300,9 @@ def run_benchmark(benchmark):
 
     change_contract_versions(">=0.4.25 <0.9.0", [c[0] for c in contracts_to_run])
 
-    tx_bounds = [4, 8]
-    for tx_bound in tx_bounds:
-        run_all_contracts_verisol(contracts_to_run, tx_bound)
+    run_verisol(contracts_to_run, [4, 8], benchmark)
+    run_echidna(contracts_to_run, [1000, 50000, 500000], benchmark)
 
-    test_limits = [1_000, 50_000, 500_000]
-
-    for test_limit in test_limits:
-        run_all_contracts_echidna(contracts_to_run, test_limit, False, benchmark)
-
-    for test_limit in test_limits:
-        run_all_contracts_echidna(contracts_to_run, test_limit, True, benchmark)
 
 
 def main():
