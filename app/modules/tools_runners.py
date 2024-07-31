@@ -152,7 +152,7 @@ class VerisolRunner:
 class EchidnaRunner:
     def __init__(self, config_variables, contract, config_file_params):
         self.directory = config_variables.dir
-        self.config_variables = config_variables
+        self.contract_name = config_variables.contractName
         self.contract = contract
         self.config_file_params = config_file_params
 
@@ -171,7 +171,7 @@ class EchidnaRunner:
     def create_echidna_command(self):
         config_file = self.create_config_file()
         commandResult = (
-            f"echidna {self.contract} --contract {self.config_variables.contractName} --config {config_file}"
+            f"echidna {self.contract} --contract {self.contract_name} --config {config_file}"
         )
         return commandResult
 

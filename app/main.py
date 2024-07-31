@@ -228,7 +228,7 @@ def main():
     # En VeriSol, creamos un contrato por thread. O sea contracts_count = threads_count.
     # En Echidna, creamos una cierta cantidad de contratos dependiendo de la cantidad de queries que tengamos. (ej: > 100 queries).
 
-    # Hacemos lo de discard_unreachable_states (sólo con VeriSol?) y actualizamos variables.
+    # Hacemos lo de discard_unreachable_states y actualizamos variables.
     print("-> Descartando estados inalcanzables con el reduceCombinations...")
     reduce_combinations_time = time()
     verisol_fails = VerisolExecutionHistory()
@@ -323,8 +323,7 @@ if __name__ == "__main__":
     optimization_settings = Optimizer()
 
     # Estas variables, como están definidas acá, son globales.
-    # Faltan agregar las flags de las optimizaciones, el time_mode y el verbose.
-    # Flags optimizaciones: -rs, -rt, -re, -rte, -ra.
+    # Falta agregar el time_mode y el verbose, si es que decido usarlos.
 
     # TODO: setear valores por default para los parámetros de VeriSol y Echidna,
     # para cuando no se pasan como parámetros. No olvidarse de la variable budget.

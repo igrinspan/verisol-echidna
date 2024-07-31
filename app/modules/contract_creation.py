@@ -303,7 +303,7 @@ class VerisolContractCreator(ContractCreator):
             results[thread_id] = (None, None)
             return
 
-        queries, queries_names = self.get_valid_transitions_output(preconditions, self.config_variables.preconditions,states, extra_conditions, self.config_variables.extraConditions,self.config_variables.functions,self.config_variables)
+        queries, queries_names = self.get_valid_transitions_output(preconditions, self.config_variables.preconditions, states, extra_conditions, self.config_variables.extraConditions, self.config_variables.functions, self.config_variables)
         if len(queries) == 0:
             results[thread_id] = (None, None)
             return

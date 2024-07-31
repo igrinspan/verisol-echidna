@@ -43,6 +43,8 @@ class Graph:
         states,
         result,
     ):
+        
+
         self.graph.node(  # Nodo fuente
             combination_to_string(states[id_precondition_require]),
             output_combination(id_precondition_require, states, self.config_variables),
@@ -53,11 +55,14 @@ class Graph:
         )
         # transiciones dummy no las agrego
         if not self.config_variables.functions[id_function].startswith("dummy_"):
+            print(f"Agregamos el eje {self.config_variables.functions[id_function]} {result}")
             self.graph.edge(  # Eje
                 combination_to_string(states[id_precondition_require]),
                 combination_to_string(states[id_precondition_assert]),
                 label=f"{self.config_variables.functions[id_function]} {result}",
             )
+        else:
+            print(f"DUMMY ALERT: No agregamos el eje {self.config_variables.functions[id_function]} {result}")
 
     def add_init_node_to_graph(self, init_test, result):
         id_precondition_assert = init_test[0]
