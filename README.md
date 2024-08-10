@@ -6,7 +6,7 @@
     python3 main.py <contract-config-file> <mode> <tool> [tool specific options]
 ```
 
-[options]: txbound=..., time_out=..., test_limit=... 
+[options]: txbound=..., time_out=..., test_limit=...
 
 Por ejemplo:
 
