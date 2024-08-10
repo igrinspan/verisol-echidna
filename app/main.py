@@ -137,7 +137,7 @@ def echidna_execution_logic(config_variables, init_contract_to_run, transitions_
     """ Corre los contratos con Echidna. Para eso prepara la configFile y llama al EchidnaRunner """
     init_failed = []
     tr_failed = []
-    init_config_params = EchidnaConfigData(testLimit=test_limit, workers=16, format="text")
+    init_config_params = EchidnaConfigData(testLimit=test_limit, workers=16, format="text", seqLen=2)
     transitions_config_params = EchidnaConfigData(testLimit=test_limit, workers=16, format="text")
 
     valid_init_time = time()
