@@ -193,7 +193,7 @@ class EchidnaContractCreator(ContractCreator):
                 if "public" in line:
                     constructor_lines[index] = line.replace(")", ") hasNotInitialized ", 1)
                 else:
-                    constructor_lines[index] = line.replace(")", ") hasInitialized public", 1)
+                    constructor_lines[index] = line.replace(")", ") hasNotInitialized public", 1)
                 break
 
         constructor_lines[0] = constructor_lines[0].replace("constructor", "function my_constructor")
