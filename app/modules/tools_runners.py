@@ -5,10 +5,13 @@ from dataclasses import asdict
 import subprocess
 import psutil
 import platform
+from rich.console import Console
 
 
 from modules.contract_config import Mode
 from modules.output import output_combination
+
+console = Console()
 
 verbose = False
 verisol_output = "Found a counterexample"
@@ -155,12 +158,14 @@ class EchidnaRunner:
         self.contract_name = config_variables.contractName
         self.contract = contract
         self.config_file_params = config_file_params
+        self.config_variables = config_variables
 
     def run_contract(self):
         start = time()
         result = self.set_up_and_run()
         end = time()
-        print(f"The contract took {round(end - start, 2)} seconds to run...")
+        if self.config_variables.debug:
+            print(f"Este contrato demoró {round(end - start, 2)}s")
         return self.process_output(result)
 
     def set_up_and_run(self):
@@ -176,7 +181,10 @@ class EchidnaRunner:
         return commandResult
 
     def run_echidna_command(self, command_to_run):
-        result = subprocess.run([command_to_run, ""], shell=True, cwd=self.directory, stdout=subprocess.PIPE)
+        result = subprocess.run([command_to_run, ""], shell=True, cwd=self.directory, capture_output=True)
+        if result.stderr:
+            console.print(f"[bold bright_red]Error en la ejecución de Echidna!")
+            raise Exception(result.stderr.decode("utf-8"))
         return result.stdout.decode("utf-8")
 
     def process_output(self, tool_result):

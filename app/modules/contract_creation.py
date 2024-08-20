@@ -4,6 +4,9 @@ import re
 
 from modules.file_manager import create_file, write_file, write_file_from_string, create_directory_2
 from modules.contract_config import Mode
+from rich.console import Console
+
+console = Console()
 
 # Clases: 
 # - ContractCreator (superclase)
@@ -153,9 +156,14 @@ class EchidnaContractCreator(ContractCreator):
         # De function_names podemos sacar la cantidad de queries que se crearon.
         queries_count = len(function_names)
         contracts = []
-        print(f"queries_count={queries_count}")
-        if queries_count > QUERIES_COUNT_THRESHOLD:
-            splits = count
+        # if queries_count > QUERIES_COUNT_THRESHOLD:
+            # splits = count
+        if queries_count > 39:
+            splits = 4
+            if self.config_variables.debug:
+                console.print(f"[bright_yellow]La cantidad de queries ([bold]{queries_count}[/bold]) superó el umbral de {QUERIES_COUNT_THRESHOLD}.\n" +
+                              f"Se dividirán en {splits} contratos.\n" +
+                              f"Cada contrato tendrá aproximadamente {queries_count // splits} queries.")
             queries_splitted = np.array_split(queries, splits)  # Crea un arreglo de arreglos de queries.
             for idx, queries_list in enumerate(queries_splitted):
                 body = ""  # Acá metemos las queries que queremos para el nuevo contrato.
@@ -166,6 +174,8 @@ class EchidnaContractCreator(ContractCreator):
                 write_file(filename_temp, body, self.target_contract)
                 contracts.append(filename_temp)
         else:
+            if self.config_variables.debug:
+                console.print(f"[bright_yellow]La cantidad de queries ([bold]{queries_count}[/bold]) no superó el umbral de {QUERIES_COUNT_THRESHOLD}. \nSe creará un solo contrato")
             body = ""
             for query in queries:
                 body += query
@@ -277,7 +287,8 @@ class VerisolContractCreator(ContractCreator):
         names_splitted = np.array_split(queries_names, count)
         for idx, queries_list in enumerate(queries_splitted):
             if len(queries_list) == 0:
-                # print(f"Queries list vacío para idx={idx}, no se crea contrato de transiciones.")
+                if self.config_variables.debug:
+                    console.print(f"[bright_yellow]Queries list vacío para el thread {idx}, no se crea contrato de transiciones.")
                 continue
             # Acá metemos las queries que queremos para el nuevo contrato.
             body = ''.join(queries_list)
@@ -299,7 +310,8 @@ class VerisolContractCreator(ContractCreator):
         extra_conditions = np.array_split(self.config_variables.extraConditions, threads_count)[thread_id]
 
         if len(preconditions) == 0:
-            # print(f"Preconditions vacío para thread_id={thread_id}, no se crea contrato de transiciones.")
+            if self.config_variables.debug:
+                console.print(f"[bright_yellow]Preconditions vacío para thread {thread_id}, no se crea contrato de transiciones.")
             results[thread_id] = (None, None)
             return
 

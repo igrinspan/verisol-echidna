@@ -82,7 +82,7 @@ class ConfigImporter:
         # Combinations
         for L in range(len(funciones_numeros) + 1):
             for subset in itertools.combinations(funciones_numeros, L):
-                if self.optimizations.reduced_true: # Optimización reduced_true
+                if self.optimizations.reduce_true: # Optimización reduce_true
                     is_true = True
                     for true_pre in truePreconditions:
                         if true_pre not in subset:
@@ -102,7 +102,7 @@ class ConfigImporter:
         statesTemp2 = []
 
         # Sacamos estados en los que haya una función i y no haya otra función j tales que precondition[i] = precondition[j].
-        if not(self.optimizations.reduced_equal): # Optimización reduced_equal
+        if self.optimizations.reduce_equal: # Optimización reduce_equal
             for combination in statesTemp:
                 isCorrect = True
                 for iNumber, number in enumerate(combination):
@@ -153,6 +153,8 @@ class ConfigVariables:
     dir: str = None
     dir_name: str = None
     mode: Mode = None
+
+    debug: bool = False
 
 
 @dataclass

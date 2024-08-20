@@ -5,6 +5,7 @@ from time import time
 import os
 from threading import Thread
 import numpy as np
+from rich.console import Console
 
 from modules.contract_creation import ContractCreator, VerisolContractCreator
 from modules.tools_configs import EchidnaConfigData, VerisolConfigData
@@ -17,6 +18,7 @@ sys.path.append("../")
 sys.path.append("Configs")
 sys.path.append("modules/")
 
+console = Console()
 
 class InvalidParametersException(Exception):
     pass
@@ -31,6 +33,7 @@ def create_config_variables():
     importer = ConfigImporter(config, config_variables, optimization_settings)
     
     config_variables = importer.config_variables_setup(mode)
+    config_variables.debug = debug
     return config_variables
 
 # TODO: lógica de cantidad de contratos y threads.
@@ -49,14 +52,17 @@ def set_thread_and_contracts_count(config_variables):
 # Crea los threads y cada uno corre reduceCombinations.
 def discard_unreachable_states(config_variables, threads_count, verisol_fails):
     """ Corre el reduceCombinations de VeriSol para descartar estados espurios/inalcanzables """
+    reduce_combinations_txbound = 8
+    console.print("[bold bright_green underline]-> Descartando estados inalcanzables con el reduceCombinations...")
+    if debug:
+        console.print(f"Usamos txBound = {reduce_combinations_txbound} y threads_count = {threads_count}")
     preconditions_per_thread = np.array_split(config_variables.preconditions, threads_count)
     states_per_thread = np.array_split(config_variables.states, threads_count)
     extra_cond_per_thread = []
     if len(config_variables.extraConditions) != 0:
         extra_cond_per_thread = np.array_split(config_variables.extraConditions, threads_count)
 
-    print(threads_count)
-    verisol_config = VerisolConfigData(txBound=8, time_out=600)
+    verisol_config = VerisolConfigData(txBound=reduce_combinations_txbound, time_out=600)
 
     count_pre_initial = len(config_variables.preconditions)
     # Corremos discard_unreachable_states.
@@ -140,14 +146,18 @@ def echidna_execution_logic(config_variables, init_contract_to_run, transitions_
     init_config_params = EchidnaConfigData(testLimit=test_limit, workers=16, format="text", seqLen=2)
     transitions_config_params = EchidnaConfigData(testLimit=test_limit, workers=16, format="text")
 
+    if debug:
+        console.print("-> Ejecutando el contrato init...")
     valid_init_time = time()
     init_failed = EchidnaRunner(config_variables, init_contract_to_run, init_config_params).run_contract()
-    print(f"-> Tiempo del contrato init: {time() - valid_init_time}")
+    print(f"-> Tiempo del contrato init: {time() - valid_init_time:.2f}s")
 
+    if debug:
+        console.print("-> Ejecutando el/los contratos de transitions...")
     transitions_time = time()
     for contract in transitions_contracts_to_run:
         tr_failed += EchidnaRunner(config_variables, contract, transitions_config_params).run_contract()
-    print(f"-> Tiempo de los contratos de transiciones: {time() - transitions_time}")
+    print(f"-> Tiempo de los contratos de transiciones: {time() - transitions_time:.2f}s")
 
     return init_failed, tr_failed
 
@@ -158,7 +168,7 @@ def verisol_execution_logic(config_variables, init_contract_to_run, transitions_
     # Valid INIT
     tool_command = f"VeriSol {init_contract_to_run} {config_variables.contractName}"
     init_failed = VerisolRunner(config_variables, init_contract_to_run, verisol_config, verisol_fails).try_init(tool_command, init_queries_names, config_variables.dir)
-    print(f"-> Tiempo de valid_init: {time() - valid_init_time}")
+    print(f"-> Tiempo de valid_init: {time() - valid_init_time:.2f}s")
     # init_failed es algo como [(vc0x0x1, ""), (vc0x2x0, "?"), (vc0x2x1, ""), (vc3x0x2, "fail?")]
 
     valid_combinations_time = time()
@@ -184,7 +194,7 @@ def verisol_execution_logic(config_variables, init_contract_to_run, transitions_
     results_filtered = list(filter(lambda item: item is not None, results)) # filter None
     tr_failed = [item for sublist in results_filtered for item in sublist] # flatten
 
-    print(f"-> Tiempo de valid_combinations: {time() - valid_combinations_time}")
+    print(f"-> Tiempo de valid_combinations: {time() - valid_combinations_time:.2f}s")
 
     # OutputPrinter(config_variables).print_verisol_fails(verisol_fails)
 
@@ -212,15 +222,22 @@ def create_transitions_contracts_for_each_thread(contract_creator, threads_count
     return contracts, queries_per_contract
 
 def main():
+    
     # Importamos y guardamos las variables (preconditions, states, functions, etc.)
     config_variables = create_config_variables()
 
+    if debug:
+        console.print(f"[bold deep_sky_blue1]Contrato[/bold deep_sky_blue1]: {config_variables.contractName}")
+        console.print(f"[bold deep_sky_blue1]Tipo de abstracción[/bold deep_sky_blue1]: {mode.name}")
+        console.print(f"[bold deep_sky_blue1]Tool[/bold deep_sky_blue1]: {tool}")
+        console.print(f"[bold deep_sky_blue1]Budget[/bold deep_sky_blue1]: {test_limit if tool == 'echidna' else txBound}\n")
+
     # Definimos dónde se van a guardar los resultados, tanto los contratos a correr como el grafo.
     # Agrego budget para diferenciar ejecuciones de la misma tool. En echidna es test_limit y en verisol es txbound.
-    if optimization_settings.reduced:
-        config_variables.dir_name = f"../results/{tool}_output/{config_variables.contractFileName[:-4]}/{mode.name}/{budget}/not_reduce_combinations"
-    else:
+    if optimization_settings.reduce:
         config_variables.dir_name = f"../results/{tool}_output/{config_variables.contractFileName[:-4]}/{mode.name}/{budget}/reduce_combinations"
+    else:
+        config_variables.dir_name = f"../results/{tool}_output/{config_variables.contractFileName[:-4]}/{mode.name}/{budget}/not_reduce_combinations"
     config_variables.dir = create_directory(config_variables.dir_name) # devuelve el path completo.
 
     threads_count, contracts_count = set_thread_and_contracts_count(config_variables) # Para el discard_unreachable_states.
@@ -229,19 +246,17 @@ def main():
     # En Echidna, creamos una cierta cantidad de contratos dependiendo de la cantidad de queries que tengamos. (ej: > 100 queries).
 
     # Hacemos lo de discard_unreachable_states y actualizamos variables.
-    print("-> Descartando estados inalcanzables con el reduceCombinations...")
-    reduce_combinations_time = time()
     verisol_fails = VerisolExecutionHistory()
-    if mode == Mode.epa and not optimization_settings.reduced:
+    if mode == Mode.epa and optimization_settings.reduce:
+        reduce_combinations_time = time()
         discard_unreachable_states(config_variables, 8, verisol_fails)
-    print(f"-> Tiempo de reduce_combinations: {time() - reduce_combinations_time} \n")
+        print(f"-> Tiempo de reduce_combinations: {time() - reduce_combinations_time:.2f}s \n")
 
-    # return
     # Volvemos a calcular la cantidad de queries para definir cuántos contratos distintos vamos a correr.
     threads_count, contracts_count = set_thread_and_contracts_count(config_variables)
 
 
-    print("-> Creando los contratos a ejecutar...")
+    console.print("[bold bright_green underline]-> Creando los contratos a ejecutar...")
     contract_creation_time = time()
     # Creamos los contratos.
     contract_creator = ContractCreator().create_contract_creator(config_variables, tool)
@@ -251,51 +266,53 @@ def main():
         transitions_contracts_to_run, queries_per_contract = create_transitions_contracts_for_each_thread(contract_creator, threads_count)
     elif tool == "echidna":
         transitions_contracts_to_run, queries_per_contract = contract_creator.create_multiple_transitions_contracts(contracts_count)
-    print(f"-> Tiempo de creación de contratos: {time() - contract_creation_time} \n")
+    print(f"-> Tiempo de creación de contratos: {time() - contract_creation_time:.2f}s \n")
 
-    print("-> Ejecutando los contratos de init y de transiciones...")
     execution_time = time()
     init_failed = []
     tr_failed = []
     if tool == "echidna":  # Definimos los parámetros del config.yaml de echidna.
         try:
+            console.print("[bold bright_green underline]-> Ejecutando los contratos de init y de transiciones...")
             init_failed, tr_failed = echidna_execution_logic(config_variables, init_contract_to_run, transitions_contracts_to_run, test_limit)
         except Exception as e:
-            print(f"No se pudo correr el contrato {config_variables.contractName} con Echidna en modo {mode.name}.")
+            console.print(f"[bold bright_red]No se pudo correr el contrato {config_variables.contractName} con Echidna en modo {mode.name}.\nError: {e}")
+            return
 
 
     elif tool == "verisol":
         verisol_config = VerisolConfigData(txBound=txBound, time_out=time_out)
         init_failed, tr_failed = verisol_execution_logic(config_variables, init_contract_to_run, transitions_contracts_to_run, verisol_config, verisol_fails, threads_count, queries_per_contract, init_queries_names)
-    print(f"-> Tiempo de ejecución: {time() - execution_time} \n")
+    print(f"-> Tiempo de ejecución: {time() - execution_time:.2f}s \n")
 
+    if output:
+        OutputPrinter(config_variables).print_results(tr_failed, init_failed)
 
-    OutputPrinter(config_variables).print_results(tr_failed, init_failed)
-
-    # print("----Resultados finales----")
-    # print(f"Init failed: {init_failed}")
-    # print(f"Transitions failed: {tr_failed}")
     graph_time = time()
-    print("-> Construyendo el grafo...")
+    console.print("[bold bright_green underline]-> Construyendo el grafo...")
     Graph(config_variables).build_graph(init_failed, tr_failed)
-    print(f"-> Tiempo de construcción del grafo: {time() - graph_time} \n")
+    print(f"-> Tiempo de construcción del grafo: {time() - graph_time:.2f}s \n")
+
+    if debug:
+        console.print(f"Cantidad de transiciones que salen desde el constructor: [bright_green]{len(init_failed)}")
+        console.print(f"Cantidad de transiciones internas: [bright_green]{len(tr_failed)}")
 
 class Optimizer():
     """ Clase para guardar las flags de optimización. """
     def __init__(self):
-        self.reduced = False
-        self.reduced_true = True
-        self.reduced_equal = False
+        self.reduce = True
+        self.reduce_true = True
+        self.reduce_equal = True
         self.flag_mapping = {
-            "-rs": {"reduced": True},
-            "-rt": {"reduced_true": False},
-            "-re": {"reduced_equal": True},
-            "-rte": {"reduced_equal": True, "reduced_true": False},
-            "-ra": {"reduced_equal": True, "reduced_true": False, "reduced": True}
+            "-rs": {"reduce": False}, # rs = reduce states (desactiva esa optimización)
+            "-rt": {"reduce_true": False}, # rt = reduce true (desactiva esa optimización)
+            "-re": {"reduce_equal": False}, # re = reduce equal (desactiva esa optimización)
+            "-rte": {"reduce_equal": False, "reduce_true": False}, # rte = reduce true and equal
+            "-ra": {"reduce_equal": False, "reduce_true": False, "reduce": False} # ra = reduce all
         }
 
     def __str__(self): 
-        return f"reduced: {self.reduced}\nreduced_true: {self.reduced_true}\nreduced_equal: {self.reduced_equal}"
+        return f"reduce: {self.reduce}\nreduce_true: {self.reduce_true}\nreduce_equal: {self.reduce_equal}"
 
     def set_flags(self, flag):
         """ Setea las variables de optimización según la flag que se le pase """
@@ -316,6 +333,9 @@ if __name__ == "__main__":
     time_out = None # VeriSol
     test_limit = None # Echidna
     budget = None
+
+    debug = False
+    output = False
 
     verbose = False # Execution. Por ahora no se usan. Quedaron las dos medio desactualizadas, ¿no? 
     time_mode = False # Execution
@@ -347,6 +367,11 @@ if __name__ == "__main__":
         elif "test_limit=" in sys.argv[i]:
             test_limit = int(sys.argv[i].replace("test_limit=","").strip())
             budget = test_limit
+        elif sys.argv[i] == "--debug":
+            print("\nCorriendo verisolEchidna en modo debug con los siguientes parámetros:")
+            debug = True
+        elif sys.argv[i] == "--print-output":
+            output = True
         else:
             optimization_flag = sys.argv[i]
             optimization_settings.set_flags(optimization_flag)
@@ -372,7 +397,7 @@ if __name__ == "__main__":
     main()
 
     end = time()
-    print(f"Tiempo total: {end - start}")
+    print(f"Tiempo total: {end - start:.2f}s")
 
     # En lo de Edén se creaba un nuevo archivo al finalizar la ejecución con el tiempo,
     # la cantidad de timeouts, y la cantidad de fails de corral (con y sin trackvars).
