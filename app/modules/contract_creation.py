@@ -156,10 +156,8 @@ class EchidnaContractCreator(ContractCreator):
         # De function_names podemos sacar la cantidad de queries que se crearon.
         queries_count = len(function_names)
         contracts = []
-        # if queries_count > QUERIES_COUNT_THRESHOLD:
-            # splits = count
-        if queries_count > 39:
-            splits = 4
+        if queries_count > QUERIES_COUNT_THRESHOLD:
+            splits = count
             if self.config_variables.debug:
                 console.print(f"[bright_yellow]La cantidad de queries ([bold]{queries_count}[/bold]) superó el umbral de {QUERIES_COUNT_THRESHOLD}.\n" +
                               f"Se dividirán en {splits} contratos.\n" +
